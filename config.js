@@ -13,7 +13,9 @@
  *   3. Paste the https://….onrender.com URL below
  *   4. Redeploy Hostinger / push to main
  */
-window.FG_API_BASE = window.FG_API_BASE || "https://fitness-gurukul-api.onrender.com";
+// Live API (Cloudflare tunnel while Render is offline). Replace with your
+// https://….onrender.com URL after Render redeploy for a permanent host.
+window.FG_API_BASE = window.FG_API_BASE || "https://functional-sections-implement-handles.trycloudflare.com";
 
 (function (w) {
   var PHP_MAP = {
