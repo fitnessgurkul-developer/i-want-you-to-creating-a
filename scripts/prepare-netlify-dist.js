@@ -29,6 +29,8 @@ const files = [
   "app.js",
   "config.js",
   "styles.css",
+  "robots.txt",
+  "sitemap.xml",
 ];
 
 const dirs = ["assets", "coaches", "api"];

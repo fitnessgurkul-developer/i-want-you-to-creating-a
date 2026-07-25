@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+
+Disallow: /backend.html
+Disallow: /office.html
+Disallow: /owner-data.html
+Disallow: /admin.html
+Disallow: /dashboard.html
+Disallow: /api/
+
+Sitemap: https://soft-chimera-8a4214.netlify.app/sitemap.xml
