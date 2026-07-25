@@ -11,6 +11,8 @@ const dist = path.join(root, "dist");
 
 const files = [
   "index.html",
+  "index.php",
+  ".htaccess",
   "about.html",
   "admin.html",
   "backend.html",

@@ -1,0 +1,14 @@
+# Fitness Gurukul — Hostinger public_html (keep this minimal / safe)
+DirectoryIndex index.html index.php
+Options -Indexes
+
+# Block sensitive files if accidentally uploaded
+<FilesMatch "(?i)^(\.env.*|server\.py|package(-lock)?\.json|render\.yaml)$">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+  </IfModule>
+</FilesMatch>

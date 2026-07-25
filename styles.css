@@ -77,7 +77,11 @@ body::after {
   content: "";
   position: absolute;
   inset: -60%;
-  background: radial-gradient(ellipse 55% 45% at 75% 10%, rgba(245,158,11,0.2), transparent 55%), radial-gradient(ellipse 45% 40% at 20% 25%, rgba(13,202,240,0.15), transparent 50%), radial-gradient(ellipse 50% 35% at 60% 50%, rgba(168,85,247,0.12), transparent 48%), radial-gradient(ellipse 40% 30% at 85% 75%, rgba(34,197,94,0.13), transparent 45%), radial-gradient(ellipse 35% 40% at 10% 85%, rgba(251,191,36,0.12), transparent 50%);
+  background:
+    radial-gradient(ellipse 55% 45% at 75% 10%, rgba(251,191,36,0.18), transparent 55%),
+    radial-gradient(ellipse 45% 40% at 20% 25%, rgba(255,255,255,0.08), transparent 50%),
+    radial-gradient(ellipse 50% 35% at 60% 50%, rgba(255,255,255,0.04), transparent 48%),
+    radial-gradient(ellipse 35% 40% at 10% 85%, rgba(251,191,36,0.12), transparent 50%);
   animation: ambientDrift 20s ease-in-out infinite alternate;
 }
 
@@ -85,7 +89,10 @@ body::after {
   content: "";
   position: absolute;
   inset: -60%;
-  background: radial-gradient(ellipse 45% 35% at 35% 60%, rgba(236,72,153,0.1), transparent 50%), radial-gradient(ellipse 40% 30% at 55% 15%, rgba(245,158,11,0.13), transparent 45%), radial-gradient(ellipse 35% 40% at 40% 85%, rgba(13,202,240,0.1), transparent 50%);
+  background:
+    radial-gradient(ellipse 45% 35% at 35% 60%, rgba(255,255,255,0.05), transparent 50%),
+    radial-gradient(ellipse 40% 30% at 55% 15%, rgba(245,158,11,0.13), transparent 45%),
+    radial-gradient(ellipse 35% 40% at 40% 85%, rgba(255,255,255,0.04), transparent 50%);
   animation: ambientDrift2 28s ease-in-out infinite alternate;
 }
 
@@ -4311,9 +4318,10 @@ from { opacity: 0; transform: translateY(10px); }
 
   body { font-size: 15px; }
 
-  main, .site-header { width: min(100% - 24px, 1180px); }
+  /* Keep header/main full-bleed; gutters come from .page-shell / .header-inner */
+  main, .site-header { width: 100%; max-width: none; }
 
-  .site-footer { width: min(100% - 24px, 1180px); grid-template-columns: 1fr; }
+  .site-footer { width: min(100% - 24px, 1180px); margin-inline: auto; grid-template-columns: 1fr; }
 
   h1 { font-size: 2.25rem; }
 

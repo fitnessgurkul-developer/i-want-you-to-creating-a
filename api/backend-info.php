@@ -5,7 +5,9 @@ fg_json_out([
   "ok" => true,
   "engine" => "hostinger-php",
   "mode" => "hostinger",
-  "localDefaultPassword" => true,
-  "hint" => "Use the owner password from api/config.php (default: fitnessgurukul). Change it after first login.",
+  // Never expose the real password over the public API.
+  "localDefaultPassword" => false,
+  "hint" => "Enter the owner password from api/config.php (or FG_ADMIN_TOKEN env).",
   "database" => "api/data/submissions.json",
+  "site" => "https://fitnessgurukul.app",
 ]);
