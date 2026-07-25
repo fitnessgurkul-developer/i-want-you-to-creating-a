@@ -6,7 +6,7 @@
  * when the site is served from Hostinger (no Python / Render required).
  */
 return [
-  "admin_token" => getenv("FG_ADMIN_TOKEN") ?: "fitnessgurukul",
+  "admin_token" => getenv("FG_ADMIN_TOKEN") ?: "Rr6OrZTsbxJNfWcqFzyBQehb",
   "whatsapp" => "917207113310",
   "contact_email" => "contact@fitnessgurukul.co.in",
 ];

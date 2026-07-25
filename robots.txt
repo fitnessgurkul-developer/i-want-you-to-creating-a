@@ -8,4 +8,4 @@ Disallow: /admin.html
 Disallow: /dashboard.html
 Disallow: /api/
 
-Sitemap: https://soft-chimera-8a4214.netlify.app/sitemap.xml
+Sitemap: https://fitnessgurukul.app/sitemap.xml

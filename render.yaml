@@ -17,4 +17,4 @@ services:
       - key: DATA_DIR
         value: "./data"
       - key: CORS_ORIGINS
-        value: "https://fitnessgurukul.co.in,https://www.fitnessgurukul.co.in,https://fitnessgurukul.in,https://www.fitnessgurukul.in,https://soft-chimera-8a4214.netlify.app,https://jade-puppy-0909d4.netlify.app,https://saikrishnacoder.github.io"
+        value: "https://fitnessgurukul.app,https://www.fitnessgurukul.app,https://fitnessgurukul.co.in,https://www.fitnessgurukul.co.in,https://soft-chimera-8a4214.netlify.app,https://jade-puppy-0909d4.netlify.app,https://saikrishnacoder.github.io"

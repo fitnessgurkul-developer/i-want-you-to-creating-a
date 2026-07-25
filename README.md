@@ -123,15 +123,19 @@ After deploy:
 4. Run `./scripts/verify-api.sh https://….onrender.com`
 5. Open `/backend.html` with password `fitnessgurukul` (or your `ADMIN_TOKEN`)
 
+## Production domain
+
+Primary site: **https://fitnessgurukul.app** (Hostinger)
+
 ## Deploy: Hostinger forms (works without Render)
 
 Hostinger shared hosting can save leads with the PHP endpoints in `/api/`:
 
 - Forms POST → `/api/submit.php` → `api/data/submissions.json`
 - Challenge joins → `/api/challenge-join.php`
-- Owner page → `/api/admin-data.php` (password from `api/config.php`, default `fitnessgurukul`)
+- Owner page → `/api/admin-data.php` (password from `api/config.php`)
 
-Keep `config.js` as `window.FG_API_BASE = ""` for this mode. Change the password in `api/config.php` after first login.
+Keep `config.js` as `window.FG_API_BASE = ""` for this mode so leads stay on fitnessgurukul.app.
 
 If PHP is unavailable, forms fall back to a prefilled WhatsApp message so leads are never silently lost.
 
