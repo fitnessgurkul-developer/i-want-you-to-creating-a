@@ -1,13 +1,14 @@
-# Fitness Gurukul — static site on Netlify (no Git LFS required)
+# Fitness Gurukul static site on Netlify (no Git LFS)
 
 [build]
-  publish = "."
-  command = "echo 'Static site — no build step'"
+  publish = "dist"
+  command = "node scripts/prepare-netlify-dist.js"
 
 [build.environment]
   NODE_VERSION = "20"
-  # Do not pull Git LFS — budget exceeded and site uses assets/cdn instead.
   GIT_LFS_ENABLED = "false"
+  GIT_LFS_SKIP_SMUDGE = "1"
+  NPM_FLAGS = "--ignore-scripts"
 
 [[headers]]
   for = "/*.html"
