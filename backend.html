@@ -173,7 +173,7 @@
       </label>
       <div class="error" id="gateError" role="status"></div>
       <button class="primary" type="button" id="unlockBtn" style="width:100%">Open backend</button>
-      <p class="note">Local default password is usually <code>fitnessgurukul</code>.</p>
+      <p class="note">Use the strong owner password from <code>api/config.php</code> / <code>ADMIN_TOKEN</code>.</p>
     </div>
 
     <div id="board" class="hidden">
@@ -541,20 +541,16 @@
           hint.style.background = "rgba(74,222,128,0.08)";
           hint.style.borderColor = "rgba(74,222,128,0.28)";
           hint.style.color = "#bbf7d0";
-          hint.innerHTML = "Hostinger mode: forms save via <code>/api/submit.php</code> into <code>api/data/submissions.json</code>. Default password: <code>fitnessgurukul</code> (change in <code>api/config.php</code>).";
+          hint.innerHTML = "Hostinger mode: forms save via <code>/api/submit.php</code> into <code>api/data/submissions.json</code>. Unlock with the password in <code>api/config.php</code>.";
         }
         var info = null;
         try {
           var infoResult = await fetchFirstOk(apiCandidates("/api/backend-info"));
           info = infoResult.json;
         } catch (e) {}
-        if (info && (info.mode === "local-default" || info.mode === "hostinger") && info.localDefaultPassword) {
+        if (info && info.mode === "local-default") {
           hint.classList.remove("hidden");
-          var pwd = info.localDefaultPassword === true ? "fitnessgurukul" : info.localDefaultPassword;
-          hint.innerHTML = "Opening backend with default owner password <code>" + esc(pwd) + "</code>…";
-          qs("tokenInput").value = pwd;
-          await unlock(pwd);
-          return;
+          hint.innerHTML = info.hint || "Local owner backend ready. Enter the password from <code>.env</code> / <code>ADMIN_TOKEN</code>.";
         }
         if (getToken()) {
           qs("tokenInput").value = getToken();

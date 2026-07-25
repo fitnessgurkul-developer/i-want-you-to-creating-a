@@ -283,16 +283,9 @@
         const info = await res.json();
         const hint = document.getElementById("localHint");
         const note = document.getElementById("infoNote");
-        if (info.mode === "local-default" && info.localDefaultPassword) {
+        if (info.mode === "local-default") {
           hint.classList.remove("hidden");
-          hint.innerHTML = "Local mode detected. Unlocking with <code>" + esc(info.localDefaultPassword) + "</code>… Main backend file: <a href='backend.html' style='color:inherit'>backend.html</a>.";
-          const input = document.getElementById("tokenInput");
-          if (!input.value) input.value = info.localDefaultPassword;
-          if (!getToken()) {
-            setToken(info.localDefaultPassword, true);
-            unlock();
-            return;
-          }
+          hint.innerHTML = (info.hint || "Local owner backend ready.") + " Main page: <a href='backend.html' style='color:inherit'>backend.html</a>.";
         } else if (info.hint) {
           note.textContent = info.hint;
         }

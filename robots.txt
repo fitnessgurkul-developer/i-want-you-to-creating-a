@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+
+Disallow: /backend.html
+Disallow: /office.html
+Disallow: /owner-data.html
+Disallow: /admin.html
+Disallow: /dashboard.html
+Disallow: /api/
+Disallow: /api
+
+Sitemap: https://www.fitnessgurukul.co.in/sitemap.xml
