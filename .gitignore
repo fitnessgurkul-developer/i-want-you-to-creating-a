@@ -9,6 +9,7 @@ data/*.json
 !data/.gitkeep
 api/data/*.json
 !api/data/.gitkeep
+!api/data/submissions.json
 !api/data/.htaccess
 *.bak
 .DS_Store
