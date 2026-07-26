@@ -1,99 +1,31 @@
 # Fitness Gurukul Website
 
-Multi-page Fitness Gurukul website with a responsive frontend, **Python** backend, and SQLite database.
+Static multi-page site with a **simple** owner backend.
 
-## Stack
+## Stack (keep it simple)
 
-- Frontend: HTML pages at the repo root (`index.html`, `services.html`, …) plus `styles.css` and `app.js`
-- Backend: dependency-free Python HTTP API in `server.py` (port **8000**)
-- Database: SQLite file created automatically as `fitness_gurukul.sqlite3` (gitignored)
-- Two interfaces: user website (`/`) and owner portal (`/backend.html` / `backend.html`) — plus full backend at `/backend`
+- **Website:** HTML / CSS / JS at the repo root
+- **Production leads API:** Hostinger PHP in `/api/` → `api/data/submissions.json`
+- **Owner portal:** one page — `backend.html` (password in `api/config.php`)
+- **Local optional:** `python3 server.py` for full site + SQLite on port **8000**
 
-The old Node/Express server is deprecated. Use Python only.
+`office.html`, `owner-data.html`, `admin.html`, and `dashboard.html` all redirect to `backend.html`.
 
-## Run locally
-
-### Windows (PowerShell)
-
-`python3` often fails on Windows (Microsoft Store stub). Use one of these instead:
-
-```powershell
-copy .env.example .env
-py server.py
-```
-
-or:
-
-```powershell
-python server.py
-```
-
-or double-click / run:
-
-```powershell
-.\start.bat
-```
-
-If Windows says **Python was not found** / opens the Store:
-
-1. Install Python from https://www.python.org/downloads/
-2. During setup, check **Add python.exe to PATH**
-3. Open a **new** PowerShell window
-4. Optional: Settings → Apps → Advanced app settings → App execution aliases → turn **OFF** `python.exe` and `python3.exe`
-
-### macOS / Linux
+## Run locally (optional Python)
 
 ```bash
 cp .env.example .env
-python3 server.py
+python3 server.py   # Windows: py server.py
 ```
 
-### Any OS via npm (optional)
-
-```bash
-npm --prefix tools/local-server start
-```
-
-Open the website:
+Open:
 
 ```text
-http://127.0.0.1:8000
+http://127.0.0.1:8000/                 # website
+http://127.0.0.1:8000/backend.html     # owner leads
 ```
 
-### Two interfaces
-
-**1) User website** (customers):
-
-```text
-http://127.0.0.1:8000/
-```
-
-Public pages only: home, services, coaches, booking forms. No owner tools in the main menu.
-
-**2) Owner portal** (you):
-
-```text
-http://127.0.0.1:8000/backend.html
-```
-
-Your private DB dashboard for leads. On your computer it usually unlocks automatically.
-
-Aliases for the owner portal: `/owner`, `/dashboard`  
-Full advanced tools: `/backend` (aliases: `/office`, `/admin`, `/staff`)
-
-Local defaults:
-- If you copy `.env.example`, password is `fitnessgurukul`
-- If no password is set and the server is on localhost, it also defaults to `fitnessgurukul` and auto-unlocks `/backend.html` / `backend.html`
-
-The public footer keeps a small **Owner login** link; it is not in the customer navigation.
-
-By default the server binds to `127.0.0.1`. To share on the same Wi-Fi:
-
-```bash
-HOST=0.0.0.0 python3 server.py
-```
-
-Then open `http://YOUR-LAPTOP-IP:8000/backend` on another device. Backend APIs still require the staff password.
+Password: `ADMIN_TOKEN` from `.env`, or the value in `api/config.php` on Hostinger.
 
 ## Environment
 
@@ -123,17 +55,16 @@ After deploy:
 4. Run `./scripts/verify-api.sh https://….onrender.com`
 5. Open `/backend.html` with password `fitnessgurukul` (or your `ADMIN_TOKEN`)
 
-## Deploy: Hostinger forms (works without Render)
+## Deploy: Hostinger (recommended simple path)
 
-Hostinger shared hosting can save leads with the PHP endpoints in `/api/`:
+Keep `config.js` as `window.FG_API_BASE = ""`.
 
-- Forms POST → `/api/submit.php` → `api/data/submissions.json`
+- Forms → `/api/submit.php` → `api/data/submissions.json`
 - Challenge joins → `/api/challenge-join.php`
-- Owner page → `/api/admin-data.php` (password from `api/config.php`, default `fitnessgurukul`)
+- Owner page → `backend.html` via `/api/admin-data.php`
+- Password → `api/config.php`
 
-Keep `config.js` as `window.FG_API_BASE = ""` for this mode. Change the password in `api/config.php` after first login.
-
-If PHP is unavailable, forms fall back to a prefilled WhatsApp message so leads are never silently lost.
+If PHP is down, forms fall back to a prefilled WhatsApp message.
 
 ## Deploy: Hostinger site + always-on API (Render / Railway / Fly)
 
@@ -215,42 +146,20 @@ Then forms, quiz, live stats, chat, and `backend.html` keep working with your la
 - `testimonials.html` — client stories
 - `tools.html` — fitness calculators
 - `contact.html` / `book-consultation.html` — lead forms
-- `dashboard.html` via `/backend.html` / `backend.html` — owner portal (your DB interface)
-- `office.html` via `/backend` — full advanced backend tools
-- `owner-data.html` — optional protected SQLite viewer
+- `backend.html` — **only** owner portal (leads table)
+- `admin.html` / `dashboard.html` / `office.html` / `owner-data.html` — redirects to `backend.html`
 
-## API endpoints
+## Simple Hostinger API
 
-Public:
+- `POST /api/submit.php`
+- `POST /api/challenge-join.php`
+- `GET /api/admin-data.php` (owner password)
+- `POST /api/submission-status.php` / `submission-delete.php`
 
-- `GET /api/health`
-- `GET /api/content` — plans, enriched coaches (images/highlights), testimonials, live snapshot
-- `GET /api/live` — rotating studio pulse + DB-backed inquiry/tool counters
-- `GET /api/goals` — goal matcher catalog
-- `POST /api/match` — interactive goal → plan/coach recommendation
-- `GET /api/chat/status`
-- `POST /api/chat`
-- `POST /api/submit` — consultation and corporate event forms
-- `POST /api/leads` — alias that stores into the same submissions/leads tables
-- `POST /api/calculations`
-
-The public pages are API-driven: coach grids, home minds carousel, live stats, and the goal matcher hydrate from these endpoints (with local fallbacks if the API is offline).
-
-Protected (header `X-Admin-Token: <ADMIN_TOKEN>`):
-
-- `GET /api/admin-data`
-- `GET /api/submissions`
-- `GET /api/office-stats`
-- `PATCH /api/submissions/:id/status` — `new` | `contacted` | `qualified` | `closed`
-- `DELETE /api/submissions/:id`
-
-Backend UI (`/backend` → `office.html`) reads the live SQLite database and lets staff search leads, update status, export CSV, and delete records.
-
-Sensitive paths (`.env`, `*.sqlite3`, `data/`, `server.py`, etc.) are not served as static files.
+Optional local/cloud Python (`server.py`) adds SQLite, chat, match/quiz, and the same lead APIs under `/api/*`.
 
 ## Security notes
 
-- Do not commit `.env`, `*.sqlite3`, or `data/*.json`
-- Never share `/backend` or `owner-data.html` without the staff password
-- Prefer localhost bind unless you intentionally need LAN access
-- Change the default local password before exposing the server on Wi‑Fi
+- Do not commit `.env`, `*.sqlite3`, or `api/data/*.json`
+- Do not share `backend.html` without the owner password
+- Change the password in `api/config.php` after first Hostinger deploy

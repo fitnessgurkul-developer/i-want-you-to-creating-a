@@ -1115,14 +1115,9 @@ class handler(SimpleHTTPRequestHandler):
         # Two interfaces:
         # - User website: /, index.html, public pages
         # - Owner backend page in project root: backend.html
-        if path in {"/backend", "/me", "/owner", "/dashboard", "/leads", "/staff"}:
+        # One owner portal — every legacy path lands on backend.html
+        if path in {"/backend", "/me", "/owner", "/dashboard", "/leads", "/staff", "/office", "/admin"}:
             self.path = "/backend.html"
-            path = self.path
-        elif path == "/office":
-            self.path = "/office.html"
-            path = self.path
-        elif path == "/admin":
-            self.path = "/admin.html"
             path = self.path
         elif path in {"/challenge", "/challenges", "/transformation-challenge", "/workouts"}:
             self.path = "/transformation-challenge.html"

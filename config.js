@@ -1,20 +1,13 @@
 /**
- * Fitness Gurukul — API endpoint config
+ * Fitness Gurukul — API endpoint config (keep simple)
  *
- * Lead save order:
- *   1) Cloud Python API via FG_API_BASE (Render / Railway / Fly / tunnel)
- *   2) Same-origin /api/* (local python server.py)
- *   3) Same-origin /api/*.php (Hostinger shared hosting)
- *   4) WhatsApp prefilled fallback in app.js
+ * Default (recommended): FG_API_BASE = ""
+ *   → Hostinger /api/*.php + backend.html owner portal
+ *   → WhatsApp fallback if PHP is down
  *
- * Permanent cloud deploy (recommended):
- *   1. Open https://render.com/deploy?repo=https://github.com/saikrishnacoder/i-want-you-to-creating-a
- *   2. Create free Web Service from render.yaml
- *   3. Paste the https://….onrender.com URL below
- *   4. Redeploy Hostinger / push to main
+ * Optional: set FG_API_BASE to a cloud Python URL (Render/Railway/Fly)
+ * for SQLite + AI chat. Local: leave empty and run python3 server.py.
  */
-// Empty = same-origin (/api/*.php on Hostinger, or WhatsApp fallback on static hosts).
-// For a cloud Python API (Render/Railway/Fly), set e.g. "https://….onrender.com".
 window.FG_API_BASE = window.FG_API_BASE || "";
 
 (function (w) {

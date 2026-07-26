@@ -122,58 +122,28 @@
       </span>
     </a>
     <div class="top-actions">
-      <a class="btn user" href="/">Open user website</a>
-      <a class="btn" href="office.html">Advanced tools</a>
+      <a class="btn user" href="/">Open website</a>
       <button class="btn hidden" type="button" id="signOutBtn">Sign out</button>
     </div>
   </header>
 
   <main class="wrap">
-    <div class="split">
-      <section class="card">
-        <h1>Your database lives here</h1>
-        <p class="muted"><code>backend.html</code> is the owner view of the live SQLite database. Every booking, contact, challenge join, and event RSVP from the website is saved by the API and shown in the table below.</p>
-        <div class="iface" style="margin-top:16px">
-          <a href="/">
-            <div>
-              <div class="tag user">User interface</div>
-              <strong>Public website</strong>
-              <div class="muted">Home, services, coaches, booking forms</div>
-            </div>
-            <span>→</span>
-          </a>
-          <a href="backend.html">
-            <div>
-              <div class="tag owner">Owner backend</div>
-              <strong>backend.html</strong>
-              <div class="muted">Live database of form submissions</div>
-            </div>
-            <span>→</span>
-          </a>
-        </div>
-      </section>
-      <section class="card">
-        <h2>Quick links</h2>
-        <p class="muted">Use the public site to get customers. Use this page to manage leads.</p>
-        <div class="iface" style="margin-top:14px">
-          <a href="/book-consultation.html"><div><strong>Test a booking form</strong><div class="muted">Creates a DB lead</div></div><span>→</span></a>
-          <a href="/contact.html"><div><strong>Test contact form</strong><div class="muted">Creates a DB lead</div></div><span>→</span></a>
-          <a href="office.html"><div><strong>Advanced backend</strong><div class="muted">Chat logs, calculators, CSV tools</div></div><span>→</span></a>
-        </div>
-      </section>
-    </div>
+    <section class="card" style="margin-bottom:18px">
+      <h1>Owner leads</h1>
+      <p class="muted">One simple backend. Form submissions from the website land here (Hostinger PHP JSON, or local/cloud Python SQLite).</p>
+    </section>
 
     <div id="gate" class="card gate">
       <h2>Unlock backend</h2>
-      <p class="muted">Connected to the live SQLite database. On this computer it can open automatically.</p>
+      <p class="muted">Enter the owner password to view and manage leads.</p>
       <div class="hint hidden" id="localHint"></div>
       <label>
         Owner password
-        <input id="tokenInput" type="password" autocomplete="current-password" placeholder="ADMIN_TOKEN from .env" />
+        <input id="tokenInput" type="password" autocomplete="current-password" placeholder="Password from api/config.php" />
       </label>
       <div class="error" id="gateError" role="status"></div>
       <button class="primary" type="button" id="unlockBtn" style="width:100%">Open backend</button>
-      <p class="note">Use the strong owner password from <code>api/config.php</code> / <code>ADMIN_TOKEN</code>.</p>
+      <p class="note">Password is set in <code>api/config.php</code> (Hostinger) or <code>ADMIN_TOKEN</code> (local Python).</p>
     </div>
 
     <div id="board" class="hidden">
