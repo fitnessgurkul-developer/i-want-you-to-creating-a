@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Transformations | Fitness Gurukul</title>
-  <meta name="description" content="Real Fitness Gurukul transformations in Hyderabad — interactive before/after stories, video testimonials, and client journeys." />
+  <meta name="description" content="Real Fitness Gurukul transformations from Hyderabad IT professionals — engineers, PMs, and analysts with interactive before/after stories." />
   <link rel="stylesheet" href="styles.css" />
   <style>
     :root {
@@ -217,6 +217,17 @@
       font-size: clamp(1.8rem, 3vw, 2.6rem);
       margin: 0;
       letter-spacing: -0.03em;
+    }
+    .xf-role {
+      margin: 6px 0 0;
+      color: rgba(255,255,255,0.62);
+      font-size: 0.88rem;
+    }
+    .xf-story {
+      margin: 0;
+      color: rgba(255,255,255,0.78);
+      font-size: 0.95rem;
+      line-height: 1.65;
     }
     .xf-detail blockquote {
       margin: 0;
@@ -492,10 +503,10 @@
       <div class="xf-hero-media" aria-hidden="true"></div>
       <div class="xf-hero-inner">
         <p class="xf-brand">Fitness <span>Gurukul</span></p>
-        <h1>Bodies rewritten. Habits rebuilt.</h1>
-        <p>Real Hyderabad transformations — drag to compare, switch people, and hear their stories.</p>
+        <h1>From standup to strong.</h1>
+        <p>Real stories from Hyderabad IT desks — engineers, PMs, and analysts who rebuilt energy, posture, and confidence around real work weeks.</p>
         <div class="xf-hero-actions">
-          <a class="primary-button" href="#xfStage">Explore stories</a>
+          <a class="primary-button" href="#xfStage">Explore IT stories</a>
           <a class="ghost-button" href="book-consultation.html">Buy Now</a>
         </div>
         <div class="xf-scroll-hint">Drag the photo · switch people · play videos</div>
@@ -505,8 +516,8 @@
     <section class="xf-stage" id="xfStage">
       <div class="xf-stage-head xf-reveal">
         <div>
-          <span class="section-kicker">Interactive stories</span>
-          <h2>Pick a person. Scrub the change.</h2>
+          <span class="section-kicker">Hyderabad tech stories</span>
+          <h2>Pick a teammate path. Scrub the change.</h2>
         </div>
         <div class="xf-filters" id="xfFilters">
           <button type="button" data-filter="all" class="active">All</button>
@@ -530,7 +541,9 @@
           <div>
             <div class="xf-detail-kicker" id="xfCategory">Body recomposition</div>
             <h3 id="xfName">Udit</h3>
+            <p class="xf-role" id="xfRole">Backend engineer · Gachibowli</p>
           </div>
+          <p class="xf-story" id="xfStory">After two years of late releases and desk lunches, his jeans fit worse than his sprint burndown.</p>
           <blockquote id="xfQuote">“The coaching gave me the discipline and structure I never had. Every session was planned, every meal was guided.”</blockquote>
           <div class="xf-metrics">
             <div class="xf-metric"><strong id="xfBeforeKg">88</strong><span>Start weight (kg)</span></div>
@@ -552,7 +565,7 @@
         <div class="xf-videos-head xf-reveal">
           <span class="section-kicker">On camera</span>
           <h2>They said it themselves</h2>
-          <p>Swipe the reel. Tap to play full-screen client stories filmed at Fitness Gurukul.</p>
+          <p>Tap to hear how Hyderabad IT professionals fitted training around standups, releases, and Indian meals.</p>
         </div>
         <div class="xf-video-rail xf-reveal" id="xfVideoRail">
           <button class="xf-video-item" type="button" data-video="TESTIMONIALS/FINAL%20TESTIMONIAL.mp4">
@@ -561,7 +574,7 @@
             </video>
             <div class="xf-video-shade"></div>
             <div class="xf-play">▶</div>
-            <div class="xf-video-copy"><strong>Journey to a healthier me</strong><div style="color:rgba(255,255,255,0.7);font-size:0.85rem;margin-top:4px">Lifestyle reset on camera</div></div>
+            <div class="xf-video-copy"><strong>Product manager reset</strong><div style="color:rgba(255,255,255,0.7);font-size:0.85rem;margin-top:4px">From roadmap chaos to routine</div></div>
           </button>
           <button class="xf-video-item" type="button" data-video="TESTIMONIALS/NEHA%20.mp4">
             <video muted loop playsinline preload="metadata" poster="neha.png">
@@ -569,7 +582,7 @@
             </video>
             <div class="xf-video-shade"></div>
             <div class="xf-play">▶</div>
-            <div class="xf-video-copy"><strong>Neha’s fat-loss story</strong><div style="color:rgba(255,255,255,0.7);font-size:0.85rem;margin-top:4px">Practical meals, real consistency</div></div>
+            <div class="xf-video-copy"><strong>Neha’s desk-to-strong story</strong><div style="color:rgba(255,255,255,0.7);font-size:0.85rem;margin-top:4px">Indian meals that survived late calls</div></div>
           </button>
           <button class="xf-video-item" type="button" data-video="TESTIMONIALS/TESTIMONAL%20FINAL.mp4">
             <video muted loop playsinline preload="metadata" poster="udit.png">
@@ -577,7 +590,7 @@
             </video>
             <div class="xf-video-shade"></div>
             <div class="xf-play">▶</div>
-            <div class="xf-video-copy"><strong>Strength &amp; confidence</strong><div style="color:rgba(255,255,255,0.7);font-size:0.85rem;margin-top:4px">Discipline that stuck</div></div>
+            <div class="xf-video-copy"><strong>Backend engineer rebuild</strong><div style="color:rgba(255,255,255,0.7);font-size:0.85rem;margin-top:4px">Posture, energy, and code that shipped</div></div>
           </button>
           <button class="xf-video-item" type="button" data-video="TESTIMONIALS/TESTOMONIAL%20VID%201.mp4">
             <video muted loop playsinline preload="metadata" poster="deepak.png">
@@ -585,7 +598,7 @@
             </video>
             <div class="xf-video-shade"></div>
             <div class="xf-play">▶</div>
-            <div class="xf-video-copy"><strong>From zero to fitness</strong><div style="color:rgba(255,255,255,0.7);font-size:0.85rem;margin-top:4px">Beginner breakthrough</div></div>
+            <div class="xf-video-copy"><strong>Support lead comeback</strong><div style="color:rgba(255,255,255,0.7);font-size:0.85rem;margin-top:4px">Shift work without night snacks</div></div>
           </button>
         </div>
       </div>
@@ -594,8 +607,8 @@
     <section class="xf-cta">
       <div class="xf-cta-inner xf-reveal">
         <span class="section-kicker">Fitness Gurukul</span>
-        <h2>Your turn on the timeline</h2>
-        <p>1:1 coaching, Indian nutrition, and doorstep sessions in Hyderabad — built around the body you have today.</p>
+        <h2>Your sprint starts here</h2>
+        <p>1:1 coaching and Indian nutrition built for Hyderabad IT schedules — early mornings, doorstep sessions, and plans that survive release week.</p>
         <div class="xf-hero-actions">
           <a class="primary-button" href="book-consultation.html">Buy Now</a>
           <a class="ghost-button" href="https://wa.me/917207113310" target="_blank" rel="noopener">Have questions? Chat now</a>
@@ -610,68 +623,76 @@
         {
           id: "udit",
           name: "Udit",
+          role: "Backend engineer · Gachibowli",
           filter: "recomp",
-          category: "Body recomposition",
+          category: "Desk to defined",
           image: "udit.png",
-          quote: "The coaching gave me the discipline and structure I never had. Every session was planned, every meal was guided.",
+          story: "Twelve-hour release weeks, chair posture, and canteen biryani had stacked quietly for years. He wanted to look sharp on camera calls without quitting Indian food.",
+          quote: "My coach treated my calendar like a product backlog — short sessions, clear meals, zero guilt after late deploys.",
           before: 88,
           after: 74,
           journey: [
-            { month: "Start", value: "88 kg" },
-            { month: "Month 2", value: "83 kg" },
-            { month: "Month 4", value: "79 kg" },
-            { month: "Month 6", value: "76 kg" },
-            { month: "Month 8", value: "74 kg" }
+            { month: "Week 1", value: "Desk posture reset" },
+            { month: "Month 2", value: "83 kg · energy back" },
+            { month: "Month 4", value: "79 kg · belt notch" },
+            { month: "Month 6", value: "76 kg · camera-ready" },
+            { month: "Month 8", value: "74 kg · kept it" }
           ]
         },
         {
           id: "neha",
           name: "Neha",
+          role: "Product manager · Financial District",
           filter: "loss",
-          category: "Weight loss",
+          category: "Roadmap + fat loss",
           image: "neha.png",
           video: "TESTIMONIALS/NEHA%20.mp4",
-          quote: "I struggled for years. Personalized training and nutrition coaching changed everything — I finally enjoyed fitness.",
+          story: "Stakeholder calls till 9, weekend catch-ups, and “just one more chai + snack” were her default. She needed a plan that survived roadmap chaos — not a perfect gym routine.",
+          quote: "They built meals around dosa, dal, and office cafeteria reality. I finally stopped restarting every Monday.",
           before: 82,
           after: 65,
           journey: [
-            { month: "Start", value: "82 kg" },
-            { month: "Month 2", value: "77 kg" },
-            { month: "Month 4", value: "72 kg" },
-            { month: "Month 6", value: "68 kg" },
-            { month: "Month 7", value: "65 kg" }
+            { month: "Start", value: "82 kg · low energy" },
+            { month: "Month 2", value: "77 kg · sleep better" },
+            { month: "Month 4", value: "72 kg · walks stuck" },
+            { month: "Month 6", value: "68 kg · clothes fit" },
+            { month: "Month 7", value: "65 kg · steady" }
           ]
         },
         {
           id: "ramakrishna",
           name: "Ramakrishna",
+          role: "Engineering manager · Kondapur",
           filter: "strength",
-          category: "Strength return",
+          category: "Strength after 40",
           image: "ramakrishna.png",
-          quote: "At my age I thought getting back in shape was impossible. The training was tough but always safe.",
+          story: "Years of leading teams left him strong in meetings and weak under the bar. Back stiffness from laptop hours made him skip every “new year” gym attempt — until coaching made strength safe again.",
+          quote: "I thought age and manager life meant decline. Progressive training proved I could still get stronger without getting injured.",
           before: 88,
           after: 74,
           journey: [
-            { month: "Start", value: "88 kg" },
-            { month: "Month 2", value: "84 kg" },
-            { month: "Month 4", value: "79 kg" },
-            { month: "Month 6", value: "74 kg" }
+            { month: "Start", value: "Form first" },
+            { month: "Month 2", value: "84 kg · pain down" },
+            { month: "Month 4", value: "79 kg · lifts up" },
+            { month: "Month 6", value: "74 kg · strong again" }
           ]
         },
         {
           id: "deepak",
           name: "Deepak",
+          role: "IT support lead · Madhapur",
           filter: "loss",
-          category: "Lifestyle reset",
+          category: "Shift-work reset",
           image: "deepak.png",
-          quote: "Low energy and bad habits became a structured routine. Six months later I am stronger and more confident than ever.",
+          story: "Night tickets, irregular meals, and 2 a.m. Maggi had become normal. He didn’t need a influencer diet — he needed a routine that respected rotating shifts and still cut the soft weight.",
+          quote: "Doorstep sessions after my shift changed everything. No commute excuses, just a plan that matched my roster.",
           before: 90,
           after: 76,
           journey: [
-            { month: "Start", value: "90 kg" },
-            { month: "Month 2", value: "85 kg" },
-            { month: "Month 4", value: "80 kg" },
-            { month: "Month 6", value: "76 kg" }
+            { month: "Start", value: "90 kg · night snacks" },
+            { month: "Month 2", value: "85 kg · meal window" },
+            { month: "Month 4", value: "80 kg · stairs easy" },
+            { month: "Month 6", value: "76 kg · confident" }
           ]
         }
       ];
@@ -716,7 +737,7 @@
         peopleEl.innerHTML = list.map(function(s) {
           return '<button class="xf-person' + (s.id === activeId ? ' active' : '') + '" type="button" data-id="' + s.id + '">' +
             '<img src="' + s.image + '" alt="' + s.name + '" />' +
-            '<strong>' + s.name + '</strong><small>' + s.category + '</small></button>';
+            '<strong>' + s.name + '</strong><small>' + (s.role || s.category) + '</small></button>';
         }).join("");
         peopleEl.querySelectorAll(".xf-person").forEach(function(btn) {
           btn.addEventListener("click", function() {
@@ -731,6 +752,8 @@
         var story = stories.find(function(s) { return s.id === activeId; }) || stories[0];
         document.getElementById("xfCategory").textContent = story.category;
         document.getElementById("xfName").textContent = story.name;
+        document.getElementById("xfRole").textContent = story.role || "";
+        document.getElementById("xfStory").textContent = story.story || "";
         document.getElementById("xfQuote").textContent = "“" + story.quote + "”";
         beforeEl.style.backgroundImage = 'url("' + story.image + '")';
         afterEl.style.backgroundImage = 'url("' + story.image + '")';
