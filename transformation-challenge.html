@@ -672,8 +672,8 @@
           <div class="tc-result-panel" id="tcQuizResult" aria-live="polite">
             <div class="tc-result-empty">
               <div class="tc-score">?</div>
-              <strong>Your match appears here</strong>
-              <span>Answer the quiz to unlock a plan + challenge from `/api/quiz`.</span>
+              <strong>Your plan shows up here</strong>
+              <span>Answer four quick questions and we’ll match you to a challenge, coaching plan, and coach.</span>
             </div>
           </div>
         </div>
@@ -901,7 +901,7 @@
 
       async function runQuiz() {
         var panel = $("tcQuizResult");
-        panel.innerHTML = '<div class="tc-result-empty"><strong>Matching via /api/quiz…</strong><span>Pulling live plans and coaches.</span></div>';
+        panel.innerHTML = '<div class="tc-result-empty"><strong>Finding your match…</strong><span>Matching you to a challenge, plan, and coach.</span></div>';
         try {
           var res = await fetch((window.fgApiUrl ? window.fgApiUrl("/api/quiz") : "/api/quiz"), {
             method: "POST",
@@ -939,7 +939,7 @@
               '<a class="ghost-button" href="book-consultation.html">Buy Now</a>' +
             "</div>";
         } catch (e) {
-          panel.innerHTML = '<div class="tc-result-empty"><strong>Could not reach the quiz API</strong><span>Try again or <a href="book-consultation.html">book a consultation</a>.</span></div>';
+          panel.innerHTML = '<div class="tc-result-empty"><strong>We couldn’t load your match</strong><span>Try again in a moment, or <a href="book-consultation.html">book a consultation</a>.</span></div>';
         }
       }
 
