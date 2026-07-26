@@ -161,7 +161,7 @@ Optional upgrade if you want SQLite + AI chat on a cloud API:
 4. Generate a public domain and copy it
 
 **Vercel**
-`server.py` exports a top-level `handler` class for the Python runtime. Set `ADMIN_TOKEN` (and optional `CORS_ORIGINS`) in the project env. SQLite on Vercel is ephemeral across cold starts/redeploys — prefer Render/Railway with a volume for durable leads.
+`server.py` defines a top-level `handler` class (`BaseHTTPRequestHandler`), and `pyproject.toml` sets `[tool.vercel] entrypoint = "server:handler"`. Set `ADMIN_TOKEN` (and optional `CORS_ORIGINS`) in the project env. SQLite on Vercel is ephemeral across cold starts/redeploys — prefer Render/Railway with a volume for durable leads.
 
 **Fly.io**
 ```bash
