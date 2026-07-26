@@ -1052,7 +1052,13 @@ def ensure_database():
     if not DB_SCHEMA_READY or not DB_PATH.exists():
         init_db()
 
-class AppHandler(SimpleHTTPRequestHandler):
+class handler(SimpleHTTPRequestHandler):
+    """HTTP request handler.
+
+    Named ``handler`` (not AppHandler) so Vercel's Python runtime can detect
+    this module as a BaseHTTPRequestHandler entrypoint.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, directory=str(PUBLIC), **kwargs)
 
@@ -1388,10 +1394,8 @@ class AppHandler(SimpleHTTPRequestHandler):
         return self.send_json({"error": "Not found"}, 404)
 
 
-# Vercel Python runtime requires a top-level class named "handler"
-# (BaseHTTPRequestHandler subclass). Local/Railway/Render still use AppHandler.
-class handler(AppHandler):
-    pass
+# Alias kept for local/docs references; Vercel looks for top-level ``handler``.
+AppHandler = handler
 
 
 if __name__ == "__main__":
@@ -1401,7 +1405,7 @@ if __name__ == "__main__":
     default_host = "0.0.0.0" if os.environ.get("PORT") else "127.0.0.1"
     host = (os.environ.get("HOST") or default_host).strip() or default_host
     cred_mode = ensure_admin_credentials(host)
-    server = ThreadingHTTPServer((host, port), AppHandler)
+    server = ThreadingHTTPServer((host, port), handler)
     print("")
     print("=" * 56)
     print(" Fitness Gurukul API")
