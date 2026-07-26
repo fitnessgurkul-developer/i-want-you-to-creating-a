@@ -8,13 +8,21 @@
   <link rel="stylesheet" href="styles.css" />
   <style>
     :root {
-      --xf-accent: #4ade80;
-      --xf-ink: #f4f7fb;
-      --xf-muted: rgba(244,247,251,0.68);
+      /* Match site black / white / soft gray */
+      --xf-accent: #ffffff;
+      --xf-ink: #ffffff;
+      --xf-muted: #999999;
       --xf-line: rgba(255,255,255,0.12);
+      --xf-soft: rgba(255,255,255,0.72);
     }
 
-    .xf-page { overflow-x: hidden; }
+    body.xf-page {
+      overflow-x: hidden;
+      background: #000;
+    }
+    body.xf-page::before,
+    body.xf-page::after,
+    body.xf-page #bg-ambient { display: none !important; }
 
     /* HERO — one composition, brand first, full-bleed */
     .xf-hero {
@@ -28,63 +36,64 @@
     .xf-hero-media {
       position: absolute; inset: 0;
       background:
-        linear-gradient(180deg, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.55) 45%, rgba(0,0,0,0.88) 100%),
-        url("udit.png") center/cover no-repeat;
-      transform: scale(1.04);
-      animation: xfKen 18s ease-in-out infinite alternate;
+        linear-gradient(90deg, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.55) 42%, rgba(0,0,0,0.35) 100%),
+        linear-gradient(180deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.45) 40%, rgba(0,0,0,0.92) 100%),
+        url("udit.png") right 18% / cover no-repeat;
+      filter: grayscale(1) contrast(1.08) brightness(0.92);
+      transform: scale(1.02);
+      animation: xfKen 22s ease-in-out infinite alternate;
     }
     @keyframes xfKen {
-      from { transform: scale(1.04) translate3d(0,0,0); }
-      to { transform: scale(1.1) translate3d(-1.5%, -1%, 0); }
+      from { transform: scale(1.02) translate3d(0,0,0); }
+      to { transform: scale(1.06) translate3d(-1%, 0, 0); }
     }
     .xf-hero-inner {
       position: relative;
       z-index: 2;
-      width: min(1120px, calc(100% - 40px));
+      width: min(1120px, calc(100% - 48px));
       margin: 0 auto;
-      padding: 120px 0 56px;
+      padding: 120px 0 64px;
     }
     .xf-brand {
-      font-size: clamp(2.4rem, 7vw, 5.2rem);
-      line-height: 0.95;
-      letter-spacing: -0.04em;
+      font-size: clamp(3rem, 9vw, 6.4rem);
+      line-height: 0.92;
+      letter-spacing: -0.045em;
       font-weight: 800;
       margin: 0 0 18px;
     }
-    .xf-brand span { display: block; color: var(--xf-accent); }
+    .xf-brand span { display: block; color: rgba(255,255,255,0.72); }
     .xf-hero h1 {
-      max-width: 14ch;
-      font-size: clamp(1.5rem, 3.4vw, 2.35rem);
-      line-height: 1.15;
+      max-width: 16ch;
+      font-size: clamp(1.35rem, 2.8vw, 1.85rem);
+      line-height: 1.2;
       margin: 0 0 12px;
-      font-weight: 600;
+      font-weight: 500;
+      color: rgba(255,255,255,0.92);
     }
     .xf-hero p {
-      max-width: 38ch;
+      max-width: 36ch;
       color: var(--xf-muted);
-      font-size: 1.05rem;
-      margin: 0 0 22px;
+      font-size: 1rem;
+      margin: 0 0 24px;
     }
     .xf-hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
     .xf-scroll-hint {
       margin-top: 28px;
-      color: rgba(255,255,255,0.45);
-      font-size: 0.78rem;
-      letter-spacing: 0.08em;
+      color: rgba(255,255,255,0.4);
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
       animation: xfPulse 2.2s ease-in-out infinite;
     }
     @keyframes xfPulse {
       0%, 100% { opacity: 0.35; transform: translateY(0); }
-      50% { opacity: 0.9; transform: translateY(4px); }
+      50% { opacity: 0.85; transform: translateY(3px); }
     }
 
     /* INTERACTIVE STAGE */
     .xf-stage {
-      padding: 72px 0 40px;
-      background:
-        radial-gradient(ellipse at 10% 0%, rgba(74,222,128,0.12), transparent 40%),
-        radial-gradient(ellipse at 90% 20%, rgba(255,255,255,0.05), transparent 35%);
+      padding: 80px 0 48px;
+      background: #000;
     }
     .xf-stage-head {
       width: min(1120px, calc(100% - 40px));
@@ -113,28 +122,27 @@
     }
     .xf-filters button:hover { color: #fff; border-color: rgba(255,255,255,0.28); }
     .xf-filters button.active {
-      color: #04140a;
-      background: var(--xf-accent);
-      border-color: var(--xf-accent);
+      color: #000;
+      background: #fff;
+      border-color: #fff;
     }
 
     .xf-stage-grid {
-      width: min(1120px, calc(100% - 40px));
+      width: min(1120px, calc(100% - 48px));
       margin: 0 auto;
       display: grid;
-      grid-template-columns: 1.15fr 0.85fr;
-      gap: 22px;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 28px;
       align-items: stretch;
     }
 
     .xf-spotlight {
       position: relative;
-      min-height: 520px;
+      min-height: 560px;
       border-radius: 0;
       overflow: hidden;
-      border-top: 1px solid rgba(255,255,255,0.08);
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-      background: #0a0d11;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: #0a0a0a;
     }
     .xf-compare {
       position: absolute; inset: 0;
@@ -142,13 +150,17 @@
       touch-action: none;
       user-select: none;
     }
+    /* Composite images are left=before / right=after — show each half properly */
     .xf-compare-after,
     .xf-compare-before {
       position: absolute; inset: 0;
-      background-size: cover;
-      background-position: center;
+      background-size: 200% 100%;
+      background-repeat: no-repeat;
+      filter: grayscale(1) contrast(1.05);
     }
+    .xf-compare-after { background-position: 100% 18%; }
     .xf-compare-before {
+      background-position: 0% 18%;
       clip-path: inset(0 50% 0 0);
     }
     .xf-compare-handle {
@@ -195,11 +207,11 @@
       gap: 18px;
     }
     .xf-detail-kicker {
-      color: var(--xf-accent);
-      font-size: 0.75rem;
-      letter-spacing: 0.08em;
+      color: rgba(255,255,255,0.55);
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
-      font-weight: 700;
+      font-weight: 600;
     }
     .xf-detail h3 {
       font-size: clamp(1.8rem, 3vw, 2.6rem);
@@ -209,9 +221,9 @@
     .xf-detail blockquote {
       margin: 0;
       color: var(--xf-muted);
-      font-size: 1.05rem;
+      font-size: 1.02rem;
       line-height: 1.65;
-      border-left: 2px solid rgba(74,222,128,0.55);
+      border-left: 2px solid rgba(255,255,255,0.35);
       padding-left: 14px;
     }
     .xf-metrics {
@@ -254,9 +266,9 @@
       transition: opacity .45s ease, transform .45s ease;
     }
     .xf-journey-dot {
-      width: 10px; height: 10px; border-radius: 50%;
-      background: var(--xf-accent);
-      box-shadow: 0 0 0 4px rgba(74,222,128,0.15);
+      width: 9px; height: 9px; border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(255,255,255,0.12);
     }
     .xf-people {
       display: grid;
@@ -275,11 +287,13 @@
     }
     .xf-person img {
       width: 100%;
-      aspect-ratio: 1;
+      aspect-ratio: 3 / 4;
       object-fit: cover;
+      object-position: 100% 18%;
       display: block;
-      filter: grayscale(0.35) brightness(0.85);
-      transition: filter .25s, transform .25s;
+      filter: grayscale(1) brightness(0.88);
+      transition: filter .25s, transform .25s, opacity .25s;
+      opacity: 0.72;
     }
     .xf-person strong {
       display: block;
@@ -292,13 +306,14 @@
     }
     .xf-person.active img,
     .xf-person:hover img {
-      filter: none;
+      filter: grayscale(1) contrast(1.05) brightness(1);
       transform: translateY(-2px);
+      opacity: 1;
     }
     .xf-person.active {
       border-color: transparent;
     }
-    .xf-person.active strong { color: var(--xf-accent); }
+    .xf-person.active strong { color: #fff; }
 
     /* VIDEO REEL */
     .xf-videos {
@@ -367,11 +382,21 @@
     /* CTA */
     .xf-cta {
       padding: 90px 0;
-      background:
-        linear-gradient(180deg, rgba(0,0,0,0.2), rgba(0,0,0,0.75)),
-        url("neha.png") center/cover no-repeat;
       border-top: 1px solid rgba(255,255,255,0.06);
+      position: relative;
+      overflow: hidden;
+      background: #000;
     }
+    .xf-cta::before {
+      content: "";
+      position: absolute; inset: 0;
+      background:
+        linear-gradient(180deg, rgba(0,0,0,0.55), rgba(0,0,0,0.92)),
+        url("neha.png") 70% 18% / cover no-repeat;
+      filter: grayscale(1) contrast(1.05);
+      z-index: 0;
+    }
+    .xf-cta-inner { position: relative; z-index: 1; }
     .xf-cta-inner {
       width: min(800px, calc(100% - 40px));
       margin: 0 auto;
@@ -468,7 +493,7 @@
       <div class="xf-hero-inner">
         <p class="xf-brand">Fitness <span>Gurukul</span></p>
         <h1>Bodies rewritten. Habits rebuilt.</h1>
-        <p>Scrub the stories. Watch the drop. Meet the people behind Hyderabad’s most honest transformations.</p>
+        <p>Real Hyderabad transformations — drag to compare, switch people, and hear their stories.</p>
         <div class="xf-hero-actions">
           <a class="primary-button" href="#xfStage">Explore stories</a>
           <a class="ghost-button" href="book-consultation.html">Buy Now</a>
@@ -709,9 +734,13 @@
         document.getElementById("xfQuote").textContent = "“" + story.quote + "”";
         beforeEl.style.backgroundImage = 'url("' + story.image + '")';
         afterEl.style.backgroundImage = 'url("' + story.image + '")';
-        // Visual trick: after side slightly brighter/contrast via filter on after layer
-        afterEl.style.filter = "contrast(1.08) saturate(1.05)";
-        beforeEl.style.filter = "grayscale(0.25) brightness(0.85)";
+        // Composites are left=start / right=now — keep face/torso framing
+        beforeEl.style.backgroundPosition = "0% 18%";
+        afterEl.style.backgroundPosition = "100% 18%";
+        beforeEl.style.backgroundSize = "200% 100%";
+        afterEl.style.backgroundSize = "200% 100%";
+        afterEl.style.filter = "grayscale(1) contrast(1.08) brightness(1.02)";
+        beforeEl.style.filter = "grayscale(1) brightness(0.9)";
 
         if (animate) {
           animateNumber(document.getElementById("xfBeforeKg"), story.before);

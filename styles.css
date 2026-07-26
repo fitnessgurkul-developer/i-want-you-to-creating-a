@@ -415,9 +415,9 @@ main,
   gap: 6px;
   padding: 8px 16px;
   border-radius: 50px;
-  background: rgba(74,222,128,0.15);
-  border: 1px solid rgba(74,222,128,0.3);
-  color: #4ade80;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.35);
+  color: #ffffff;
   font-size: 0.8rem;
   font-weight: 600;
   text-decoration: none;
@@ -429,8 +429,8 @@ main,
 
 .header-play-btn:hover,
 .header-play-btn.open {
-  background: rgba(74,222,128,0.25);
-  border-color: rgba(74,222,128,0.5);
+  background: rgba(255,255,255,0.12);
+  border-color: rgba(255,255,255,0.55);
   transform: translateY(-1px);
 }
 
