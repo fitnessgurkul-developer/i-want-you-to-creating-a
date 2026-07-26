@@ -2814,12 +2814,38 @@ from {
 
 .contact-details { display: grid; grid-template-columns: 0.9fr 1.1fr 1fr; gap: 14px; margin-bottom: 28px; }
 
+.coach-scroll-track {
+  gap: 22px;
+}
 .coach-scroll-track .cc-card {
-  flex: 0 0 240px;
+  flex: 0 0 280px;
+  min-height: 240px;
+  padding: 28px 24px 22px;
   border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
   transition: transform 0.4s cubic-bezier(.34,1.56,.64,1), border-color 0.3s, box-shadow 0.3s;
   cursor: default;
   animation: cardFadeIn 0.6s ease both;
+}
+.coach-scroll-track .cc-card .psc-card-icon {
+  margin-bottom: 4px;
+}
+.coach-scroll-track .cc-card h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  line-height: 1.25;
+}
+.coach-scroll-track .cc-card .psc-short {
+  margin: 0;
+  flex: 1;
+  line-height: 1.55;
+  font-size: 0.88rem;
+}
+.coach-scroll-track .cc-card .psc-card-tag {
+  margin-top: 8px;
+  align-self: flex-start;
 }
 
 .coach-scroll-track .cc-card:nth-child(1),
