@@ -7025,7 +7025,104 @@ from { opacity: 0; transform: translateY(24px); }
 
 .footer-staff-link:hover { color: var(--white); opacity: 1; }
 
+/* Related strip above footer (page-aware) */
+.fg-page-related {
+  width: 100%;
+  padding: 48px 24px 8px;
+  border-top: 1px solid var(--line);
+  background: #050505;
+}
+.fg-page-related-inner {
+  width: min(1180px, 100%);
+  margin: 0 auto;
+}
+.fg-page-related h2 {
+  margin: 0 0 18px;
+  font-size: 1.15rem;
+  letter-spacing: -0.02em;
+  color: #fff;
+}
+.fg-page-related-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+.fg-page-related a {
+  display: block;
+  padding: 16px 0;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  color: inherit;
+  text-decoration: none;
+}
+.fg-page-related a strong {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 0.95rem;
+  color: #fff;
+}
+.fg-page-related a span {
+  display: block;
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.55;
+}
+.fg-page-related a:hover strong { text-decoration: underline; }
+@media (max-width: 800px) {
+  .fg-page-related-grid { grid-template-columns: 1fr; }
+}
+
+/* Popular Search — SEO / related links below footer */
+.fg-popular-search {
+  width: 100%;
+  margin: 0;
+  padding: 36px 24px 56px;
+  border-top: 1px solid var(--line);
+  background: #070707;
+  color: rgba(255,255,255,0.72);
+}
+.fg-popular-inner {
+  width: min(1180px, 100%);
+  margin: 0 auto;
+}
+.fg-popular-search h2 {
+  margin: 0 0 22px;
+  font-size: clamp(1.35rem, 2.4vw, 1.85rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #fff;
+}
+.fg-popular-row {
+  margin: 0 0 16px;
+  font-size: 0.78rem;
+  line-height: 1.75;
+}
+.fg-popular-row h3 {
+  display: inline;
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: rgba(255,255,255,0.88);
+}
+.fg-popular-row p {
+  display: inline;
+  margin: 0;
+  color: rgba(255,255,255,0.55);
+}
+.fg-popular-row a {
+  color: rgba(255,255,255,0.55);
+  text-decoration: none;
+}
+.fg-popular-row a:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+.fg-pop-sep {
+  color: rgba(255,255,255,0.22);
+  padding: 0 2px;
+}
+
 @media (max-width:540px) {
+  .fg-popular-search { padding: 28px 18px 44px; }
   .footer-refresh { width: calc(100% - 24px); margin-top: 56px; }
 
   .footer-refresh .footer-topline { align-items: flex-start; flex-wrap: wrap; gap: 15px; padding: 22px; }

@@ -2772,13 +2772,197 @@ function initHomePage() {
   }, { passive: true });
 }
 
+function sitePathPrefix() {
+  return /\/coaches\//i.test(String(location.pathname || "")) ? "../" : "";
+}
+
+function pipeLinks(items, prefix) {
+  return items.map(function(item, i) {
+    var sep = i === 0 ? "" : ' <span class="fg-pop-sep" aria-hidden="true">|</span> ';
+    return sep + '<a href="' + prefix + item.href + '">' + item.label + "</a>";
+  }).join("");
+}
+
+function injectPopularSearch() {
+  var existing = qs(".fg-popular-search");
+  if (existing) existing.remove();
+  // Keep owner backends clean — no SEO strip on staff pages.
+  if (/backend\.html|owner-data\.html|office\.html|admin\.html|dashboard\.html/i.test(String(location.pathname || ""))) {
+    return;
+  }
+  var p = sitePathPrefix();
+  var groups = [
+    {
+      title: "IT Employee Fitness",
+      links: [
+        { label: "Personal Training for Software Engineers", href: "testimonials.html" },
+        { label: "Fitness for Product Managers", href: "testimonials.html#xfStage" },
+        { label: "Desk Job Weight Loss Hyderabad", href: "services.html" },
+        { label: "Posture Correction for Coders", href: "coaches.html" },
+        { label: "Release Week Workout Plan", href: "transformation-challenge.html" },
+        { label: "Standing Desk Mobility Routine", href: "tools.html" },
+        { label: "Camera-Ready Transformation Stories", href: "testimonials.html" },
+        { label: "Night Shift Fitness for IT Support", href: "testimonials.html#xfStage" }
+      ]
+    },
+    {
+      title: "Weight Loss Guides",
+      links: [
+        { label: "Fat Loss Plan for Desk Jobs", href: "services.html#plans" },
+        { label: "Indian Diet for Software Engineers", href: "book-consultation.html?goal=weight-loss" },
+        { label: "Lose Belly Fat After 9-6", href: "transformation-challenge.html#tcQuiz" },
+        { label: "Canteen Food Weight Loss Tips", href: "tools.html" },
+        { label: "Weekend Only Training Plan", href: "services.html" },
+        { label: "WFH Fat Loss Routine", href: "book-consultation.html?program=Virtual%201%3A1%20Elite%20Transformation" },
+        { label: "Hyderabad IT Park Walking Plan", href: "events.html" },
+        { label: "Sustainable Recomposition Guide", href: "testimonials.html" }
+      ]
+    },
+    {
+      title: "Personal Training Hyderabad",
+      links: [
+        { label: "1:1 Personal Training Manikonda", href: "services.html" },
+        { label: "Doorstep PT in Gachibowli", href: "book-consultation.html?goal=strength" },
+        { label: "Home Personal Trainer Kondapur", href: "contact.html" },
+        { label: "Personal Trainer Madhapur", href: "coaches.html" },
+        { label: "Yoga Coach for IT Stress", href: "coaches.html" },
+        { label: "Strength Training for Managers 40+", href: "testimonials.html" },
+        { label: "Beginner Gym Alternative Hyderabad", href: "about.html" },
+        { label: "Buy Fitness Gurukul Plan", href: "book-consultation.html" }
+      ]
+    },
+    {
+      title: "Challenges & Tools",
+      links: [
+        { label: "30 Day Fat Burn Challenge", href: "transformation-challenge.html" },
+        { label: "21 Day Mobility Reset", href: "transformation-challenge.html" },
+        { label: "BMI & Macro Calculators", href: "tools.html" },
+        { label: "Plan Matcher Quiz", href: "transformation-challenge.html#tcQuiz" },
+        { label: "Corporate Fitness Events", href: "events.html" },
+        { label: "Community Cycle Rides", href: "events.html" },
+        { label: "Kids Athletics Programs", href: "services.html" },
+        { label: "Book Free Consultation", href: "book-consultation.html" }
+      ]
+    },
+    {
+      title: "Areas We Serve",
+      links: [
+        { label: "Personal Training Gachibowli", href: "contact.html" },
+        { label: "Personal Training Kondapur", href: "contact.html" },
+        { label: "Personal Training Madhapur", href: "contact.html" },
+        { label: "Personal Training Jubilee Hills", href: "contact.html" },
+        { label: "Personal Training Banjara Hills", href: "contact.html" },
+        { label: "Personal Training Tolichowki", href: "contact.html" },
+        { label: "Personal Training Financial District", href: "contact.html" },
+        { label: "Doorstep Training Manikonda", href: "book-consultation.html" }
+      ]
+    }
+  ];
+
+  var section = document.createElement("section");
+  section.className = "fg-popular-search";
+  section.setAttribute("aria-label", "Popular search");
+  section.innerHTML =
+    '<div class="fg-popular-inner">' +
+      "<h2>Popular Search</h2>" +
+      groups.map(function(group) {
+        return (
+          '<div class="fg-popular-row">' +
+            '<h3>' + group.title + ' :</h3>' +
+            '<p>' + pipeLinks(group.links, p) + "</p>" +
+          "</div>"
+        );
+      }).join("") +
+    "</div>";
+  document.body.appendChild(section);
+}
+
+function injectPageRelated() {
+  if (qs(".fg-page-related")) return;
+  if (/backend\.html|owner-data\.html|office\.html|admin\.html|dashboard\.html|testimonials\.html/i.test(String(location.pathname || ""))) {
+    return;
+  }
+  var p = sitePathPrefix();
+  var page = String(location.pathname || "").split("/").pop() || "index.html";
+  var sets = {
+    "index.html": [
+      { t: "IT desk transformations", d: "See engineers and PMs who rebuilt energy around real Hyderabad work weeks.", h: "testimonials.html" },
+      { t: "Doorstep PT near tech parks", d: "Coach comes to Gachibowli, Kondapur, Madhapur, and Manikonda societies.", h: "book-consultation.html" },
+      { t: "30-day challenge for busy weeks", d: "Short blocks that still work when release calendars take over.", h: "transformation-challenge.html" }
+    ],
+    "services.html": [
+      { t: "Which plan fits a 9–6 engineer?", d: "Compare Core, Prime, and Signature for desk jobs and Indian meals.", h: "book-consultation.html?goal=weight-loss" },
+      { t: "Real recomposition stories", d: "Before/after journeys from Hyderabad IT professionals.", h: "testimonials.html" },
+      { t: "Virtual Elite for travel weeks", d: "Keep coaching when you are between client sites or WFH.", h: "book-consultation.html?program=Virtual%201%3A1%20Elite%20Transformation" }
+    ],
+    "coaches.html": [
+      { t: "Yoga for product stress", d: "Breathwork and mobility for back-to-back stakeholder weeks.", h: "coaches.html" },
+      { t: "Rehab after desk injuries", d: "Return-to-train coaching for laptop shoulders and lower back.", h: "book-consultation.html?goal=rehab" },
+      { t: "Strength after 40 in tech leadership", d: "Safe progressive training for engineering managers.", h: "testimonials.html" }
+    ],
+    "events.html": [
+      { t: "Corporate wellness for IT parks", d: "Team walks, cycle days, and active offsites across Hyderabad.", h: "contact.html" },
+      { t: "Employee challenge ideas", d: "Pair events with a 21–30 day transformation challenge.", h: "transformation-challenge.html" },
+      { t: "Book a campus activation", d: "Tell us headcount, date, and location — we run the day.", h: "book-consultation.html?program=Corporate%20Events" }
+    ],
+    "tools.html": [
+      { t: "Macros that survive canteen food", d: "Translate calculator numbers into dosa, dal, and protein options.", h: "book-consultation.html" },
+      { t: "Match a plan after your numbers", d: "Use the quiz once BMI/macros are clear.", h: "transformation-challenge.html#tcQuiz" },
+      { t: "See what desk jobs changed", d: "Browse IT employee before/after stories next.", h: "testimonials.html" }
+    ],
+    "about.html": [
+      { t: "Training built since 2013", d: "Hyderabad coaching with Indian nutrition at the core.", h: "services.html" },
+      { t: "Meet the coach roster", d: "Strength, yoga, rehab, kids, and sports specialists.", h: "coaches.html" },
+      { t: "Talk to the team", d: "Book a free consultation in Manikonda or doorstep.", h: "contact.html" }
+    ],
+    "contact.html": [
+      { t: "Prefer a guided quiz first?", d: "Get a plan + challenge match in under two minutes.", h: "transformation-challenge.html#tcQuiz" },
+      { t: "Browse IT transformations", d: "Proof from engineers, PMs, and support leads.", h: "testimonials.html" },
+      { t: "Compare coaching plans", d: "Core, Prime, Signature, Endurance, Forge, Elite.", h: "services.html" }
+    ],
+    "book-consultation.html": [
+      { t: "Not sure which plan?", d: "Take the challenge quiz for a coach-ready recommendation.", h: "transformation-challenge.html#tcQuiz" },
+      { t: "Read a story like yours", d: "IT employee journeys from Gachibowli to Financial District.", h: "testimonials.html" },
+      { t: "Chat on WhatsApp", d: "Ask timing, doorstep availability, or pricing quickly.", h: "https://wa.me/917207113310" }
+    ],
+    "transformation-challenge.html": [
+      { t: "See finished transformations", d: "Scrub before/after stories from Hyderabad tech desks.", h: "testimonials.html" },
+      { t: "Lock a consult after the quiz", d: "Bring your challenge match into a free booking form.", h: "book-consultation.html" },
+      { t: "Pair with corporate events", d: "Run team challenges across your IT park.", h: "events.html" }
+    ]
+  };
+  var cards = sets[page] || sets["index.html"];
+  var wrap = document.createElement("section");
+  wrap.className = "fg-page-related";
+  wrap.setAttribute("aria-label", "Related reading");
+  wrap.innerHTML =
+    '<div class="fg-page-related-inner">' +
+      "<h2>Related for you</h2>" +
+      '<div class="fg-page-related-grid">' +
+        cards.map(function(card) {
+          var href = /^https?:/i.test(card.h) ? card.h : (p + card.h);
+          var extra = /^https?:/i.test(card.h) ? ' target="_blank" rel="noopener"' : "";
+          return '<a href="' + href + '"' + extra + "><strong>" + card.t + "</strong><span>" + card.d + "</span></a>";
+        }).join("") +
+      "</div>" +
+    "</div>";
+  document.body.appendChild(wrap);
+}
+
 function injectFooter() {
   var existing = qs(".site-footer");
   if (existing) existing.remove();
+  var existingRelated = qs(".fg-page-related");
+  if (existingRelated) existingRelated.remove();
+  var existingPopular = qs(".fg-popular-search");
+  if (existingPopular) existingPopular.remove();
+  var p = sitePathPrefix();
+  try { injectPageRelated(); } catch (relErr) { console.warn("boot:injectPageRelated", relErr); }
   var f = document.createElement("footer");
   f.className = "site-footer footer-refresh";
-  f.innerHTML = `<div class="footer-topline"><a class="footer-logo" href="index.html"><img src="assets/fitness-gurukul-logo.png" alt="Fitness Gurukul" /><span class="footer-logo-text"><strong>Fitness</strong><span>Gurukul</span></span></a><p>Personal training, made personal.</p><a class="footer-cta" href="contact.html">Talk to a coach <span aria-hidden="true">&rarr;</span></a></div><div class="footer-refresh-grid"><div class="footer-intro"><p>Built for stronger, healthier lives in Hyderabad&mdash;at the studio, at home, and wherever you train.</p><a href="tel:+917207113310">+91 72071 13310</a></div><div class="footer-col"><h4>Discover</h4><nav class="footer-nav"><a href="about.html">About us</a><a href="coaches.html">Our coaches</a><a href="transformation-challenge.html">Transformation challenge</a></nav></div><div class="footer-col"><h4>Start here</h4><nav class="footer-nav"><a href="tools.html">Fitness tools</a><a href="events.html">Events</a><a href="testimonials.html">Success stories</a><a href="contact.html">Book a consultation</a></nav></div><div class="footer-col"><h4>Contact Us</h4><div class="footer-contact-col"><a href="tel:+917207113310"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>+91 72071 13310</a><a href="mailto:contact@fitnessgurukul.co.in"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>contact@fitnessgurukul.co.in</a><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Manikonda, Hyderabad</span><a class="footer-contact-cta" href="contact.html">Get Directions &rarr;</a></div></div><div class="footer-col"><h4>Visit</h4><p class="footer-address">Manikonda, Hyderabad<br />Telangana, India</p><div class="footer-social"><a href="https://www.instagram.com/fitnessgurukulofficial/" target="_blank" rel="noopener" aria-label="Instagram">IG</a><a href="https://www.facebook.com/fitnessgurukul7/" target="_blank" rel="noopener" aria-label="Facebook">fb</a><a href="https://www.youtube.com/channel/UCLt2Qs1MeV_uf_xMJ7AaPlA" target="_blank" rel="noopener" aria-label="YouTube">YT</a></div></div></div><div class="footer-bottom"><p class="footer-copy">&copy; 2026 Fitness Gurukul. All rights reserved.</p><span class="footer-bottom-links"><a href="contact.html">Contact Us</a></span></div>`;
+  f.innerHTML = `<div class="footer-topline"><a class="footer-logo" href="${p}index.html"><img src="${p}assets/fitness-gurukul-logo.png" alt="Fitness Gurukul" /><span class="footer-logo-text"><strong>Fitness</strong><span>Gurukul</span></span></a><p>Personal training, made personal.</p><a class="footer-cta" href="${p}contact.html">Talk to a coach <span aria-hidden="true">&rarr;</span></a></div><div class="footer-refresh-grid"><div class="footer-intro"><p>Built for stronger, healthier lives in Hyderabad&mdash;at the studio, at home, and wherever you train.</p><a href="tel:+917207113310">+91 72071 13310</a></div><div class="footer-col"><h4>Discover</h4><nav class="footer-nav"><a href="${p}about.html">About us</a><a href="${p}coaches.html">Our coaches</a><a href="${p}transformation-challenge.html">Transformation challenge</a></nav></div><div class="footer-col"><h4>Start here</h4><nav class="footer-nav"><a href="${p}tools.html">Fitness tools</a><a href="${p}events.html">Events</a><a href="${p}testimonials.html">Success stories</a><a href="${p}contact.html">Book a consultation</a></nav></div><div class="footer-col"><h4>Contact Us</h4><div class="footer-contact-col"><a href="tel:+917207113310"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>+91 72071 13310</a><a href="mailto:contact@fitnessgurukul.co.in"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>contact@fitnessgurukul.co.in</a><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Manikonda, Hyderabad</span><a class="footer-contact-cta" href="${p}contact.html">Get Directions &rarr;</a></div></div><div class="footer-col"><h4>Visit</h4><p class="footer-address">Manikonda, Hyderabad<br />Telangana, India</p><div class="footer-social"><a href="https://www.instagram.com/fitnessgurukulofficial/" target="_blank" rel="noopener" aria-label="Instagram">IG</a><a href="https://www.facebook.com/fitnessgurukul7/" target="_blank" rel="noopener" aria-label="Facebook">fb</a><a href="https://www.youtube.com/channel/UCLt2Qs1MeV_uf_xMJ7AaPlA" target="_blank" rel="noopener" aria-label="YouTube">YT</a></div></div></div><div class="footer-bottom"><p class="footer-copy">&copy; 2026 Fitness Gurukul. All rights reserved.</p><span class="footer-bottom-links"><a href="${p}contact.html">Contact Us</a></span></div>`;
   document.body.appendChild(f);
+  try { injectPopularSearch(); } catch (err) { console.warn("boot:injectPopularSearch", err); }
 }
 
 function injectWhatsAppFloat() {
