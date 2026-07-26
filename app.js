@@ -3025,13 +3025,9 @@ function injectPopularSearch() {
       '<div class="fg-popular-grid">' +
         groups.map(function(group) {
           return (
-            '<div class="fg-popular-group">' +
+            '<div class="fg-popular-row">' +
               "<h3>" + safe(group.title) + "</h3>" +
-              "<ul>" +
-                group.links.map(function(link) {
-                  return '<li><a href="' + safe(p + link.href) + '">' + safe(link.label) + "</a></li>";
-                }).join("") +
-              "</ul>" +
+              '<div class="fg-popular-links">' + pipeLinks(group.links, p) + "</div>" +
             "</div>"
           );
         }).join("") +
