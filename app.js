@@ -3004,14 +3004,14 @@ function injectPopularSearch() {
     {
       title: "Areas We Serve",
       links: [
-        { label: "Personal Training Gachibowli", href: "contact.html" },
-        { label: "Personal Training Kondapur", href: "contact.html" },
-        { label: "Personal Training Madhapur", href: "contact.html" },
-        { label: "Personal Training Jubilee Hills", href: "contact.html" },
-        { label: "Personal Training Banjara Hills", href: "contact.html" },
-        { label: "Personal Training Tolichowki", href: "contact.html" },
-        { label: "Personal Training Financial District", href: "contact.html" },
-        { label: "Doorstep Training Manikonda", href: "book-consultation.html" }
+        { label: "Gachibowli", href: "contact.html" },
+        { label: "Kondapur", href: "contact.html" },
+        { label: "Madhapur", href: "contact.html" },
+        { label: "Jubilee Hills", href: "contact.html" },
+        { label: "Banjara Hills", href: "contact.html" },
+        { label: "Tolichowki", href: "contact.html" },
+        { label: "Financial District", href: "contact.html" },
+        { label: "Manikonda", href: "book-consultation.html" }
       ]
     }
   ];
