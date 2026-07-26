@@ -3,21 +3,21 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>IT Transformations Hyderabad | Fitness Gurukul</title>
-  <meta name="description" content="Interactive before/after transformations from Hyderabad IT professionals — software engineers, product managers, and support leads coached at Fitness Gurukul." />
+  <title>Transformations | Fitness Gurukul</title>
+  <meta name="description" content="Real Fitness Gurukul transformations and event voices from Hyderabad — original names, before/after stories, and testimonials from FG rides, runs, and wellness days." />
   <meta name="robots" content="index,follow,max-image-preview:large" />
   <link rel="canonical" href="https://fitnessgurukul.app/testimonials.html" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Fitness Gurukul" />
   <meta property="og:url" content="https://fitnessgurukul.app/testimonials.html" />
-  <meta property="og:title" content="IT Transformations Hyderabad | Fitness Gurukul" />
-  <meta property="og:description" content="From standup to strong — real Hyderabad tech desk transformations with before/after stories." />
-  <meta property="og:image" content="https://fitnessgurukul.app/assets/transforms/udit-hero.webp" />
+  <meta property="og:title" content="Transformations | Fitness Gurukul" />
+  <meta property="og:description" content="Original names. Real change. Before/after stories and event testimonials from Fitness Gurukul Hyderabad." />
+  <meta property="og:image" content="https://fitnessgurukul.app/assets/transforms/xf-page-hero.webp" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="IT Transformations Hyderabad | Fitness Gurukul" />
-  <meta name="twitter:description" content="Interactive before/after stories from Hyderabad IT professionals." />
-  <meta name="twitter:image" content="https://fitnessgurukul.app/assets/transforms/udit-hero.webp" />
-  <link rel="preload" as="image" href="assets/transforms/udit-hero.webp" type="image/webp" fetchpriority="high" />
+  <meta name="twitter:title" content="Transformations | Fitness Gurukul" />
+  <meta name="twitter:description" content="Original names, real before/after stories, and event testimonials from Fitness Gurukul." />
+  <meta name="twitter:image" content="https://fitnessgurukul.app/assets/transforms/xf-page-hero.webp" />
+  <link rel="preload" as="image" href="assets/transforms/xf-page-hero.webp" type="image/webp" fetchpriority="high" />
   <link rel="stylesheet" href="styles.css" />
   <style>
     :root {
@@ -37,7 +37,7 @@
     body.xf-page::after,
     body.xf-page #bg-ambient { display: none !important; }
 
-    /* HERO — one composition, brand first, full-bleed */
+    /* HERO — one composition, brand first, dedicated full-bleed image */
     .xf-hero {
       position: relative;
       min-height: 100vh;
@@ -45,30 +45,27 @@
       display: grid;
       align-items: end;
       color: var(--xf-ink);
-      content-visibility: visible;
+      isolation: isolate;
     }
     .xf-hero-media {
       position: absolute; inset: 0;
+      z-index: 0;
       background:
-        linear-gradient(90deg, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.55) 42%, rgba(0,0,0,0.35) 100%),
-        linear-gradient(180deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.45) 40%, rgba(0,0,0,0.92) 100%),
-        url("assets/transforms/udit-hero.webp") right 18% / cover no-repeat;
-      /* Grayscale baked into compressed assets where possible — keep light filter only */
-      filter: grayscale(0.85) contrast(1.05);
-      transform: scale(1.02);
+        linear-gradient(180deg, rgba(0,0,0,0.28) 0%, rgba(0,0,0,0.42) 38%, rgba(0,0,0,0.94) 100%),
+        url("assets/transforms/xf-page-hero.webp") center 42% / cover no-repeat;
+      transform: scale(1.03);
       will-change: transform;
-      animation: xfKen 22s ease-in-out infinite alternate;
+      animation: xfKen 24s ease-in-out infinite alternate;
     }
     @keyframes xfKen {
-      from { transform: scale(1.02) translate3d(0,0,0); }
-      to { transform: scale(1.06) translate3d(-1%, 0, 0); }
+      from { transform: scale(1.03) translate3d(0,0,0); }
+      to { transform: scale(1.08) translate3d(-1.2%, -0.6%, 0); }
     }
     @media (prefers-reduced-motion: reduce) {
       .xf-hero-media,
-      .xf-scroll-hint,
       .xf-reveal,
       .xf-journey-step { animation: none !important; transition: none !important; }
-      .xf-hero-media { transform: none; will-change: auto; filter: grayscale(1); }
+      .xf-hero-media { transform: none; will-change: auto; }
       .xf-reveal { opacity: 1; transform: none; }
     }
     .xf-hero-inner {
@@ -76,43 +73,33 @@
       z-index: 2;
       width: min(1120px, calc(100% - 48px));
       margin: 0 auto;
-      padding: 120px 0 64px;
+      padding: 120px 0 72px;
     }
     .xf-brand {
-      font-size: clamp(3rem, 9vw, 6.4rem);
-      line-height: 0.92;
-      letter-spacing: -0.045em;
+      font-size: clamp(3.2rem, 10vw, 6.8rem);
+      line-height: 0.9;
+      letter-spacing: -0.05em;
       font-weight: 800;
-      margin: 0 0 18px;
+      margin: 0 0 20px;
     }
-    .xf-brand span { display: block; color: rgba(255,255,255,0.72); }
+    .xf-brand span { display: block; color: rgba(255,255,255,0.7); }
     .xf-hero h1 {
-      max-width: 16ch;
-      font-size: clamp(1.35rem, 2.8vw, 1.85rem);
-      line-height: 1.2;
-      margin: 0 0 12px;
+      max-width: 14ch;
+      font-size: clamp(1.4rem, 2.9vw, 1.95rem);
+      line-height: 1.15;
+      margin: 0 0 14px;
       font-weight: 500;
-      color: rgba(255,255,255,0.92);
+      color: rgba(255,255,255,0.94);
+      letter-spacing: -0.02em;
     }
-    .xf-hero p {
-      max-width: 36ch;
+    .xf-hero > .xf-hero-inner > p {
+      max-width: 34ch;
       color: var(--xf-muted);
-      font-size: 1rem;
-      margin: 0 0 24px;
+      font-size: 1.02rem;
+      line-height: 1.5;
+      margin: 0 0 28px;
     }
     .xf-hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
-    .xf-scroll-hint {
-      margin-top: 28px;
-      color: rgba(255,255,255,0.4);
-      font-size: 0.72rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      animation: xfPulse 2.2s ease-in-out infinite;
-    }
-    @keyframes xfPulse {
-      0%, 100% { opacity: 0.35; transform: translateY(0); }
-      50% { opacity: 0.85; transform: translateY(3px); }
-    }
 
     /* INTERACTIVE STAGE */
     .xf-stage {
@@ -436,9 +423,8 @@
       content: "";
       position: absolute; inset: 0;
       background:
-        linear-gradient(180deg, rgba(0,0,0,0.55), rgba(0,0,0,0.92)),
-        url("assets/transforms/neha-hero.webp") 70% 18% / cover no-repeat;
-      filter: grayscale(1) contrast(1.05);
+        radial-gradient(ellipse at 20% 0%, rgba(255,255,255,0.08), transparent 48%),
+        linear-gradient(180deg, #0a0a0a, #000);
       z-index: 0;
     }
     .xf-cta-inner { position: relative; z-index: 1; }
@@ -446,6 +432,69 @@
       width: min(800px, calc(100% - 40px));
       margin: 0 auto;
       text-align: left;
+    }
+
+    /* Event testimonials — text-led, no reused photos */
+    .xf-events {
+      padding: 80px 0 56px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      background: #000;
+      content-visibility: auto;
+      contain-intrinsic-size: 1px 720px;
+    }
+    .xf-events-inner {
+      width: min(1120px, calc(100% - 48px));
+      margin: 0 auto;
+    }
+    .xf-events-head {
+      max-width: 540px;
+      margin-bottom: 36px;
+    }
+    .xf-events-head h2 {
+      font-size: clamp(1.7rem, 3vw, 2.4rem);
+      margin: 8px 0 10px;
+      letter-spacing: -0.03em;
+    }
+    .xf-events-head p { color: var(--xf-muted); margin: 0; max-width: 40ch; }
+    .xf-event-list { display: grid; gap: 0; }
+    .xf-event-voice {
+      display: grid;
+      grid-template-columns: 180px 1fr;
+      gap: 28px;
+      padding: 28px 0;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      align-items: start;
+    }
+    .xf-event-voice:last-child { border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .xf-event-meta .event-name {
+      display: block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.45);
+      margin-bottom: 10px;
+    }
+    .xf-event-meta strong {
+      display: block;
+      font-size: 1.15rem;
+      letter-spacing: -0.02em;
+      margin-bottom: 4px;
+    }
+    .xf-event-meta span {
+      color: var(--xf-muted);
+      font-size: 0.86rem;
+    }
+    .xf-event-voice blockquote {
+      margin: 0;
+      font-size: 1.12rem;
+      line-height: 1.55;
+      color: rgba(255,255,255,0.88);
+      letter-spacing: -0.015em;
+      max-width: 46ch;
+    }
+    @media (max-width: 720px) {
+      .xf-event-voice { grid-template-columns: 1fr; gap: 12px; }
     }
     .xf-cta h2 {
       font-size: clamp(2rem, 4vw, 3.2rem);
@@ -556,9 +605,9 @@
   {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
-    "name": "IT Transformations Hyderabad | Fitness Gurukul",
+    "name": "Transformations | Fitness Gurukul",
     "url": "https://fitnessgurukul.app/testimonials.html",
-    "description": "Interactive before/after transformations from Hyderabad IT professionals coached at Fitness Gurukul.",
+    "description": "Original-name transformations and event testimonials from Fitness Gurukul Hyderabad.",
     "isPartOf": {
       "@type": "WebSite",
       "name": "Fitness Gurukul",
@@ -577,26 +626,26 @@
     "hasPart": [
       {
         "@type": "Review",
-        "author": { "@type": "Person", "name": "Udit", "jobTitle": "Backend engineer" },
-        "reviewBody": "My coach treated my calendar like a product backlog — short sessions, clear meals, zero guilt after late deploys.",
+        "author": { "@type": "Person", "name": "Udit Narayan" },
+        "reviewBody": "The coaching at Fitness Gurukul gave me the discipline and structure I never had. Every session was planned, every meal was guided.",
         "itemReviewed": { "@type": "Service", "name": "Fitness Gurukul Personal Training" }
       },
       {
         "@type": "Review",
-        "author": { "@type": "Person", "name": "Neha", "jobTitle": "Product manager" },
-        "reviewBody": "They built meals around dosa, dal, and office cafeteria reality. I finally stopped restarting every Monday.",
+        "author": { "@type": "Person", "name": "Neha Chopra" },
+        "reviewBody": "The combination of personalized training and nutrition coaching changed everything. I lost weight steadily and started enjoying fitness.",
         "itemReviewed": { "@type": "Service", "name": "Fitness Gurukul Personal Training" }
       },
       {
         "@type": "Review",
-        "author": { "@type": "Person", "name": "Ramakrishna", "jobTitle": "Engineering manager" },
-        "reviewBody": "I thought age and manager life meant decline. Progressive training proved I could still get stronger without getting injured.",
+        "author": { "@type": "Person", "name": "Ramakrishna" },
+        "reviewBody": "The training was tough but always safe, and the nutrition plan was practical. I feel years younger now.",
         "itemReviewed": { "@type": "Service", "name": "Fitness Gurukul Personal Training" }
       },
       {
         "@type": "Review",
-        "author": { "@type": "Person", "name": "Deepak", "jobTitle": "IT support lead" },
-        "reviewBody": "Doorstep sessions after my shift changed everything. No commute excuses, just a plan that matched my roster.",
+        "author": { "@type": "Person", "name": "Deepak" },
+        "reviewBody": "The structured program and constant accountability kept me on track. I am stronger, leaner, and more confident.",
         "itemReviewed": { "@type": "Service", "name": "Fitness Gurukul Personal Training" }
       }
     ]
@@ -652,25 +701,24 @@
   </nav>
 
   <main>
-    <section class="xf-hero">
+    <section class="xf-hero" aria-label="Transformations hero">
       <div class="xf-hero-media" aria-hidden="true"></div>
       <div class="xf-hero-inner">
         <p class="xf-brand">Fitness <span>Gurukul</span></p>
-        <h1>From standup to strong.</h1>
-        <p>Real stories from Hyderabad IT desks — engineers, PMs, and analysts who rebuilt energy, posture, and confidence around real work weeks.</p>
+        <h1>Original names. Real change.</h1>
+        <p>Before-and-after stories and event voices from the people who trained with us in Hyderabad.</p>
         <div class="xf-hero-actions">
-          <a class="primary-button" href="#xfStage">Explore IT stories</a>
-          <a class="ghost-button" href="book-consultation.html">Buy Now</a>
+          <a class="primary-button" href="#xfStage">See transformations</a>
+          <a class="ghost-button" href="#xfEventVoices">Event testimonials</a>
         </div>
-        <div class="xf-scroll-hint">Drag the photo · switch people · play videos</div>
       </div>
     </section>
 
     <section class="xf-stage" id="xfStage">
       <div class="xf-stage-head xf-reveal">
         <div>
-          <span class="section-kicker">Hyderabad tech stories</span>
-          <h2>Pick a teammate path. Scrub the change.</h2>
+          <span class="section-kicker">Named transformations</span>
+          <h2>Pick a story. Scrub the change.</h2>
         </div>
         <div class="xf-filters" id="xfFilters" role="tablist" aria-label="Filter transformation stories">
           <button type="button" data-filter="all" class="active" aria-pressed="true">All</button>
@@ -693,11 +741,11 @@
         <div class="xf-detail">
           <div>
             <div class="xf-detail-kicker" id="xfCategory">Body recomposition</div>
-            <h3 id="xfName">Udit</h3>
-            <p class="xf-role" id="xfRole">Backend engineer · Gachibowli</p>
+            <h3 id="xfName">Udit Narayan</h3>
+            <p class="xf-role" id="xfRole">Member · Hyderabad</p>
           </div>
-          <p class="xf-story" id="xfStory">After two years of late releases and desk lunches, his jeans fit worse than his sprint burndown.</p>
-          <blockquote id="xfQuote">“The coaching gave me the discipline and structure I never had. Every session was planned, every meal was guided.”</blockquote>
+          <p class="xf-story" id="xfStory">He came in overweight and low on confidence — and rebuilt his body with planned sessions and guided meals.</p>
+          <blockquote id="xfQuote">“The coaching at Fitness Gurukul gave me the discipline and structure I never had. Every session was planned, every meal was guided.”</blockquote>
           <div class="xf-metrics">
             <div class="xf-metric"><strong id="xfBeforeKg">88</strong><span>Start weight (kg)</span></div>
             <div class="xf-metric"><strong id="xfAfterKg">74</strong><span>Current weight (kg)</span></div>
@@ -718,33 +766,77 @@
         <div class="xf-videos-head xf-reveal">
           <span class="section-kicker">On camera</span>
           <h2>They said it themselves</h2>
-          <p>Tap to hear how Hyderabad IT professionals fitted training around standups, releases, and Indian meals.</p>
+          <p>Tap to hear Udit Narayan, Neha Chopra, and fellow members in their own words.</p>
         </div>
         <div class="xf-video-rail xf-reveal" id="xfVideoRail">
-          <button class="xf-video-item" type="button" data-video="TESTIMONIALS/FINAL%20TESTIMONIAL.mp4" aria-label="Play product manager reset video">
-            <img src="assets/transforms/neha-thumb.webp" alt="" width="320" height="400" loading="lazy" decoding="async" />
+          <button class="xf-video-item" type="button" data-video="TESTIMONIALS/NEHA%20.mp4" aria-label="Play Neha Chopra testimonial video">
+            <img src="assets/transforms/neha-video.webp" alt="" width="320" height="400" loading="lazy" decoding="async" />
             <div class="xf-video-shade"></div>
             <div class="xf-play" aria-hidden="true">▶</div>
-            <div class="xf-video-copy"><strong>Product manager reset</strong><div style="color:rgba(255,255,255,0.7);font-size:0.85rem;margin-top:4px">From roadmap chaos to routine</div></div>
+            <div class="xf-video-copy"><strong>Neha Chopra</strong><div style="color:rgba(255,255,255,0.7);font-size:0.85rem;margin-top:4px">Weight loss · her story on camera</div></div>
           </button>
-          <button class="xf-video-item" type="button" data-video="TESTIMONIALS/NEHA%20.mp4" aria-label="Play Neha desk-to-strong video">
-            <img src="assets/transforms/neha-thumb.webp" alt="" width="320" height="400" loading="lazy" decoding="async" />
+          <button class="xf-video-item" type="button" data-video="TESTIMONIALS/TESTIMONAL%20FINAL.mp4" aria-label="Play Udit Narayan testimonial video">
+            <img src="assets/transforms/udit-video.webp" alt="" width="320" height="400" loading="lazy" decoding="async" />
             <div class="xf-video-shade"></div>
             <div class="xf-play" aria-hidden="true">▶</div>
-            <div class="xf-video-copy"><strong>Neha’s desk-to-strong story</strong><div style="color:rgba(255,255,255,0.7);font-size:0.85rem;margin-top:4px">Indian meals that survived late calls</div></div>
+            <div class="xf-video-copy"><strong>Udit Narayan</strong><div style="color:rgba(255,255,255,0.7);font-size:0.85rem;margin-top:4px">Body recomposition · on camera</div></div>
           </button>
-          <button class="xf-video-item" type="button" data-video="TESTIMONIALS/TESTIMONAL%20FINAL.mp4" aria-label="Play backend engineer rebuild video">
-            <img src="assets/transforms/udit-thumb.webp" alt="" width="320" height="400" loading="lazy" decoding="async" />
+          <button class="xf-video-item" type="button" data-video="TESTIMONIALS/FINAL%20TESTIMONIAL.mp4" aria-label="Play Ramakrishna testimonial video">
+            <img src="assets/transforms/ramakrishna-video.webp" alt="" width="320" height="400" loading="lazy" decoding="async" />
             <div class="xf-video-shade"></div>
             <div class="xf-play" aria-hidden="true">▶</div>
-            <div class="xf-video-copy"><strong>Backend engineer rebuild</strong><div style="color:rgba(255,255,255,0.7);font-size:0.85rem;margin-top:4px">Posture, energy, and code that shipped</div></div>
+            <div class="xf-video-copy"><strong>Ramakrishna</strong><div style="color:rgba(255,255,255,0.7);font-size:0.85rem;margin-top:4px">Strength return · member voice</div></div>
           </button>
-          <button class="xf-video-item" type="button" data-video="TESTIMONIALS/TESTOMONIAL%20VID%201.mp4" aria-label="Play support lead comeback video">
-            <img src="assets/transforms/deepak-thumb.webp" alt="" width="320" height="400" loading="lazy" decoding="async" />
+          <button class="xf-video-item" type="button" data-video="TESTIMONIALS/TESTOMONIAL%20VID%201.mp4" aria-label="Play Deepak testimonial video">
+            <img src="assets/transforms/deepak-video.webp" alt="" width="320" height="400" loading="lazy" decoding="async" />
             <div class="xf-video-shade"></div>
             <div class="xf-play" aria-hidden="true">▶</div>
-            <div class="xf-video-copy"><strong>Support lead comeback</strong><div style="color:rgba(255,255,255,0.7);font-size:0.85rem;margin-top:4px">Shift work without night snacks</div></div>
+            <div class="xf-video-copy"><strong>Deepak</strong><div style="color:rgba(255,255,255,0.7);font-size:0.85rem;margin-top:4px">Energy rebuild · member voice</div></div>
           </button>
+        </div>
+      </div>
+    </section>
+
+    <section class="xf-events" id="xfEventVoices">
+      <div class="xf-events-inner">
+        <div class="xf-events-head xf-reveal">
+          <span class="section-kicker">Event testimonials</span>
+          <h2>Voices from the rides, runs, and wellness days</h2>
+          <p>Original names from Fitness Gurukul community events across Hyderabad.</p>
+        </div>
+        <div class="xf-event-list xf-reveal">
+          <article class="xf-event-voice">
+            <div class="xf-event-meta">
+              <span class="event-name">FG New Ride</span>
+              <strong>Udit Narayan</strong>
+              <span>Community Cycle · Hyderabad</span>
+            </div>
+            <blockquote>“The New Ride pack made consistency feel social again. I showed up for the route — and stayed accountable for the weeks between.”</blockquote>
+          </article>
+          <article class="xf-event-voice">
+            <div class="xf-event-meta">
+              <span class="event-name">Born Star Running Event</span>
+              <strong>Neha Chopra</strong>
+              <span>Community Run · Hyderabad</span>
+            </div>
+            <blockquote>“Born Star was my first timed run after months of coaching. Crossing that line proved the quiet weekday work was real.”</blockquote>
+          </article>
+          <article class="xf-event-voice">
+            <div class="xf-event-meta">
+              <span class="event-name">April Ride</span>
+              <strong>Ramakrishna</strong>
+              <span>FG Cycling Community</span>
+            </div>
+            <blockquote>“I joined April Ride for the atmosphere and left with a stronger habit. Safe pacing, great company, and coaches who notice form.”</blockquote>
+          </article>
+          <article class="xf-event-voice">
+            <div class="xf-event-meta">
+              <span class="event-name">Yoga Day</span>
+              <strong>Deepak</strong>
+              <span>Community Wellness · Hyderabad</span>
+            </div>
+            <blockquote>“Yoga Day reset how I recover. Between shift work and training, that morning practice kept my energy honest.”</blockquote>
+          </article>
         </div>
       </div>
     </section>
@@ -752,44 +844,44 @@
     <section class="xf-related" id="xfRelated">
       <div class="xf-related-inner">
         <div class="xf-related-head xf-reveal">
-          <span class="section-kicker">Related for IT desks</span>
-          <h2>Made for Hyderabad tech schedules</h2>
-          <p>Short guides and next steps built around standups, releases, canteen food, and doorstep coaching.</p>
+          <span class="section-kicker">Keep going</span>
+          <h2>Next steps after the stories</h2>
+          <p>Coaching, challenges, and community events when you are ready to start.</p>
         </div>
         <div class="xf-related-grid xf-reveal">
           <a href="services.html">
-            <strong>Desk-job fat loss plans</strong>
-            <span>Core to Signature coaching with Indian meals that survive cafeteria biryani and late standups.</span>
+            <strong>Personal training plans</strong>
+            <span>Core to Signature coaching with nutrition that fits Indian meals and real weeks.</span>
           </a>
           <a href="transformation-challenge.html">
-            <strong>30-day challenge for release weeks</strong>
-            <span>Short blocks that still move the needle when your calendar is full of deploys and reviews.</span>
+            <strong>30-day transformation challenge</strong>
+            <span>Short blocks with a quiz match — pick a challenge and lock your next month.</span>
           </a>
-          <a href="book-consultation.html?goal=weight-loss">
-            <strong>Book a free IT-friendly consult</strong>
-            <span>Tell us your shift pattern, office area, and goal — we match coach + plan around your week.</span>
+          <a href="book-consultation.html">
+            <strong>Book a free consultation</strong>
+            <span>Tell us your goal and schedule — we match coach and plan around your life.</span>
           </a>
           <a href="coaches.html">
-            <strong>Coaches for posture &amp; stress</strong>
-            <span>Yoga, rehab, and strength coaches who understand laptop shoulders and back stiffness.</span>
+            <strong>Meet the coaches</strong>
+            <span>Strength, yoga, rehab, and lifestyle coaches across Hyderabad.</span>
           </a>
           <a href="tools.html">
-            <strong>Macros for canteen reality</strong>
-            <span>Use the calculators, then map results to dosa, dal, and protein that fit a Gachibowli lunch break.</span>
+            <strong>Fitness calculators</strong>
+            <span>Macros, BMI, and planning tools before you book.</span>
           </a>
           <a href="events.html">
-            <strong>Corporate &amp; campus events</strong>
-            <span>Team walks, cycle rides, and wellness days for IT parks across Hyderabad.</span>
+            <strong>Rides, runs &amp; wellness events</strong>
+            <span>FG New Ride, Born Star, Yoga Day, and corporate active days.</span>
           </a>
         </div>
         <div class="xf-related-tags xf-reveal">
-          <a href="testimonials.html">Software engineer transformation</a>
-          <a href="book-consultation.html?goal=strength">Doorstep PT Gachibowli</a>
-          <a href="book-consultation.html">Personal trainer Kondapur</a>
-          <a href="services.html">WFH weight loss plan</a>
-          <a href="transformation-challenge.html#tcQuiz">IT lifestyle quiz</a>
-          <a href="contact.html">Training near Financial District</a>
-          <a href="coaches.html">Yoga for product managers</a>
+          <a href="testimonials.html">Udit Narayan transformation</a>
+          <a href="testimonials.html#xfEventVoices">Event testimonials</a>
+          <a href="book-consultation.html">Personal trainer Hyderabad</a>
+          <a href="events.html">FG New Ride</a>
+          <a href="transformation-challenge.html#tcQuiz">Challenge quiz</a>
+          <a href="contact.html">Contact Fitness Gurukul</a>
+          <a href="coaches.html">Our coaches</a>
           <a href="about.html">Fitness Gurukul since 2013</a>
         </div>
       </div>
@@ -798,8 +890,8 @@
     <section class="xf-cta">
       <div class="xf-cta-inner xf-reveal">
         <span class="section-kicker">Fitness Gurukul</span>
-        <h2>Your sprint starts here</h2>
-        <p>1:1 coaching and Indian nutrition built for Hyderabad IT schedules — early mornings, doorstep sessions, and plans that survive release week.</p>
+        <h2>Write your name next</h2>
+        <p>1:1 coaching, Indian nutrition, and a community that rides and runs together in Hyderabad.</p>
         <div class="xf-hero-actions">
           <a class="primary-button" href="book-consultation.html">Buy Now</a>
           <a class="ghost-button" href="https://wa.me/917207113310" target="_blank" rel="noopener">Have questions? Chat now</a>
@@ -813,81 +905,81 @@
       var stories = [
         {
           id: "udit",
-          name: "Udit",
-          role: "Backend engineer · Gachibowli",
+          name: "Udit Narayan",
+          role: "Member · Hyderabad",
           filter: "recomp",
-          category: "Desk to defined",
+          category: "Body recomposition",
           image: "assets/transforms/udit.webp",
           thumb: "assets/transforms/udit-thumb.webp",
-          story: "Twelve-hour release weeks, chair posture, and canteen biryani had stacked quietly for years. He wanted to look sharp on camera calls without quitting Indian food.",
-          quote: "My coach treated my calendar like a product backlog — short sessions, clear meals, zero guilt after late deploys.",
+          story: "He went from overweight with low confidence to a complete rebuild — planned sessions, guided meals, and steady accountability.",
+          quote: "The coaching at Fitness Gurukul gave me the discipline and structure I never had. Every session was planned, every meal was guided. This is the best investment I have made in myself.",
           before: 88,
           after: 74,
           journey: [
-            { month: "Week 1", value: "Desk posture reset" },
-            { month: "Month 2", value: "83 kg · energy back" },
-            { month: "Month 4", value: "79 kg · belt notch" },
-            { month: "Month 6", value: "76 kg · camera-ready" },
-            { month: "Month 8", value: "74 kg · kept it" }
+            { month: "Start", value: "88 kg" },
+            { month: "Month 2", value: "83 kg" },
+            { month: "Month 4", value: "79 kg" },
+            { month: "Month 6", value: "76 kg" },
+            { month: "Month 8", value: "74 kg" }
           ]
         },
         {
           id: "neha",
-          name: "Neha",
-          role: "Product manager · Financial District",
+          name: "Neha Chopra",
+          role: "Member · Hyderabad",
           filter: "loss",
-          category: "Roadmap + fat loss",
+          category: "Weight loss",
           image: "assets/transforms/neha.webp",
           thumb: "assets/transforms/neha-thumb.webp",
           video: "TESTIMONIALS/NEHA%20.mp4",
-          story: "Stakeholder calls till 9, weekend catch-ups, and “just one more chai + snack” were her default. She needed a plan that survived roadmap chaos — not a perfect gym routine.",
-          quote: "They built meals around dosa, dal, and office cafeteria reality. I finally stopped restarting every Monday.",
+          story: "Years of stalled attempts ended when training and nutrition finally worked together — steady loss, more energy, and fitness she could enjoy.",
+          quote: "I struggled with my weight for years. Nothing worked until I joined Fitness Gurukul. The combination of personalized training and nutrition coaching changed everything.",
           before: 82,
           after: 65,
           journey: [
-            { month: "Start", value: "82 kg · low energy" },
-            { month: "Month 2", value: "77 kg · sleep better" },
-            { month: "Month 4", value: "72 kg · walks stuck" },
-            { month: "Month 6", value: "68 kg · clothes fit" },
-            { month: "Month 7", value: "65 kg · steady" }
+            { month: "Start", value: "82 kg" },
+            { month: "Month 2", value: "77 kg" },
+            { month: "Month 4", value: "72 kg" },
+            { month: "Month 6", value: "68 kg" },
+            { month: "Month 7", value: "65 kg" }
           ]
         },
         {
           id: "ramakrishna",
           name: "Ramakrishna",
-          role: "Engineering manager · Kondapur",
+          role: "Member · Hyderabad",
           filter: "strength",
-          category: "Strength after 40",
+          category: "Strength return",
           image: "assets/transforms/ramakrishna.webp",
           thumb: "assets/transforms/ramakrishna-thumb.webp",
-          story: "Years of leading teams left him strong in meetings and weak under the bar. Back stiffness from laptop hours made him skip every “new year” gym attempt — until coaching made strength safe again.",
-          quote: "I thought age and manager life meant decline. Progressive training proved I could still get stronger without getting injured.",
+          story: "He thought getting back in shape was impossible at his age — until safe progressive training and a practical nutrition plan proved otherwise.",
+          quote: "At my age I thought getting back in shape was impossible. My coach proved me wrong. The training was tough but always safe, and the nutrition plan was practical and easy to follow.",
           before: 88,
           after: 74,
           journey: [
-            { month: "Start", value: "Form first" },
-            { month: "Month 2", value: "84 kg · pain down" },
-            { month: "Month 4", value: "79 kg · lifts up" },
-            { month: "Month 6", value: "74 kg · strong again" }
+            { month: "Start", value: "88 kg" },
+            { month: "Month 2", value: "84 kg" },
+            { month: "Month 4", value: "79 kg" },
+            { month: "Month 6", value: "74 kg" }
           ]
         },
         {
           id: "deepak",
           name: "Deepak",
-          role: "IT support lead · Madhapur",
+          role: "Member · Hyderabad",
           filter: "loss",
-          category: "Shift-work reset",
+          category: "Energy rebuild",
           image: "assets/transforms/deepak.webp",
           thumb: "assets/transforms/deepak-thumb.webp",
-          story: "Night tickets, irregular meals, and 2 a.m. Maggi had become normal. He didn’t need a influencer diet — he needed a routine that respected rotating shifts and still cut the soft weight.",
-          quote: "Doorstep sessions after my shift changed everything. No commute excuses, just a plan that matched my roster.",
+          story: "Low energy and uneven habits were the starting point. Structure and accountability turned six months into a leaner, stronger, more confident Deepak.",
+          quote: "I came to Fitness Gurukul with low energy and bad habits. The structured program and constant accountability from my coach kept me on track.",
           before: 90,
           after: 76,
           journey: [
-            { month: "Start", value: "90 kg · night snacks" },
-            { month: "Month 2", value: "85 kg · meal window" },
-            { month: "Month 4", value: "80 kg · stairs easy" },
-            { month: "Month 6", value: "76 kg · confident" }
+            { month: "Start", value: "90 kg" },
+            { month: "Month 2", value: "85 kg" },
+            { month: "Month 4", value: "80 kg" },
+            { month: "Month 6", value: "76 kg" }
           ]
         }
       ];
