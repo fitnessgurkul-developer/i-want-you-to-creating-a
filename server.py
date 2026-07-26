@@ -84,6 +84,8 @@ DB_PATH = resolve_db_path()
 
 
 DEFAULT_CORS_ORIGINS = (
+    "https://fitnessgurukul.app,"
+    "https://www.fitnessgurukul.app,"
     "https://fitnessgurukul.co.in,"
     "https://www.fitnessgurukul.co.in,"
     "https://fitnessgurukul.in,"

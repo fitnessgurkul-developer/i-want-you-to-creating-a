@@ -1,3 +1,4 @@
+# Sole cloud API host for Fitness Gurukul (frontend is Hostinger).
 services:
   - type: web
     name: fitness-gurukul-api
@@ -12,6 +13,6 @@ services:
       - key: ADMIN_TOKEN
         generateValue: true
       - key: CORS_ORIGINS
-        value: "https://fitnessgurukul.co.in,https://www.fitnessgurukul.co.in,https://fitnessgurukul.in,https://www.fitnessgurukul.in"
+        value: "https://fitnessgurukul.app,https://www.fitnessgurukul.app,https://fitnessgurukul.co.in,https://www.fitnessgurukul.co.in,https://fitnessgurukul.in,https://www.fitnessgurukul.in"
       - key: PYTHON_VERSION
         value: "3.12.8"

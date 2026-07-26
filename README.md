@@ -110,97 +110,59 @@ PORT=8000
 - Without `OPENAI_API_KEY`, the chat widget answers from local website facts.
 - Change `ADMIN_TOKEN` (or `ADMIN_PASSWORD`) before sharing the server beyond your machine.
 
-## One-click cloud API (Render)
+## Production stack (only these two)
 
-Deploy the Python API from this repo (free tier, no credit card):
+| Role | Host | What lives there |
+|------|------|------------------|
+| **Frontend** | **Hostinger** | HTML/CSS/JS, `config.js`, `/api/*.php` fallback |
+| **API** | **Render** | `server.py` + SQLite leads (`fitness-gurukul-api`) |
+
+Do **not** deploy this repo to Netlify, Vercel, GitHub Pages, Railway, or Fly.io. Those configs were removed so git pushes stop fighting each other.
+
+### Frontend — Hostinger
+
+Upload or git-pull the site root onto Hostinger (public_html / domain root for `fitnessgurukul.app`):
+
+- All `*.html`, `styles.css`, `app.js`, `config.js`, `assets/`, `coaches/`, `api/`
+- PHP fallbacks under `/api/*.php` keep forms working if Render is asleep
+
+### API — Render
 
 [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/saikrishnacoder/i-want-you-to-creating-a)
 
-After deploy:
-1. Copy the service URL (`https://….onrender.com`)
-2. Set it in `config.js`: `window.FG_API_BASE = "https://….onrender.com";`
-3. Push/redeploy Hostinger
-4. Run `./scripts/verify-api.sh https://….onrender.com`
-5. Open `/backend.html` with password `fitnessgurukul` (or your `ADMIN_TOKEN`)
+Or: Render → New → Blueprint from this repo (`render.yaml`).
 
-## Deploy: Hostinger forms (works without Render)
+1. Confirm the service URL is `https://fitness-gurukul-api.onrender.com` (or update `config.js` to match)
+2. Set a strong `ADMIN_TOKEN` in the Render dashboard
+3. Health check: `./scripts/verify-api.sh https://fitness-gurukul-api.onrender.com`
+4. Redeploy / re-upload Hostinger so live `config.js` matches
 
-Hostinger shared hosting can save leads with the PHP endpoints in `/api/`:
-
-- Forms POST → `/api/submit.php` → `api/data/submissions.json`
-- Challenge joins → `/api/challenge-join.php`
-- Owner page → `/api/admin-data.php` (password from `api/config.php`, default `fitnessgurukul`)
-
-Keep `config.js` as `window.FG_API_BASE = ""` for this mode. Change the password in `api/config.php` after first login.
-
-If PHP is unavailable, forms fall back to a prefilled WhatsApp message so leads are never silently lost.
-
-## Deploy: Hostinger site + always-on API (Render / Railway / Fly)
-
-Optional upgrade if you want SQLite + AI chat on a cloud API:
-
-1. **Website files** on Hostinger (HTML/CSS/JS + `/api/*.php`)
-2. **Python API** (`server.py`) on Render, Railway, or Fly.io (always online)
-
-### A) Deploy the API (pick one)
-
-**Render (easiest)**
-1. Go to [https://render.com](https://render.com) → New → Blueprint / Web Service
-2. Connect this GitHub repo (`main`)
-3. Runtime: Python · Start command: `python server.py`
-4. Set env vars:
-   - `HOST=0.0.0.0`
-   - `ADMIN_TOKEN=` (choose a strong password)
-   - `CORS_ORIGINS=*` (or your Hostinger domain)
-5. Deploy → copy the URL, e.g. `https://fitness-gurukul-api.onrender.com`
-
-**Railway**
-1. [https://railway.app](https://railway.app) → New Project → Deploy from GitHub
-2. Start command: `python server.py`
-3. Add the same env vars as above
-4. Generate a public domain and copy it
-
-**Fly.io**
-```bash
-fly launch
-fly secrets set ADMIN_TOKEN=your-strong-password CORS_ORIGINS=*
-fly deploy
-```
-
-Health check: open `https://YOUR-API-URL/api/health` — should return `{"ok": true, ...}`.
-
-### B) Point the Hostinger website at the API
-
-Edit `config.js` on Hostinger (or in Git then redeploy):
-
-```js
-window.FG_API_BASE = "https://YOUR-API-URL";
-```
-
-Example:
+`config.js` already points at Render:
 
 ```js
 window.FG_API_BASE = "https://fitness-gurukul-api.onrender.com";
 ```
 
-Leave it as `""` only when the site and API are on the same origin (local `server.py`).
+Lead flow:
 
-**This one setting is what keeps leads in your backend:**
-- Website forms → `POST {FG_API_BASE}/api/submit` → SQLite on the cloud API
-- Challenge joins → `POST {FG_API_BASE}/api/challenge-join` → same SQLite
-- Owner page `backend.html` → `GET {FG_API_BASE}/api/admin-data` → same SQLite
-
-So Hostinger only hosts the pages; the cloud API owns the database.
-
-### C) Redeploy Hostinger
-
-Pull/upload the latest `main` (includes `config.js`) and make sure your edited API URL is live.
-
-Then forms, quiz, live stats, chat, and `backend.html` keep working with your laptop off. Open `https://yoursite.com/backend.html` and unlock with the same `ADMIN_TOKEN` from Render/Railway/Fly — new leads appear there.
+- Forms → `POST {FG_API_BASE}/api/submit` → SQLite on Render
+- Challenge → `POST {FG_API_BASE}/api/challenge-join`
+- Owner portal → `https://yoursite.com/backend.html` (same `ADMIN_TOKEN`)
+- If Render is down: Hostinger `/api/*.php`, then WhatsApp prefill
 
 **Notes**
-- Free Render apps may sleep after idle; first request can take ~30s to wake.
-- SQLite on free tiers is usually ephemeral (resets on redeploy). For permanent leads, use a paid disk/volume or export regularly from the owner backend.
+
+- Free Render apps may sleep after idle; first request can take ~30s.
+- SQLite on free tiers is usually ephemeral (resets on redeploy). Export leads from the owner backend regularly, or add a paid disk.
+
+### Disconnect other hosts (one-time, in their dashboards)
+
+Repo-side configs for these are gone. Unlink Git so they stop failing on every push:
+
+1. **Netlify** — Site settings → Build & deploy → stop builds / unlink GitHub for every site tied to this repo (`soft-chimera-8a4214` and any duplicates).
+2. **Vercel** — Project → Settings → Git → Disconnect (both `i-want-you-to-creating-a` projects if present).
+3. **GitHub Pages** — Settings → Pages → None (workflow already removed).
+4. **Railway / Fly** — delete or disconnect any project linked to this repo.
 
 ## Pages
 

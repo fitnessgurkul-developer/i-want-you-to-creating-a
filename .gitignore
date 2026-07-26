@@ -13,3 +13,5 @@ api/data/*.json
 *.bak
 .DS_Store
 dist/
+.netlify/
+.vercel/

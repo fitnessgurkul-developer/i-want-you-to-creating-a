@@ -1,19 +1,22 @@
 /**
  * Fitness Gurukul — API endpoint config
  *
+ * Production stack (only):
+ *   Frontend → Hostinger (fitnessgurukul.app / fitnessgurukul.co.in)
+ *   API      → Render    (https://fitness-gurukul-api.onrender.com)
+ *
  * Lead save order:
- *   1) Cloud Python API via FG_API_BASE (Render / Railway / Fly / tunnel)
+ *   1) Cloud Python API via FG_API_BASE (Render)
  *   2) Same-origin /api/* (local python server.py)
- *   3) Same-origin /api/*.php (Hostinger shared hosting)
+ *   3) Same-origin /api/*.php (Hostinger shared hosting fallback)
  *   4) WhatsApp prefilled fallback in app.js
  *
- * Permanent cloud deploy (recommended):
+ * Setup:
  *   1. Open https://render.com/deploy?repo=https://github.com/saikrishnacoder/i-want-you-to-creating-a
- *   2. Create free Web Service from render.yaml
- *   3. Paste the https://….onrender.com URL below
- *   4. Redeploy Hostinger / push to main
+ *   2. Confirm service URL matches FG_API_BASE below
+ *   3. Upload / pull latest files onto Hostinger
  */
-window.FG_API_BASE = window.FG_API_BASE || "https://functional-sections-implement-handles.trycloudflare.com";
+window.FG_API_BASE = window.FG_API_BASE || "https://fitness-gurukul-api.onrender.com";
 
 (function (w) {
   var PHP_MAP = {
