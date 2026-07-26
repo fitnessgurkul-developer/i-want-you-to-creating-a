@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
-# Local site + API launcher (repo root).
-exec node start-node.js "$@"
+# Local site + API launcher (Node backend).
+exec node server.js "$@"

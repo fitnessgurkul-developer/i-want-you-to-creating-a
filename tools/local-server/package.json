@@ -1,12 +1,12 @@
 {
-  "name": "fitness-gurukul-backend",
-  "version": "1.1.0",
-  "description": "Local helper \u2014 run from repo root: npm --prefix tools/local-server start",
+  "name": "fitness-gurukul-local",
+  "version": "2.0.0",
   "private": true,
+  "description": "Local helper — from repo root: npm --prefix tools/local-server start",
   "scripts": {
-    "start": "node ../../start-node.js",
-    "dev": "node ../../start-node.js",
-    "test": "node ../../start-node.js --check",
+    "start": "node ../../server.js",
+    "dev": "node ../../server.js",
+    "test": "node --check ../../server.js",
     "build": "node ../../scripts/prepare-netlify-dist.js"
   }
 }

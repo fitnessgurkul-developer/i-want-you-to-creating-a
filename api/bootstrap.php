@@ -1,4 +1,7 @@
 <?php
+/**
+ * Fitness Gurukul — shared Hostinger PHP API helpers.
+ */
 header("X-Content-Type-Options: nosniff");
 
 $config = require __DIR__ . "/config.php";
@@ -29,7 +32,6 @@ function fg_read_json_body() {
   if (is_array($decoded)) {
     return $decoded;
   }
-  // FormData / x-www-form-urlencoded fallback
   if (!empty($_POST)) {
     return $_POST;
   }
@@ -62,6 +64,7 @@ function fg_save_submissions($storeFile, $rows) {
 }
 
 function fg_admin_token_from_request() {
+  // Header-only — never accept ?token= (leaks via logs/Referer).
   $header = $_SERVER["HTTP_X_ADMIN_TOKEN"] ?? "";
   if ($header) {
     return trim($header);
@@ -70,7 +73,7 @@ function fg_admin_token_from_request() {
   if (stripos($auth, "Bearer ") === 0) {
     return trim(substr($auth, 7));
   }
-  return trim((string) ($_GET["token"] ?? ""));
+  return "";
 }
 
 function fg_require_admin($config) {
@@ -78,6 +81,16 @@ function fg_require_admin($config) {
   $expected = (string) ($config["admin_token"] ?? "");
   if ($expected === "" || !hash_equals($expected, $provided)) {
     fg_json_out(["error" => "Unauthorized"], 401);
+  }
+}
+
+function fg_cors_preflight() {
+  if (($_SERVER["REQUEST_METHOD"] ?? "") === "OPTIONS") {
+    header("Access-Control-Allow-Methods: GET, POST, PATCH, DELETE, OPTIONS");
+    header("Access-Control-Allow-Headers: Content-Type, X-Admin-Token, Authorization");
+    header("Access-Control-Max-Age: 86400");
+    http_response_code(204);
+    exit;
   }
 }
 

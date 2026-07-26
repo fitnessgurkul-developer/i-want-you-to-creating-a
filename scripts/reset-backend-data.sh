@@ -5,6 +5,15 @@ ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 rm -f fitness_gurukul.sqlite3 fitness_gurukul.sqlite3-* \
       data/fitness_gurukul.sqlite3 data/fitness_gurukul.sqlite3-* \
-      data/submissions.json
+      data/submissions.json data/backend-store.json
 printf '[]\n' > api/data/submissions.json
-echo "Backend data reset. Restart python server.py if it is running."
+printf '%s\n' '{
+  "leads": [],
+  "newsletter": [],
+  "checkins": [],
+  "ai_scans": [],
+  "calculator_results": [],
+  "chat_messages": [],
+  "submissions": []
+}' > data/backend-store.json
+echo "Backend data reset (PHP JSON + Node store). Restart node server.js if running."

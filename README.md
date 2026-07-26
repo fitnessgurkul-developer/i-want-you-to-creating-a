@@ -127,13 +127,16 @@ After deploy:
 
 Primary site: **https://fitnessgurukul.app** (Hostinger)
 
-### Local start
+### Local start (Node backend)
 
 ```bash
 ./start.sh
+# or: node server.js
 # or: node start-node.js
-# optional npm helper: npm --prefix tools/local-server start
+# optional: npm --prefix tools/local-server start
 ```
+
+Python (`server.py`) remains as a legacy/cloud alternate. Hostinger production uses `api/*.php`.
 
 Netlify builds are static-only (no root `package.json`) so the Install dependencies stage cannot fail.
 

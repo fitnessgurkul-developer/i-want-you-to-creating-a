@@ -1,3 +1,10 @@
+"""
+Fitness Gurukul Python API (legacy / alternate runtime).
+
+Preferred runtime is Node: `node server.js`
+This file remains for Render/Docker Python deploys and local fallback.
+"""
+
 from http.server import ThreadingHTTPServer, SimpleHTTPRequestHandler
 from pathlib import Path
 from urllib.parse import urlparse, unquote
@@ -1127,26 +1134,21 @@ class AppHandler(SimpleHTTPRequestHandler):
                     "cloudReady": True,
                 })
             if path == "/api/backend-info":
-                # Non-sensitive helper so the login screen can guide staff.
+                # Never expose passwords over this public endpoint.
                 host_hdr = (self.headers.get("Host") or f"127.0.0.1:{os.environ.get('PORT', '8000')}").strip()
-                mode = ADMIN_CRED_MODE if ADMIN_CRED_MODE != "unconfigured" else (
-                    "configured" if admin_token() else "unconfigured"
-                )
                 return self.send_json({
                     "ok": True,
+                    "engine": "python",
                     "backendUrl": "/backend",
                     "dashboardUrl": "/backend",
                     "ownerUrl": "/backend",
                     "userUrl": "/",
                     "adminConfigured": bool(admin_token()),
-                    "mode": mode,
-                    "localDefaultPassword": LOCAL_DEFAULT_PASSWORD if mode == "local-default" else "",
+                    "mode": "python",
+                    "localDefaultPassword": False,
                     "openUrl": f"http://{host_hdr}/backend",
-                    "hint": (
-                        f"Local default password: {LOCAL_DEFAULT_PASSWORD}"
-                        if mode == "local-default"
-                        else "Enter the staff password from your .env file (ADMIN_TOKEN or ADMIN_PASSWORD)."
-                    ),
+                    "hint": "Enter the staff password from your .env file (ADMIN_TOKEN or ADMIN_PASSWORD).",
+                    "site": "https://fitnessgurukul.app",
                 })
             if path == "/api/content":
                 return self.send_json(content_payload())

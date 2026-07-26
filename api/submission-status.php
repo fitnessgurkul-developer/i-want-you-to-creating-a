@@ -1,17 +1,17 @@
 <?php
 require __DIR__ . "/bootstrap.php";
+fg_cors_preflight();
+fg_require_admin($config);
 
-if ($_SERVER["REQUEST_METHOD"] !== "POST" && $_SERVER["REQUEST_METHOD"] !== "PATCH") {
+$method = $_SERVER["REQUEST_METHOD"] ?? "GET";
+if (!in_array($method, ["POST", "PATCH"], true)) {
   fg_json_out(["error" => "Method not allowed"], 405);
 }
 
-fg_require_admin($config);
 $payload = fg_read_json_body();
 $id = fg_clip($payload["id"] ?? ($_GET["id"] ?? ""), 64);
-$status = fg_clip($payload["status"] ?? "", 32);
-$allowed = ["new", "contacted", "qualified", "closed"];
-
-if ($id === "" || !in_array($status, $allowed, true)) {
+$status = strtolower(fg_clip($payload["status"] ?? "", 32));
+if ($id === "" || !in_array($status, ["new", "contacted", "qualified", "closed"], true)) {
   fg_json_out(["error" => "Invalid id or status"], 400);
 }
 
@@ -29,5 +29,7 @@ unset($row);
 if (!$found) {
   fg_json_out(["error" => "Not found"], 404);
 }
-fg_save_submissions($storeFile, $rows);
+if (!fg_save_submissions($storeFile, $rows)) {
+  fg_json_out(["error" => "Storage failed"], 500);
+}
 fg_json_out(["ok" => true, "id" => $id, "status" => $status]);

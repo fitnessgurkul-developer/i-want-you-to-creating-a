@@ -15,7 +15,13 @@ jobs:
       uses: actions/setup-python@v5
       with:
         python-version: "3.12"
-    - name: Compile server
+    - name: Set up Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: "20"
+    - name: Check Node server
+      run: node --check server.js
+    - name: Compile Python server
       run: python3 -m py_compile server.py
     - name: Smoke test health endpoint
       run: |
