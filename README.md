@@ -48,10 +48,10 @@ cp .env.example .env
 python3 server.py
 ```
 
-### Any OS via npm
+### Any OS via npm (optional)
 
 ```bash
-npm start
+npm --prefix tools/local-server start
 ```
 
 Open the website:
