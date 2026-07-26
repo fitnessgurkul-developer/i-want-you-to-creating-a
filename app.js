@@ -2865,14 +2865,20 @@ function injectPopularSearch() {
   section.innerHTML =
     '<div class="fg-popular-inner">' +
       "<h2>Popular Search</h2>" +
-      groups.map(function(group) {
-        return (
-          '<div class="fg-popular-row">' +
-            '<h3>' + group.title + ' :</h3>' +
-            '<p>' + pipeLinks(group.links, p) + "</p>" +
-          "</div>"
-        );
-      }).join("") +
+      '<div class="fg-popular-grid">' +
+        groups.map(function(group) {
+          return (
+            '<div class="fg-popular-group">' +
+              "<h3>" + safe(group.title) + "</h3>" +
+              "<ul>" +
+                group.links.map(function(link) {
+                  return '<li><a href="' + safe(p + link.href) + '">' + safe(link.label) + "</a></li>";
+                }).join("") +
+              "</ul>" +
+            "</div>"
+          );
+        }).join("") +
+      "</div>" +
     "</div>";
   document.body.appendChild(section);
 }

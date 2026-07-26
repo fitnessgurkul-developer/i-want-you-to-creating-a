@@ -7071,11 +7071,11 @@ from { opacity: 0; transform: translateY(24px); }
   .fg-page-related-grid { grid-template-columns: 1fr; }
 }
 
-/* Popular Search — SEO / related links below footer */
+/* Popular Search — neat category grid below footer */
 .fg-popular-search {
   width: 100%;
   margin: 0;
-  padding: 36px 24px 56px;
+  padding: 40px 24px 64px;
   border-top: 1px solid var(--line);
   background: #070707;
   color: rgba(255,255,255,0.72);
@@ -7085,40 +7085,61 @@ from { opacity: 0; transform: translateY(24px); }
   margin: 0 auto;
 }
 .fg-popular-search h2 {
-  margin: 0 0 22px;
+  margin: 0 0 28px;
   font-size: clamp(1.35rem, 2.4vw, 1.85rem);
   font-weight: 700;
   letter-spacing: -0.02em;
   color: #fff;
 }
-.fg-popular-row {
-  margin: 0 0 16px;
-  font-size: 0.78rem;
-  line-height: 1.75;
+.fg-popular-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 28px 32px;
 }
-.fg-popular-row h3 {
-  display: inline;
-  margin: 0;
+.fg-popular-group {
+  min-width: 0;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255,255,255,0.12);
+}
+.fg-popular-group h3 {
+  margin: 0 0 12px;
   font-size: 0.78rem;
   font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   color: rgba(255,255,255,0.88);
 }
-.fg-popular-row p {
-  display: inline;
+.fg-popular-group ul {
+  list-style: none;
   margin: 0;
-  color: rgba(255,255,255,0.55);
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 10px;
 }
-.fg-popular-row a {
+.fg-popular-group li { margin: 0; }
+.fg-popular-group a {
+  display: inline-block;
   color: rgba(255,255,255,0.55);
   text-decoration: none;
+  font-size: 0.8rem;
+  line-height: 1.35;
+  border-bottom: 1px solid transparent;
+  transition: color .15s, border-color .15s;
 }
-.fg-popular-row a:hover {
+.fg-popular-group a:hover {
   color: #fff;
-  text-decoration: underline;
+  border-bottom-color: rgba(255,255,255,0.45);
 }
-.fg-pop-sep {
-  color: rgba(255,255,255,0.22);
-  padding: 0 2px;
+.fg-popular-row,
+.fg-pop-sep { display: none; }
+
+@media (max-width: 900px) {
+  .fg-popular-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+}
+@media (max-width: 560px) {
+  .fg-popular-grid { grid-template-columns: 1fr; gap: 20px; }
+  .fg-popular-search { padding: 28px 18px 48px; }
 }
 
 @media (max-width:540px) {
