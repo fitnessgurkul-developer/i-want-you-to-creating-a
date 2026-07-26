@@ -13272,6 +13272,72 @@ from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:transl
   color: rgba(255,255,255,0.5);
 }
 
+.coach-roster-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 28px 40px;
+  align-items: end;
+  margin-bottom: 32px;
+  padding-bottom: 28px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+.coach-roster-copy .section-kicker {
+  color: #4ade80;
+  margin-bottom: 10px;
+}
+.coach-roster-copy h2 {
+  margin: 0 0 12px;
+  font-size: clamp(2.2rem, 4.5vw, 3.4rem);
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  max-width: 10ch;
+}
+.coach-roster-copy p {
+  margin: 0;
+  max-width: 42ch;
+  color: rgba(255,255,255,0.6);
+  font-size: 1rem;
+  line-height: 1.55;
+}
+.coach-roster-stat {
+  text-align: right;
+  min-width: 120px;
+  padding-left: 24px;
+  border-left: 2px solid #4ade80;
+}
+.coach-roster-stat strong {
+  display: block;
+  font-size: clamp(2.8rem, 5vw, 4rem);
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  color: #fff;
+  margin-bottom: 8px;
+}
+.coach-roster-stat span {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.5);
+}
+@media (max-width: 700px) {
+  .coach-roster-head {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    align-items: start;
+  }
+  .coach-roster-stat {
+    text-align: left;
+    padding: 16px 0 0;
+    border-left: none;
+    border-top: 1px solid rgba(255,255,255,0.1);
+  }
+  .coach-roster-stat strong {
+    color: #4ade80;
+  }
+}
+
 .goal-match-section {
   padding: 72px 0;
   background:

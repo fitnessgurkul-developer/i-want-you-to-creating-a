@@ -1152,7 +1152,8 @@ function renderFilteredCoaches() {
       </div>
     </article>`;
   }).join("");
-  if (has("#coachCount")) qs("#coachCount").textContent = `${filtered.length} coaches shown`;
+  if (has("#coachCountNum")) qs("#coachCountNum").textContent = String(filtered.length);
+  if (has("#coachCount")) qs("#coachCount").textContent = filtered.length === 1 ? "coach shown" : "coaches shown";
 }
 
 var FALLBACK_TESTIMONIALS = [
