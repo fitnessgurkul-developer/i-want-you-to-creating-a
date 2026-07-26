@@ -3,8 +3,21 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Transformations | Fitness Gurukul</title>
-  <meta name="description" content="Real Fitness Gurukul transformations from Hyderabad IT professionals — engineers, PMs, and analysts with interactive before/after stories." />
+  <title>IT Transformations Hyderabad | Fitness Gurukul</title>
+  <meta name="description" content="Interactive before/after transformations from Hyderabad IT professionals — software engineers, product managers, and support leads coached at Fitness Gurukul." />
+  <meta name="robots" content="index,follow,max-image-preview:large" />
+  <link rel="canonical" href="https://fitnessgurukul.app/testimonials.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Fitness Gurukul" />
+  <meta property="og:url" content="https://fitnessgurukul.app/testimonials.html" />
+  <meta property="og:title" content="IT Transformations Hyderabad | Fitness Gurukul" />
+  <meta property="og:description" content="From standup to strong — real Hyderabad tech desk transformations with before/after stories." />
+  <meta property="og:image" content="https://fitnessgurukul.app/assets/transforms/udit-hero.webp" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="IT Transformations Hyderabad | Fitness Gurukul" />
+  <meta name="twitter:description" content="Interactive before/after stories from Hyderabad IT professionals." />
+  <meta name="twitter:image" content="https://fitnessgurukul.app/assets/transforms/udit-hero.webp" />
+  <link rel="preload" as="image" href="assets/transforms/udit-hero.webp" type="image/webp" fetchpriority="high" />
   <link rel="stylesheet" href="styles.css" />
   <style>
     :root {
@@ -32,20 +45,31 @@
       display: grid;
       align-items: end;
       color: var(--xf-ink);
+      content-visibility: visible;
     }
     .xf-hero-media {
       position: absolute; inset: 0;
       background:
         linear-gradient(90deg, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.55) 42%, rgba(0,0,0,0.35) 100%),
         linear-gradient(180deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.45) 40%, rgba(0,0,0,0.92) 100%),
-        url("udit.png") right 18% / cover no-repeat;
-      filter: grayscale(1) contrast(1.08) brightness(0.92);
+        url("assets/transforms/udit-hero.webp") right 18% / cover no-repeat;
+      /* Grayscale baked into compressed assets where possible — keep light filter only */
+      filter: grayscale(0.85) contrast(1.05);
       transform: scale(1.02);
+      will-change: transform;
       animation: xfKen 22s ease-in-out infinite alternate;
     }
     @keyframes xfKen {
       from { transform: scale(1.02) translate3d(0,0,0); }
       to { transform: scale(1.06) translate3d(-1%, 0, 0); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .xf-hero-media,
+      .xf-scroll-hint,
+      .xf-reveal,
+      .xf-journey-step { animation: none !important; transition: none !important; }
+      .xf-hero-media { transform: none; will-change: auto; filter: grayscale(1); }
+      .xf-reveal { opacity: 1; transform: none; }
     }
     .xf-hero-inner {
       position: relative;
@@ -94,6 +118,8 @@
     .xf-stage {
       padding: 80px 0 48px;
       background: #000;
+      content-visibility: auto;
+      contain-intrinsic-size: 1px 900px;
     }
     .xf-stage-head {
       width: min(1120px, calc(100% - 40px));
@@ -156,12 +182,18 @@
       position: absolute; inset: 0;
       background-size: 200% 100%;
       background-repeat: no-repeat;
+      background-color: #111;
       filter: grayscale(1) contrast(1.05);
+      transform: translateZ(0);
     }
     .xf-compare-after { background-position: 100% 18%; }
     .xf-compare-before {
       background-position: 0% 18%;
       clip-path: inset(0 50% 0 0);
+    }
+    .xf-compare:focus-visible {
+      outline: 2px solid #fff;
+      outline-offset: -2px;
     }
     .xf-compare-handle {
       position: absolute;
@@ -302,6 +334,7 @@
       object-fit: cover;
       object-position: 100% 18%;
       display: block;
+      background: #151515;
       filter: grayscale(1) brightness(0.88);
       transition: filter .25s, transform .25s, opacity .25s;
       opacity: 0.72;
@@ -330,6 +363,8 @@
     .xf-videos {
       padding: 80px 0;
       border-top: 1px solid rgba(255,255,255,0.06);
+      content-visibility: auto;
+      contain-intrinsic-size: 1px 520px;
     }
     .xf-videos-inner {
       width: min(1120px, calc(100% - 40px));
@@ -366,12 +401,11 @@
       font: inherit;
       padding: 0;
     }
-    .xf-video-item video,
     .xf-video-item img {
-      width: 100%; height: 100%; object-fit: cover; display: block;
+      width: 100%; height: 100%; object-fit: cover; object-position: 100% 18%;
+      display: block; filter: grayscale(1);
       transition: transform .5s ease;
     }
-    .xf-video-item:hover video,
     .xf-video-item:hover img { transform: scale(1.04); }
     .xf-video-item .xf-video-shade {
       position: absolute; inset: 0;
@@ -403,7 +437,7 @@
       position: absolute; inset: 0;
       background:
         linear-gradient(180deg, rgba(0,0,0,0.55), rgba(0,0,0,0.92)),
-        url("neha.png") 70% 18% / cover no-repeat;
+        url("assets/transforms/neha-hero.webp") 70% 18% / cover no-repeat;
       filter: grayscale(1) contrast(1.05);
       z-index: 0;
     }
@@ -440,6 +474,8 @@
       padding: 72px 0 40px;
       border-top: 1px solid rgba(255,255,255,0.06);
       background: #050505;
+      content-visibility: auto;
+      contain-intrinsic-size: 1px 640px;
     }
     .xf-related-inner {
       width: min(1120px, calc(100% - 48px));
@@ -514,8 +550,58 @@
       .xf-related-grid { grid-template-columns: 1fr; }
     }
   </style>
-  <script src="config.js"></script>
+  <script src="config.js" defer></script>
   <script src="app.js" defer></script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "IT Transformations Hyderabad | Fitness Gurukul",
+    "url": "https://fitnessgurukul.app/testimonials.html",
+    "description": "Interactive before/after transformations from Hyderabad IT professionals coached at Fitness Gurukul.",
+    "isPartOf": {
+      "@type": "WebSite",
+      "name": "Fitness Gurukul",
+      "url": "https://fitnessgurukul.app/"
+    },
+    "about": {
+      "@type": "LocalBusiness",
+      "name": "Fitness Gurukul",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Hyderabad",
+        "addressRegion": "Telangana",
+        "addressCountry": "IN"
+      }
+    },
+    "hasPart": [
+      {
+        "@type": "Review",
+        "author": { "@type": "Person", "name": "Udit", "jobTitle": "Backend engineer" },
+        "reviewBody": "My coach treated my calendar like a product backlog — short sessions, clear meals, zero guilt after late deploys.",
+        "itemReviewed": { "@type": "Service", "name": "Fitness Gurukul Personal Training" }
+      },
+      {
+        "@type": "Review",
+        "author": { "@type": "Person", "name": "Neha", "jobTitle": "Product manager" },
+        "reviewBody": "They built meals around dosa, dal, and office cafeteria reality. I finally stopped restarting every Monday.",
+        "itemReviewed": { "@type": "Service", "name": "Fitness Gurukul Personal Training" }
+      },
+      {
+        "@type": "Review",
+        "author": { "@type": "Person", "name": "Ramakrishna", "jobTitle": "Engineering manager" },
+        "reviewBody": "I thought age and manager life meant decline. Progressive training proved I could still get stronger without getting injured.",
+        "itemReviewed": { "@type": "Service", "name": "Fitness Gurukul Personal Training" }
+      },
+      {
+        "@type": "Review",
+        "author": { "@type": "Person", "name": "Deepak", "jobTitle": "IT support lead" },
+        "reviewBody": "Doorstep sessions after my shift changed everything. No commute excuses, just a plan that matched my roster.",
+        "itemReviewed": { "@type": "Service", "name": "Fitness Gurukul Personal Training" }
+      }
+    ]
+  }
+  </script>
 </head>
 <body class="xf-page">
   <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
@@ -586,20 +672,20 @@
           <span class="section-kicker">Hyderabad tech stories</span>
           <h2>Pick a teammate path. Scrub the change.</h2>
         </div>
-        <div class="xf-filters" id="xfFilters">
-          <button type="button" data-filter="all" class="active">All</button>
-          <button type="button" data-filter="recomp">Recomposition</button>
-          <button type="button" data-filter="loss">Weight loss</button>
-          <button type="button" data-filter="strength">Strength</button>
+        <div class="xf-filters" id="xfFilters" role="tablist" aria-label="Filter transformation stories">
+          <button type="button" data-filter="all" class="active" aria-pressed="true">All</button>
+          <button type="button" data-filter="recomp" aria-pressed="false">Recomposition</button>
+          <button type="button" data-filter="loss" aria-pressed="false">Weight loss</button>
+          <button type="button" data-filter="strength" aria-pressed="false">Strength</button>
         </div>
       </div>
 
       <div class="xf-stage-grid xf-reveal">
         <div class="xf-spotlight" id="xfSpotlight">
-          <div class="xf-compare" id="xfCompare" aria-label="Before and after comparison">
+          <div class="xf-compare" id="xfCompare" role="slider" tabindex="0" aria-label="Before and after comparison" aria-valuemin="5" aria-valuemax="95" aria-valuenow="50" aria-valuetext="Showing 50 percent start photo">
             <div class="xf-compare-after" id="xfAfter"></div>
             <div class="xf-compare-before" id="xfBefore"></div>
-            <div class="xf-compare-handle" id="xfHandle"></div>
+            <div class="xf-compare-handle" id="xfHandle" aria-hidden="true"></div>
             <div class="xf-compare-labels"><span>Start</span><span>Now</span></div>
           </div>
         </div>
@@ -635,36 +721,28 @@
           <p>Tap to hear how Hyderabad IT professionals fitted training around standups, releases, and Indian meals.</p>
         </div>
         <div class="xf-video-rail xf-reveal" id="xfVideoRail">
-          <button class="xf-video-item" type="button" data-video="TESTIMONIALS/FINAL%20TESTIMONIAL.mp4">
-            <video muted loop playsinline preload="metadata" poster="neha.png">
-              <source src="TESTIMONIALS/FINAL%20TESTIMONIAL.mp4" type="video/mp4" />
-            </video>
+          <button class="xf-video-item" type="button" data-video="TESTIMONIALS/FINAL%20TESTIMONIAL.mp4" aria-label="Play product manager reset video">
+            <img src="assets/transforms/neha-thumb.webp" alt="" width="320" height="400" loading="lazy" decoding="async" />
             <div class="xf-video-shade"></div>
-            <div class="xf-play">▶</div>
+            <div class="xf-play" aria-hidden="true">▶</div>
             <div class="xf-video-copy"><strong>Product manager reset</strong><div style="color:rgba(255,255,255,0.7);font-size:0.85rem;margin-top:4px">From roadmap chaos to routine</div></div>
           </button>
-          <button class="xf-video-item" type="button" data-video="TESTIMONIALS/NEHA%20.mp4">
-            <video muted loop playsinline preload="metadata" poster="neha.png">
-              <source src="TESTIMONIALS/NEHA%20.mp4" type="video/mp4" />
-            </video>
+          <button class="xf-video-item" type="button" data-video="TESTIMONIALS/NEHA%20.mp4" aria-label="Play Neha desk-to-strong video">
+            <img src="assets/transforms/neha-thumb.webp" alt="" width="320" height="400" loading="lazy" decoding="async" />
             <div class="xf-video-shade"></div>
-            <div class="xf-play">▶</div>
+            <div class="xf-play" aria-hidden="true">▶</div>
             <div class="xf-video-copy"><strong>Neha’s desk-to-strong story</strong><div style="color:rgba(255,255,255,0.7);font-size:0.85rem;margin-top:4px">Indian meals that survived late calls</div></div>
           </button>
-          <button class="xf-video-item" type="button" data-video="TESTIMONIALS/TESTIMONAL%20FINAL.mp4">
-            <video muted loop playsinline preload="metadata" poster="udit.png">
-              <source src="TESTIMONIALS/TESTIMONAL%20FINAL.mp4" type="video/mp4" />
-            </video>
+          <button class="xf-video-item" type="button" data-video="TESTIMONIALS/TESTIMONAL%20FINAL.mp4" aria-label="Play backend engineer rebuild video">
+            <img src="assets/transforms/udit-thumb.webp" alt="" width="320" height="400" loading="lazy" decoding="async" />
             <div class="xf-video-shade"></div>
-            <div class="xf-play">▶</div>
+            <div class="xf-play" aria-hidden="true">▶</div>
             <div class="xf-video-copy"><strong>Backend engineer rebuild</strong><div style="color:rgba(255,255,255,0.7);font-size:0.85rem;margin-top:4px">Posture, energy, and code that shipped</div></div>
           </button>
-          <button class="xf-video-item" type="button" data-video="TESTIMONIALS/TESTOMONIAL%20VID%201.mp4">
-            <video muted loop playsinline preload="metadata" poster="deepak.png">
-              <source src="TESTIMONIALS/TESTOMONIAL%20VID%201.mp4" type="video/mp4" />
-            </video>
+          <button class="xf-video-item" type="button" data-video="TESTIMONIALS/TESTOMONIAL%20VID%201.mp4" aria-label="Play support lead comeback video">
+            <img src="assets/transforms/deepak-thumb.webp" alt="" width="320" height="400" loading="lazy" decoding="async" />
             <div class="xf-video-shade"></div>
-            <div class="xf-play">▶</div>
+            <div class="xf-play" aria-hidden="true">▶</div>
             <div class="xf-video-copy"><strong>Support lead comeback</strong><div style="color:rgba(255,255,255,0.7);font-size:0.85rem;margin-top:4px">Shift work without night snacks</div></div>
           </button>
         </div>
@@ -739,7 +817,8 @@
           role: "Backend engineer · Gachibowli",
           filter: "recomp",
           category: "Desk to defined",
-          image: "udit.png",
+          image: "assets/transforms/udit.webp",
+          thumb: "assets/transforms/udit-thumb.webp",
           story: "Twelve-hour release weeks, chair posture, and canteen biryani had stacked quietly for years. He wanted to look sharp on camera calls without quitting Indian food.",
           quote: "My coach treated my calendar like a product backlog — short sessions, clear meals, zero guilt after late deploys.",
           before: 88,
@@ -758,7 +837,8 @@
           role: "Product manager · Financial District",
           filter: "loss",
           category: "Roadmap + fat loss",
-          image: "neha.png",
+          image: "assets/transforms/neha.webp",
+          thumb: "assets/transforms/neha-thumb.webp",
           video: "TESTIMONIALS/NEHA%20.mp4",
           story: "Stakeholder calls till 9, weekend catch-ups, and “just one more chai + snack” were her default. She needed a plan that survived roadmap chaos — not a perfect gym routine.",
           quote: "They built meals around dosa, dal, and office cafeteria reality. I finally stopped restarting every Monday.",
@@ -778,7 +858,8 @@
           role: "Engineering manager · Kondapur",
           filter: "strength",
           category: "Strength after 40",
-          image: "ramakrishna.png",
+          image: "assets/transforms/ramakrishna.webp",
+          thumb: "assets/transforms/ramakrishna-thumb.webp",
           story: "Years of leading teams left him strong in meetings and weak under the bar. Back stiffness from laptop hours made him skip every “new year” gym attempt — until coaching made strength safe again.",
           quote: "I thought age and manager life meant decline. Progressive training proved I could still get stronger without getting injured.",
           before: 88,
@@ -796,7 +877,8 @@
           role: "IT support lead · Madhapur",
           filter: "loss",
           category: "Shift-work reset",
-          image: "deepak.png",
+          image: "assets/transforms/deepak.webp",
+          thumb: "assets/transforms/deepak-thumb.webp",
           story: "Night tickets, irregular meals, and 2 a.m. Maggi had become normal. He didn’t need a influencer diet — he needed a routine that respected rotating shifts and still cut the soft weight.",
           quote: "Doorstep sessions after my shift changed everything. No commute excuses, just a plan that matched my roster.",
           before: 90,
@@ -821,11 +903,23 @@
       var handleEl = document.getElementById("xfHandle");
       var compareEl = document.getElementById("xfCompare");
 
+      var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      function escapeHtml(value) {
+        return String(value == null ? "" : value)
+          .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
+      }
+
       function filtered() {
         return stories.filter(function(s) { return activeFilter === "all" || s.filter === activeFilter; });
       }
 
       function animateNumber(el, to) {
+        if (reduceMotion) {
+          el.textContent = String(Number(to) || 0);
+          return;
+        }
         var start = Number(el.textContent) || 0;
         var target = Number(to) || 0;
         var t0 = performance.now();
@@ -842,24 +936,29 @@
         comparePos = Math.max(5, Math.min(95, pct));
         beforeEl.style.clipPath = "inset(0 " + (100 - comparePos) + "% 0 0)";
         handleEl.style.left = comparePos + "%";
+        compareEl.setAttribute("aria-valuenow", String(Math.round(comparePos)));
+        compareEl.setAttribute("aria-valuetext", "Showing " + Math.round(comparePos) + " percent start photo");
       }
 
       function renderPeople() {
         var list = filtered();
+        if (!list.length) return;
         if (!list.some(function(s) { return s.id === activeId; })) activeId = list[0].id;
         peopleEl.innerHTML = list.map(function(s) {
-          return '<button class="xf-person' + (s.id === activeId ? ' active' : '') + '" type="button" data-id="' + s.id + '">' +
-            '<img src="' + s.image + '" alt="' + s.name + '" />' +
-            '<strong>' + s.name + '</strong><small>' + (s.role || s.category) + '</small></button>';
+          var src = s.thumb || s.image;
+          return '<button class="xf-person' + (s.id === activeId ? ' active' : '') + '" type="button" data-id="' + escapeHtml(s.id) + '" aria-pressed="' + (s.id === activeId ? "true" : "false") + '">' +
+            '<img src="' + escapeHtml(src) + '" alt="' + escapeHtml(s.name) + '" width="160" height="214" loading="lazy" decoding="async" />' +
+            '<strong>' + escapeHtml(s.name) + '</strong><small>' + escapeHtml(s.role || s.category) + '</small></button>';
         }).join("");
-        peopleEl.querySelectorAll(".xf-person").forEach(function(btn) {
-          btn.addEventListener("click", function() {
-            activeId = btn.getAttribute("data-id");
-            renderStory(true);
-            renderPeople();
-          });
-        });
       }
+
+      peopleEl.addEventListener("click", function(e) {
+        var btn = e.target.closest(".xf-person");
+        if (!btn) return;
+        activeId = btn.getAttribute("data-id");
+        renderStory(true);
+        renderPeople();
+      });
 
       function renderStory(animate) {
         var story = stories.find(function(s) { return s.id === activeId; }) || stories[0];
@@ -889,14 +988,15 @@
         }
 
         journeyEl.innerHTML = story.journey.map(function(j) {
-          return '<div class="xf-journey-step"><span class="xf-journey-dot"></span><span>' + j.month + '</span><strong>' + j.value + '</strong></div>';
+          return '<div class="xf-journey-step"><span class="xf-journey-dot"></span><span>' + escapeHtml(j.month) + '</span><strong>' + escapeHtml(j.value) + '</strong></div>';
         }).join("");
         Array.prototype.forEach.call(journeyEl.children, function(step, i) {
-          setTimeout(function() { step.classList.add("is-on"); }, 80 + i * 90);
+          if (reduceMotion) step.classList.add("is-on");
+          else setTimeout(function() { step.classList.add("is-on"); }, 80 + i * 90);
         });
 
         // Auto scrub once for intrigue
-        if (animate) {
+        if (animate && !reduceMotion) {
           var start = comparePos;
           var goal = 72;
           var t0 = performance.now();
@@ -907,14 +1007,17 @@
             if (p < 1) requestAnimationFrame(sweep);
           }
           requestAnimationFrame(sweep);
+        } else if (animate) {
+          setCompare(62);
         }
       }
 
-      // Compare drag
+      // Compare drag + keyboard
       var dragging = false;
       function pointerPct(e) {
         var rect = compareEl.getBoundingClientRect();
-        var x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+        var clientX = e.clientX != null ? e.clientX : (e.touches && e.touches[0] ? e.touches[0].clientX : 0);
+        var x = clientX - rect.left;
         return (x / rect.width) * 100;
       }
       function onMove(e) {
@@ -931,40 +1034,49 @@
       compareEl.addEventListener("pointermove", onMove);
       compareEl.addEventListener("pointerup", stopDrag);
       compareEl.addEventListener("pointercancel", stopDrag);
+      compareEl.addEventListener("keydown", function(e) {
+        if (e.key === "ArrowLeft") { e.preventDefault(); setCompare(comparePos - 4); }
+        if (e.key === "ArrowRight") { e.preventDefault(); setCompare(comparePos + 4); }
+        if (e.key === "Home") { e.preventDefault(); setCompare(5); }
+        if (e.key === "End") { e.preventDefault(); setCompare(95); }
+      });
 
       document.getElementById("xfFilters").addEventListener("click", function(e) {
         var btn = e.target.closest("button[data-filter]");
         if (!btn) return;
         activeFilter = btn.getAttribute("data-filter");
         Array.prototype.forEach.call(document.querySelectorAll("#xfFilters button"), function(b) {
-          b.classList.toggle("active", b === btn);
+          var on = b === btn;
+          b.classList.toggle("active", on);
+          b.setAttribute("aria-pressed", on ? "true" : "false");
         });
         renderPeople();
         renderStory(true);
       });
 
-      // Video rail
-      document.querySelectorAll(".xf-video-item").forEach(function(item) {
-        var vid = item.querySelector("video");
-        if (vid) {
-          item.addEventListener("mouseenter", function() { vid.play().catch(function(){}); });
-          item.addEventListener("mouseleave", function() { vid.pause(); vid.currentTime = 0; });
+      // Video rail — posters only until click (no autoplay bandwidth)
+      document.getElementById("xfVideoRail").addEventListener("click", function(e) {
+        var item = e.target.closest(".xf-video-item");
+        if (!item) return;
+        var src = item.getAttribute("data-video");
+        if (!src) return;
+        var o = document.createElement("div");
+        o.setAttribute("role", "dialog");
+        o.setAttribute("aria-modal", "true");
+        o.setAttribute("aria-label", "Transformation video");
+        o.style.cssText = "position:fixed;inset:0;z-index:999999;background:rgba(0,0,0,0.92);display:flex;align-items:center;justify-content:center;padding:24px;";
+        o.innerHTML = '<div style="position:relative;width:min(900px,92vw)"><button type="button" aria-label="Close video" style="position:absolute;top:-42px;right:0;background:none;border:none;color:#fff;font-size:1.6rem;cursor:pointer">×</button><video controls autoplay playsinline preload="metadata" style="width:100%;border-radius:10px;background:#000;max-height:80vh"><source src="' + escapeHtml(src) + '" type="video/mp4"></video></div>';
+        document.body.appendChild(o);
+        document.body.style.overflow = "hidden";
+        function close() {
+          document.body.style.overflow = "";
+          if (o.parentNode) o.parentNode.removeChild(o);
+          document.removeEventListener("keydown", onEsc);
         }
-        item.addEventListener("click", function() {
-          var src = item.getAttribute("data-video");
-          if (!src) return;
-          var o = document.createElement("div");
-          o.style.cssText = "position:fixed;inset:0;z-index:999999;background:rgba(0,0,0,0.9);display:flex;align-items:center;justify-content:center;padding:24px;";
-          o.innerHTML = '<div style="position:relative;width:min(900px,92vw)"><button type="button" style="position:absolute;top:-42px;right:0;background:none;border:none;color:#fff;font-size:1.6rem;cursor:pointer">×</button><video controls autoplay style="width:100%;border-radius:10px;background:#000;max-height:80vh"><source src="' + src + '" type="video/mp4"></video></div>';
-          document.body.appendChild(o);
-          document.body.style.overflow = "hidden";
-          function close() {
-            document.body.style.overflow = "";
-            if (o.parentNode) o.parentNode.removeChild(o);
-          }
-          o.querySelector("button").addEventListener("click", close);
-          o.addEventListener("click", function(ev) { if (ev.target === o) close(); });
-        });
+        function onEsc(ev) { if (ev.key === "Escape") close(); }
+        o.querySelector("button").addEventListener("click", close);
+        o.addEventListener("click", function(ev) { if (ev.target === o) close(); });
+        document.addEventListener("keydown", onEsc);
       });
 
       // Reveals

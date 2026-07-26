@@ -9,3 +9,4 @@ neha.png !filter !diff !merge -text
 deepak.png !filter !diff !merge -text
 ramakrishna.png !filter !diff !merge -text
 assets/fitness-gurukul-logo.png !filter !diff !merge -text
+assets/transforms/** !filter !diff !merge -text
