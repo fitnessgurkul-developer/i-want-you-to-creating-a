@@ -5,7 +5,7 @@
   "description": "Fitness Gurukul static website (Netlify / Vercel)",
   "scripts": {
     "build": "bash scripts/prepare-netlify-dist.sh",
-    "start": "node tools/local-server/start-node.js"
+    "start": "node start-node.js"
   },
   "engines": {
     "node": ">=18"

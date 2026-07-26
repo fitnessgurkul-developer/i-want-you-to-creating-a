@@ -1,6 +1,7 @@
 # Fitness Gurukul — static site on Netlify
-# No root package.json / requirements.txt on purpose so the
-# "Install dependencies" stage has nothing to install (avoids exit code 1).
+# Root has package.json (no deps) for Node install only.
+# Do NOT put requirements.txt / runtime.txt at repo root — Netlify's
+# Python detect+install stage fails and leaves production on an old deploy.
 
 [build]
   publish = "dist"
@@ -10,7 +11,6 @@
   NODE_VERSION = "20"
   GIT_LFS_ENABLED = "false"
   GIT_LFS_SKIP_SMUDGE = "1"
-  # Do not auto-select Yarn/PNPM
   NETLIFY_USE_YARN = "false"
 
 [[headers]]

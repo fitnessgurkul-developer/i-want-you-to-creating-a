@@ -1,0 +1,3 @@
+# Fitness Gurukul API uses Python stdlib only — no pip packages required.
+# Kept for Docker layer caching / host detection on Render, Railway, Fly.
+setuptools>=69.0.0
