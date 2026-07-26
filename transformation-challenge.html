@@ -455,26 +455,84 @@
     .tc-coach small { color: var(--tc-muted); }
 
     .tc-join {
-      padding: 72px 0 90px;
+      padding: 88px 0 100px;
+      border-top: 1px solid var(--tc-line);
+      background:
+        radial-gradient(ellipse at 12% 0%, rgba(255,255,255,0.06), transparent 42%),
+        #000;
     }
     .tc-join-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 24px;
-      align-items: stretch;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 40px;
+      align-items: center;
+    }
+    .tc-join-copy {
+      max-width: 34rem;
+      padding: 8px 0 8px 22px;
+      border-left: 2px solid #fff;
+    }
+    .tc-join-copy .section-kicker {
+      color: rgba(255,255,255,0.5);
     }
     .tc-join-copy h2 {
-      margin: 8px 0 12px;
-      font-size: clamp(1.9rem, 3.4vw, 2.8rem);
+      margin: 10px 0 14px;
+      font-size: clamp(2.1rem, 4vw, 3.2rem);
       line-height: 0.95;
+      letter-spacing: -0.035em;
+      max-width: 11ch;
     }
-    .tc-join-copy p { color: var(--tc-muted); max-width: 42ch; }
+    .tc-join-copy > p {
+      color: var(--tc-muted);
+      max-width: 36ch;
+      margin: 0 0 26px;
+      font-size: 1.02rem;
+      line-height: 1.55;
+    }
+    .tc-join-points {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 14px;
+    }
+    .tc-join-points li {
+      display: grid;
+      grid-template-columns: 28px 1fr;
+      gap: 12px;
+      align-items: start;
+      color: rgba(255,255,255,0.82);
+      font-size: 0.95rem;
+      line-height: 1.4;
+    }
+    .tc-join-points b {
+      display: grid;
+      place-items: center;
+      width: 28px;
+      height: 28px;
+      border: 1px solid rgba(255,255,255,0.35);
+      color: #fff;
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+    .tc-join-points span { color: var(--tc-muted); display: block; margin-top: 2px; font-size: 0.86rem; }
     .tc-join-form {
       border: 1px solid var(--tc-line);
-      background: var(--tc-panel);
-      padding: 22px;
+      background: rgba(17,17,17,0.96);
+      padding: 28px 24px;
       display: grid;
-      gap: 12px;
+      gap: 14px;
+    }
+    .tc-join-form .tc-form-title {
+      margin: 0 0 4px;
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    .tc-join-form .tc-form-note {
+      margin: -4px 0 6px;
+      color: var(--tc-muted);
+      font-size: 0.86rem;
     }
     .tc-join-form label {
       display: grid;
@@ -484,16 +542,21 @@
     }
     .tc-join-form input, .tc-join-form select {
       border: 1px solid var(--tc-line);
-      background: rgba(0,0,0,0.25);
+      background: rgba(0,0,0,0.35);
       color: #fff;
-      padding: 12px 12px;
+      padding: 13px 12px;
       font: inherit;
     }
     .tc-join-form input:focus, .tc-join-form select:focus {
-      outline: 1px solid var(--tc-accent);
-      border-color: var(--tc-accent);
+      outline: 1px solid #fff;
+      border-color: #fff;
     }
-    .tc-join-status { min-height: 1.2em; color: var(--tc-accent); font-size: 0.9rem; }
+    .tc-join-form .primary-button {
+      width: 100%;
+      justify-content: center;
+      margin-top: 4px;
+    }
+    .tc-join-status { min-height: 1.2em; color: rgba(255,255,255,0.85); font-size: 0.9rem; }
 
     .tc-reveal {
       opacity: 0;
@@ -683,11 +746,27 @@
     <section class="tc-join" id="tcJoin">
       <div class="tc-shell tc-join-grid">
         <div class="tc-join-copy tc-reveal">
-          <span class="section-kicker">Commit</span>
-          <h2>Lock your challenge seat</h2>
-          <p>Leave your details and a coach will follow up. No payment on this step.</p>
+          <span class="section-kicker">Fitness Gurukul</span>
+          <h2>Start your challenge</h2>
+          <p>Tell us who you are and which challenge you want. A coach follows up — no payment on this step.</p>
+          <ol class="tc-join-points">
+            <li>
+              <b>1</b>
+              <div>Pick your challenge<span>21 or 30 days with a clear weekly focus</span></div>
+            </li>
+            <li>
+              <b>2</b>
+              <div>Share your contact<span>Name and phone so we can reach you</span></div>
+            </li>
+            <li>
+              <b>3</b>
+              <div>Get coached<span>We match you and confirm your start plan</span></div>
+            </li>
+          </ol>
         </div>
         <form class="tc-join-form tc-reveal" id="tcJoinForm">
+          <p class="tc-form-title">Join this challenge</p>
+          <p class="tc-form-note">Takes under a minute. Free to reserve your seat.</p>
           <label>Your name
             <input name="name" autocomplete="name" required placeholder="e.g. Rahul Sharma" />
           </label>
@@ -700,7 +779,7 @@
           <label>Challenge
             <select name="challengeId" id="tcJoinSelect" required></select>
           </label>
-          <button class="primary-button" type="submit">Join challenge</button>
+          <button class="primary-button" type="submit">Reserve my seat</button>
           <p class="tc-join-status" id="tcJoinStatus" role="status"></p>
         </form>
       </div>
