@@ -156,9 +156,12 @@ Optional upgrade if you want SQLite + AI chat on a cloud API:
 
 **Railway**
 1. [https://railway.app](https://railway.app) → New Project → Deploy from GitHub
-2. Start command: `python server.py`
+2. Uses the repo `Dockerfile` (`railway.toml`) — start command: `python server.py`
 3. Add the same env vars as above
 4. Generate a public domain and copy it
+
+**Vercel**
+`server.py` exports a top-level `handler` class for the Python runtime. Set `ADMIN_TOKEN` (and optional `CORS_ORIGINS`) in the project env. SQLite on Vercel is ephemeral across cold starts/redeploys — prefer Render/Railway with a volume for durable leads.
 
 **Fly.io**
 ```bash

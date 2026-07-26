@@ -1387,6 +1387,13 @@ class AppHandler(SimpleHTTPRequestHandler):
             })
         return self.send_json({"error": "Not found"}, 404)
 
+
+# Vercel Python runtime requires a top-level class named "handler"
+# (BaseHTTPRequestHandler subclass). Local/Railway/Render still use AppHandler.
+class handler(AppHandler):
+    pass
+
+
 if __name__ == "__main__":
     init_db()
     # Cloud platforms (Render/Railway/Fly) inject PORT. Bind publicly there.
