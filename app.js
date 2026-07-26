@@ -2936,7 +2936,7 @@ function sitePathPrefix() {
 function pipeLinks(items, prefix) {
   return items.map(function(item, i) {
     var sep = i === 0 ? "" : ' <span class="fg-pop-sep" aria-hidden="true">|</span> ';
-    return sep + '<a href="' + prefix + item.href + '">' + item.label + "</a>";
+    return sep + '<a href="' + safe(prefix + item.href) + '">' + safe(item.label) + "</a>";
   }).join("");
 }
 
