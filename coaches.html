@@ -208,24 +208,30 @@
       </div>
       <div class="coach-tools">
         <div class="coach-tools-row">
-          <input id="coachSearch" placeholder="Search by name..." />
-          <select id="coachRatingFilter">
-            <option value="all">All Ratings</option>
-            <option value="4.9">4.9+</option>
-            <option value="4.8">4.8+</option>
-            <option value="4.7">4.7+</option>
-            <option value="4.6">4.6+</option>
-          </select>
-        </div>
-        <div class="filter-tabs" id="coachFilters">
-          <button data-coach-filter="all" class="active">All</button>
-          <button data-coach-filter="yoga">Yoga</button>
-          <button data-coach-filter="fitness">Fitness</button>
-          <button data-coach-filter="sports">Sports</button>
-          <button data-coach-filter="kids">Kids</button>
-          <button data-coach-filter="rehab">Rehab</button>
-          <button data-coach-filter="special">Special</button>
-          <button data-coach-filter="hybrid">Hybrid</button>
+          <input id="coachSearch" placeholder="Search by name..." aria-label="Search coaches by name" />
+          <label class="coach-filter-label">
+            <span>Specialty</span>
+            <select id="coachFilters" aria-label="Filter by specialty">
+              <option value="all">All specialties</option>
+              <option value="yoga">Yoga</option>
+              <option value="fitness">Fitness</option>
+              <option value="sports">Sports</option>
+              <option value="kids">Kids</option>
+              <option value="rehab">Rehab</option>
+              <option value="special">Special</option>
+              <option value="hybrid">Hybrid</option>
+            </select>
+          </label>
+          <label class="coach-filter-label">
+            <span>Rating</span>
+            <select id="coachRatingFilter" aria-label="Filter by rating">
+              <option value="all">All ratings</option>
+              <option value="4.9">4.9+</option>
+              <option value="4.8">4.8+</option>
+              <option value="4.7">4.7+</option>
+              <option value="4.6">4.6+</option>
+            </select>
+          </label>
         </div>
       </div>
       <div class="coach-grid" id="coachGrid" aria-live="polite">

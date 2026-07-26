@@ -897,17 +897,20 @@ function hydrateProgramSelects(plans) {
   });
 }
 
+function setCoachFilter(cat) {
+  activeCoachFilter = cat || "all";
+  var select = qs("#coachFilters");
+  if (select && select.tagName === "SELECT") select.value = activeCoachFilter;
+  renderFilteredCoaches();
+}
+
 function initCoachCategoryJump() {
   qsa(".cc-card[data-coach-jump], [data-coach-jump]").forEach(function(card) {
     card.style.cursor = "pointer";
     card.addEventListener("click", function() {
       var cat = card.getAttribute("data-coach-jump");
       if (!cat) return;
-      activeCoachFilter = cat;
-      qsa("button[data-coach-filter]").forEach(function(btn) {
-        btn.classList.toggle("active", btn.getAttribute("data-coach-filter") === cat);
-      });
-      renderFilteredCoaches();
+      setCoachFilter(cat);
       var grid = qs("#allCoaches") || qs("#coachGrid");
       if (grid) grid.scrollIntoView({ behavior: "smooth", block: "start" });
     });
@@ -934,11 +937,7 @@ function initCoachCategoryJump() {
     card.style.cursor = "pointer";
     card.addEventListener("click", function() {
       var cat = card.getAttribute("data-coach-jump");
-      activeCoachFilter = cat;
-      qsa("button[data-coach-filter]").forEach(function(btn) {
-        btn.classList.toggle("active", btn.getAttribute("data-coach-filter") === cat);
-      });
-      renderFilteredCoaches();
+      setCoachFilter(cat);
       var target = qs("#allCoaches") || qs("#coachGrid");
       if (target) target.scrollIntoView({ behavior: "smooth" });
     });
@@ -952,10 +951,7 @@ function initCoachCategoryJump() {
       kids: "kids", rehab: "rehab", flexibility: "yoga"
     };
     activeCoachFilter = goalMap[goal] || (["yoga","fitness","sports","kids","rehab","special","hybrid"].indexOf(goal) >= 0 ? goal : "all");
-    qsa("button[data-coach-filter]").forEach(function(btn) {
-      btn.classList.toggle("active", btn.getAttribute("data-coach-filter") === activeCoachFilter);
-    });
-    renderFilteredCoaches();
+    setCoachFilter(activeCoachFilter);
   }
 }
 
@@ -2224,13 +2220,26 @@ function wireNavigationAids() {
     if (has("#scrollProgress")) qs("#scrollProgress").style.width = `${progress}%`;
   });
   qs("#coachSearch")?.addEventListener("input", renderFilteredCoaches);
-  qs("#coachFilters")?.addEventListener("click", (event) => {
-    const button = event.target.closest("button[data-coach-filter]");
-    if (!button) return;
-    activeCoachFilter = button.dataset.coachFilter;
-    qsa("button[data-coach-filter]", qs("#coachFilters")).forEach((item) => item.classList.toggle("active", item === button));
-    renderFilteredCoaches();
-  });
+  var coachFilterEl = qs("#coachFilters");
+  if (coachFilterEl) {
+    if (coachFilterEl.tagName === "SELECT") {
+      coachFilterEl.addEventListener("change", function() {
+        activeCoachFilter = coachFilterEl.value || "all";
+        renderFilteredCoaches();
+      });
+    } else {
+      coachFilterEl.addEventListener("click", function(event) {
+        var button = event.target.closest("button[data-coach-filter]");
+        if (!button) return;
+        activeCoachFilter = button.getAttribute("data-coach-filter") || "all";
+        qsa("button[data-coach-filter]", coachFilterEl).forEach(function(item) {
+          item.classList.toggle("active", item === button);
+        });
+        renderFilteredCoaches();
+      });
+    }
+  }
+  qs("#coachRatingFilter")?.addEventListener("change", renderFilteredCoaches);
 }
 
 async function loadContent() {
