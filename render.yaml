@@ -12,6 +12,6 @@ services:
       - key: ADMIN_TOKEN
         generateValue: true
       - key: CORS_ORIGINS
-        value: "*"
+        value: "https://fitnessgurukul.co.in,https://www.fitnessgurukul.co.in,https://fitnessgurukul.in,https://www.fitnessgurukul.in"
       - key: PYTHON_VERSION
         value: "3.12.8"

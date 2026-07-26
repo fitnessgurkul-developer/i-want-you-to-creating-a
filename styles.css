@@ -3431,7 +3431,28 @@ from { opacity: 0; transform: translateY(30px) scale(0.94); }
 
 .contact-grid { display: grid; gap: 28px; grid-template-columns: 1fr 1fr; align-items: start; }
 
-.faq-list { display: grid; gap: 16px; grid-template-columns: 1fr; }
+.faq-list { display: grid; gap: 12px; grid-template-columns: 1fr; max-width: 820px; }
+.faq-item {
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 14px;
+  padding: 4px 18px;
+  background: rgba(255,255,255,0.03);
+}
+.faq-item summary {
+  cursor: pointer;
+  list-style: none;
+  padding: 14px 0;
+  font-weight: 650;
+  color: #fff;
+}
+.faq-item summary::-webkit-details-marker { display: none; }
+.faq-item p {
+  margin: 0 0 16px;
+  color: rgba(255,255,255,0.62);
+  line-height: 1.6;
+  font-size: 0.95rem;
+}
+.faq-item a { color: #fff; text-decoration: underline; }
 
 .psc-card {
   border: 1px solid var(--line);
