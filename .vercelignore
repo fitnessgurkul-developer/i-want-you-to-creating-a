@@ -1,0 +1,19 @@
+# Force static hosting: do not upload Python/backend so Vercel cannot
+# create a crashing serverless function from server.py.
+server.py
+start.py
+requirements.txt
+pyproject.toml
+runtime.txt
+Pipfile
+Pipfile.lock
+Dockerfile
+Procfile
+railway.toml
+fly.toml
+render.yaml
+*.sqlite3
+.env
+.env.*
+__pycache__
+*.pyc

@@ -160,8 +160,8 @@ Optional upgrade if you want SQLite + AI chat on a cloud API:
 3. Add the same env vars as above
 4. Generate a public domain and copy it
 
-**Vercel**
-`server.py` defines a top-level `handler` class (`BaseHTTPRequestHandler`), and `pyproject.toml` sets `[tool.vercel] entrypoint = "server:handler"`. Set `ADMIN_TOKEN` (and optional `CORS_ORIGINS`) in the project env. SQLite on Vercel is ephemeral across cold starts/redeploys — prefer Render/Railway with a volume for durable leads.
+**Vercel (static site only)**
+Vercel serves the front-end from `dist/` via `vercel.json` — **no Python serverless functions**. Backend stays on Hostinger PHP (`/api/*.php`) or Render/Railway/Fly (`server.py`). Do not point Vercel at `server.py`.
 
 **Fly.io**
 ```bash

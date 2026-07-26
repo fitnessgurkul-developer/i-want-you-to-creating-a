@@ -13,7 +13,9 @@
  *   3. Paste the https://….onrender.com URL below
  *   4. Redeploy Hostinger / push to main
  */
-window.FG_API_BASE = window.FG_API_BASE || "https://functional-sections-implement-handles.trycloudflare.com";
+// Empty = same-origin (/api/*.php on Hostinger, or WhatsApp fallback on static hosts).
+// For a cloud Python API (Render/Railway/Fly), set e.g. "https://….onrender.com".
+window.FG_API_BASE = window.FG_API_BASE || "";
 
 (function (w) {
   var PHP_MAP = {
