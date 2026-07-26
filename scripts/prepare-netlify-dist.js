@@ -35,7 +35,7 @@ const files = [
   "sitemap.xml",
 ];
 
-const dirs = ["assets", "coaches", "api"];
+const dirs = ["assets", "coaches", "api", "TESTIMONIALS"];
 
 function rmrf(p) {
   if (!fs.existsSync(p)) return;

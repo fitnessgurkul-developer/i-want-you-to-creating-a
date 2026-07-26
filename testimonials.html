@@ -12,32 +12,35 @@
   <meta property="og:url" content="https://fitnessgurukul.app/testimonials.html" />
   <meta property="og:title" content="Transformations | Fitness Gurukul" />
   <meta property="og:description" content="Original names. Real change. Before/after stories and event testimonials from Fitness Gurukul Hyderabad." />
-  <meta property="og:image" content="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=1600&q=80&auto=format&fit=crop" />
+  <meta property="og:image" content="https://fitnessgurukul.app/assets/transforms/xf-page-hero.webp" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Transformations | Fitness Gurukul" />
   <meta name="twitter:description" content="Original names, real before/after stories, and event testimonials from Fitness Gurukul." />
-  <meta name="twitter:image" content="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=1600&q=80&auto=format&fit=crop" />
-  <link rel="preload" as="image" href="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=1800&q=80&auto=format&fit=crop" fetchpriority="high" />
+  <meta name="twitter:image" content="https://fitnessgurukul.app/assets/transforms/xf-page-hero.webp" />
+  <link rel="preload" as="image" href="assets/transforms/xf-page-hero.webp" fetchpriority="high" />
   <link rel="stylesheet" href="styles.css" />
   <style>
     :root {
-      /* Match site black / white / soft gray */
       --xf-accent: #ffffff;
       --xf-ink: #ffffff;
-      --xf-muted: #999999;
-      --xf-line: rgba(255,255,255,0.12);
-      --xf-soft: rgba(255,255,255,0.72);
+      --xf-muted: #9a9a9a;
+      --xf-line: rgba(255,255,255,0.14);
+      --xf-soft: rgba(255,255,255,0.76);
     }
 
     body.xf-page {
       overflow-x: hidden;
-      background: #000;
+      background:
+        radial-gradient(1200px 600px at 80% -10%, rgba(255,255,255,0.06), transparent 55%),
+        radial-gradient(900px 500px at -10% 40%, rgba(255,255,255,0.035), transparent 50%),
+        #050505;
+      color: #fff;
     }
     body.xf-page::before,
     body.xf-page::after,
     body.xf-page #bg-ambient { display: none !important; }
 
-    /* HERO — one composition, brand first, dedicated full-bleed image */
+    /* HERO — one composition, brand first, real FG full-bleed */
     .xf-hero {
       position: relative;
       min-height: 100vh;
@@ -51,11 +54,11 @@
       position: absolute; inset: 0;
       z-index: 0;
       background:
-        linear-gradient(180deg, rgba(0,0,0,0.28) 0%, rgba(0,0,0,0.42) 38%, rgba(0,0,0,0.94) 100%),
-        url("https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=1800&q=80&auto=format&fit=crop") center 42% / cover no-repeat;
+        linear-gradient(180deg, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0.38) 42%, rgba(0,0,0,0.94) 100%),
+        url("assets/transforms/xf-page-hero.webp") center 40% / cover no-repeat;
       transform: scale(1.03);
       will-change: transform;
-      animation: xfKen 24s ease-in-out infinite alternate;
+      animation: xfKen 22s ease-in-out infinite alternate;
     }
     @keyframes xfKen {
       from { transform: scale(1.03) translate3d(0,0,0); }
@@ -63,9 +66,11 @@
     }
     @media (prefers-reduced-motion: reduce) {
       .xf-hero-media,
+      .xf-hero-inner,
       .xf-reveal,
       .xf-journey-step { animation: none !important; transition: none !important; }
       .xf-hero-media { transform: none; will-change: auto; }
+      .xf-hero-inner,
       .xf-reveal { opacity: 1; transform: none; }
     }
     .xf-hero-inner {
@@ -74,28 +79,36 @@
       width: min(1120px, calc(100% - 48px));
       margin: 0 auto;
       padding: 120px 0 72px;
+      animation: xfHeroIn 1s ease both;
+    }
+    @keyframes xfHeroIn {
+      from { opacity: 0; transform: translateY(18px); }
+      to { opacity: 1; transform: none; }
     }
     .xf-brand {
-      font-size: clamp(3.2rem, 10vw, 6.8rem);
-      line-height: 0.9;
-      letter-spacing: -0.05em;
+      font-family: var(--font-display);
+      font-size: clamp(3.6rem, 11vw, 7.4rem);
+      line-height: 0.86;
+      letter-spacing: -0.055em;
       font-weight: 800;
-      margin: 0 0 20px;
+      margin: 0 0 22px;
+      text-wrap: balance;
     }
-    .xf-brand span { display: block; color: rgba(255,255,255,0.7); }
+    .xf-brand span { display: block; color: rgba(255,255,255,0.62); font-weight: 700; }
     .xf-hero h1 {
-      max-width: 14ch;
-      font-size: clamp(1.4rem, 2.9vw, 1.95rem);
-      line-height: 1.15;
+      max-width: 16ch;
+      font-family: var(--font-display);
+      font-size: clamp(1.35rem, 2.7vw, 1.85rem);
+      line-height: 1.2;
       margin: 0 0 14px;
       font-weight: 500;
       color: rgba(255,255,255,0.94);
       letter-spacing: -0.02em;
     }
     .xf-hero > .xf-hero-inner > p {
-      max-width: 34ch;
+      max-width: 32ch;
       color: var(--xf-muted);
-      font-size: 1.02rem;
+      font-size: 1.05rem;
       line-height: 1.5;
       margin: 0 0 28px;
     }
@@ -121,23 +134,26 @@
       font-size: clamp(1.7rem, 3vw, 2.4rem);
       margin: 8px 0 0;
     }
-    .xf-filters { display: flex; gap: 8px; flex-wrap: wrap; }
+    .xf-filters { display: flex; gap: 4px 18px; flex-wrap: wrap; align-items: center; }
     .xf-filters button {
-      border: 1px solid var(--xf-line);
-      background: rgba(255,255,255,0.03);
+      border: 0;
+      border-bottom: 2px solid transparent;
+      background: transparent;
       color: var(--xf-muted);
-      border-radius: 999px;
-      padding: 8px 14px;
+      border-radius: 0;
+      padding: 6px 0;
       font: inherit;
-      font-size: 0.82rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
       cursor: pointer;
-      transition: border-color .2s, color .2s, background .2s, transform .2s;
+      transition: color .2s, border-color .2s;
     }
-    .xf-filters button:hover { color: #fff; border-color: rgba(255,255,255,0.28); }
+    .xf-filters button:hover { color: #fff; }
     .xf-filters button.active {
-      color: #000;
-      background: #fff;
-      border-color: #fff;
+      color: #fff;
+      border-bottom-color: #fff;
+      background: transparent;
     }
 
     .xf-stage-grid {
@@ -565,26 +581,6 @@
       font-size: 0.88rem;
       line-height: 1.55;
     }
-    .xf-related-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 28px;
-    }
-    .xf-related-tags a {
-      display: inline-flex;
-      padding: 8px 12px;
-      border: 1px solid rgba(255,255,255,0.14);
-      color: rgba(255,255,255,0.7);
-      font-size: 0.78rem;
-      text-decoration: none;
-      border-radius: 999px;
-    }
-    .xf-related-tags a:hover {
-      color: #fff;
-      border-color: rgba(255,255,255,0.4);
-    }
-
     @media (max-width: 960px) {
       .xf-stage-grid { grid-template-columns: 1fr; }
       .xf-spotlight { min-height: 420px; }
@@ -705,11 +701,11 @@
       <div class="xf-hero-media" aria-hidden="true"></div>
       <div class="xf-hero-inner">
         <p class="xf-brand">Fitness <span>Gurukul</span></p>
-        <h1>Original names. Real change.</h1>
-        <p>Before-and-after stories and event voices from the people who trained with us in Hyderabad.</p>
+        <h1>Real members. Measurable change.</h1>
+        <p>Drag the line across before-and-after stories from Hyderabad — original names, real kilos, their words.</p>
         <div class="xf-hero-actions">
-          <a class="primary-button" href="#xfStage">See transformations</a>
-          <a class="ghost-button" href="#xfEventVoices">Event testimonials</a>
+          <a class="primary-button" href="#xfStage">See the change</a>
+          <a class="ghost-button" href="book-consultation.html">Start my plan</a>
         </div>
       </div>
     </section>
@@ -718,7 +714,7 @@
       <div class="xf-stage-head xf-reveal">
         <div>
           <span class="section-kicker">Named transformations</span>
-          <h2>Pick a story. Scrub the change.</h2>
+          <h2>Pick a name. Drag the difference.</h2>
         </div>
         <div class="xf-filters" id="xfFilters" role="tablist" aria-label="Filter transformation stories">
           <button type="button" data-filter="all" class="active" aria-pressed="true">All</button>
@@ -765,8 +761,8 @@
       <div class="xf-videos-inner">
         <div class="xf-videos-head xf-reveal">
           <span class="section-kicker">On camera</span>
-          <h2>They said it themselves</h2>
-          <p>Tap to hear Udit Narayan, Neha Chopra, and fellow members in their own words.</p>
+          <h2>Hear them say it</h2>
+          <p>Tap a face — Udit, Neha, Ramakrishna, and Deepak in their own words.</p>
         </div>
         <div class="xf-video-rail xf-reveal" id="xfVideoRail">
           <button class="xf-video-item" type="button" data-video="TESTIMONIALS/NEHA%20.mp4" aria-label="Play Neha Chopra testimonial video">
@@ -801,8 +797,8 @@
       <div class="xf-events-inner">
         <div class="xf-events-head xf-reveal">
           <span class="section-kicker">Event testimonials</span>
-          <h2>Voices from the rides, runs, and wellness days</h2>
-          <p>Original names from Fitness Gurukul community events across Hyderabad.</p>
+          <h2>Rides, runs, and wellness days</h2>
+          <p>What members said after FG community events in Hyderabad.</p>
         </div>
         <div class="xf-event-list xf-reveal">
           <article class="xf-event-voice">
@@ -845,44 +841,22 @@
       <div class="xf-related-inner">
         <div class="xf-related-head xf-reveal">
           <span class="section-kicker">Keep going</span>
-          <h2>Next steps after the stories</h2>
-          <p>Coaching, challenges, and community events when you are ready to start.</p>
+          <h2>Ready for your turn?</h2>
+          <p>Coaching, a short challenge, or a free consult — pick one path.</p>
         </div>
         <div class="xf-related-grid xf-reveal">
           <a href="services.html">
             <strong>Personal training plans</strong>
-            <span>Core to Signature coaching with nutrition that fits Indian meals and real weeks.</span>
+            <span>1:1 coaching with nutrition that fits Indian meals and real weeks.</span>
           </a>
           <a href="transformation-challenge.html">
-            <strong>30-day transformation challenge</strong>
-            <span>Short blocks with a quiz match — pick a challenge and lock your next month.</span>
+            <strong>30-day challenge</strong>
+            <span>A short block with a quiz match — lock your next month.</span>
           </a>
           <a href="book-consultation.html">
             <strong>Book a free consultation</strong>
-            <span>Tell us your goal and schedule — we match coach and plan around your life.</span>
+            <span>Tell us your goal — we match coach and plan around your life.</span>
           </a>
-          <a href="coaches.html">
-            <strong>Meet the coaches</strong>
-            <span>Strength, yoga, rehab, and lifestyle coaches across Hyderabad.</span>
-          </a>
-          <a href="tools.html">
-            <strong>Fitness calculators</strong>
-            <span>Macros, BMI, and planning tools before you book.</span>
-          </a>
-          <a href="events.html">
-            <strong>Rides, runs &amp; wellness events</strong>
-            <span>FG New Ride, Born Star, Yoga Day, and corporate active days.</span>
-          </a>
-        </div>
-        <div class="xf-related-tags xf-reveal">
-          <a href="testimonials.html">Udit Narayan transformation</a>
-          <a href="testimonials.html#xfEventVoices">Event testimonials</a>
-          <a href="book-consultation.html">Personal trainer Hyderabad</a>
-          <a href="events.html">FG New Ride</a>
-          <a href="transformation-challenge.html#tcQuiz">Challenge quiz</a>
-          <a href="contact.html">Contact Fitness Gurukul</a>
-          <a href="coaches.html">Our coaches</a>
-          <a href="about.html">Fitness Gurukul since 2013</a>
         </div>
       </div>
     </section>
@@ -891,10 +865,10 @@
       <div class="xf-cta-inner xf-reveal">
         <span class="section-kicker">Fitness Gurukul</span>
         <h2>Write your name next</h2>
-        <p>1:1 coaching, Indian nutrition, and a community that rides and runs together in Hyderabad.</p>
+        <p>1:1 coaching, Indian nutrition, and a Hyderabad community that shows up.</p>
         <div class="xf-hero-actions">
           <a class="primary-button" href="book-consultation.html">Book a consultation</a>
-          <a class="ghost-button" href="https://wa.me/917207113310" target="_blank" rel="noopener">Have questions? Chat now</a>
+          <a class="ghost-button" href="https://wa.me/917207113310" target="_blank" rel="noopener">Chat on WhatsApp</a>
         </div>
       </div>
     </section>

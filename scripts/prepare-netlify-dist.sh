@@ -29,7 +29,7 @@ for f in "${files[@]}"; do
   fi
 done
 
-for d in assets coaches api; do
+for d in assets coaches api TESTIMONIALS; do
   if [[ -d "$d" ]]; then
     cp -a "$d" "$DIST/"
   fi
