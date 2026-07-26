@@ -83,20 +83,30 @@ load_env_file()
 DB_PATH = resolve_db_path()
 
 
+DEFAULT_CORS_ORIGINS = (
+    "https://fitnessgurukul.co.in,"
+    "https://www.fitnessgurukul.co.in,"
+    "https://fitnessgurukul.in,"
+    "https://www.fitnessgurukul.in"
+)
+
+
 def cors_origin_for(handler):
-    """Allow Hostinger static site to call this API on Render/Railway/Fly."""
-    configured = (os.environ.get("CORS_ORIGINS") or "*").strip()
+    """Allow only Fitness Gurukul domains (override with CORS_ORIGINS)."""
+    configured = (os.environ.get("CORS_ORIGINS") or DEFAULT_CORS_ORIGINS).strip()
     request_origin = (handler.headers.get("Origin") or "").strip()
-    if not configured or configured == "*":
+    if configured == "*":
         return request_origin or "*"
     allowed = [part.strip() for part in configured.split(",") if part.strip()]
+    if request_origin.startswith(("http://127.0.0.1", "http://localhost")):
+        return request_origin
     if request_origin and request_origin in allowed:
         return request_origin
     return allowed[0] if allowed else "*"
 
 
 CONTACT = {
-    "phone": "08042781491",
+    "phone": "+917207113310",
     "whatsapp": "+917207113310",
     "email": "contact@fitnessgurukul.co.in",
     "address": "H.no.1-10/2, Lakshmi Nagar Colony, near Pochamma Temple, Manikonda, Hyderabad, 500089",
@@ -591,7 +601,7 @@ def init_db():
     DB_SCHEMA_READY = True
 
 
-LOCAL_DEFAULT_PASSWORD = "fitnessgurukul"
+LOCAL_DEFAULT_PASSWORD = "Rr6OrZTsbxJNfWcqFzyBQehb"
 ADMIN_CRED_MODE = "unconfigured"  # configured | local-default | generated
 
 def admin_token():
@@ -1123,11 +1133,11 @@ class AppHandler(SimpleHTTPRequestHandler):
                     "adminConfigured": bool(admin_token()),
                     "backendUrl": "/backend",
                     "aiEnabled": bool(os.environ.get("OPENAI_API_KEY", "").strip()),
-                    "cors": (os.environ.get("CORS_ORIGINS") or "*"),
+                    "cors": (os.environ.get("CORS_ORIGINS") or DEFAULT_CORS_ORIGINS),
                     "cloudReady": True,
                 })
             if path == "/api/backend-info":
-                # Non-sensitive helper so the login screen can guide staff.
+                # Non-sensitive helper only — never expose the owner password publicly.
                 host_hdr = (self.headers.get("Host") or f"127.0.0.1:{os.environ.get('PORT', '8000')}").strip()
                 mode = ADMIN_CRED_MODE if ADMIN_CRED_MODE != "unconfigured" else (
                     "configured" if admin_token() else "unconfigured"
@@ -1137,13 +1147,14 @@ class AppHandler(SimpleHTTPRequestHandler):
                     "backendUrl": "/backend",
                     "dashboardUrl": "/backend",
                     "ownerUrl": "/backend",
-                    "userUrl": "/",
+                    "browseUrl": "/",
                     "adminConfigured": bool(admin_token()),
                     "mode": mode,
-                    "localDefaultPassword": LOCAL_DEFAULT_PASSWORD if mode == "local-default" else "",
+                    "localDefaultPassword": False,
                     "openUrl": f"http://{host_hdr}/backend",
                     "hint": (
-                        f"Local default password: {LOCAL_DEFAULT_PASSWORD}"
+                        "Enter the owner password from your .env file (ADMIN_TOKEN / ADMIN_PASSWORD) "
+                        "or local server defaults. This page is noindex."
                         if mode == "local-default"
                         else "Enter the staff password from your .env file (ADMIN_TOKEN or ADMIN_PASSWORD)."
                     ),
@@ -1395,9 +1406,9 @@ if __name__ == "__main__":
     print(f" Website:   http://127.0.0.1:{port}/")
     print(f" Backend:   http://127.0.0.1:{port}/backend.html")
     print(f" Database:  {DB_PATH}")
-    print(f" CORS:      {os.environ.get('CORS_ORIGINS', '*')}")
+    print(f" CORS:      {os.environ.get('CORS_ORIGINS', DEFAULT_CORS_ORIGINS)}")
     if cred_mode == "local-default":
-        print(" Owner password (local default): fitnessgurukul")
+        print(" Owner password (local default): set in ADMIN_TOKEN / LOCAL_DEFAULT_PASSWORD")
         print(" Tip: open backend.html — unlocks automatically on this computer.")
     elif cred_mode == "generated":
         print(f" Owner password (generated): {admin_token()}")

@@ -128,7 +128,7 @@ const realData = {
     { name: "Shashi Mishra", role: "Fitness Trainer", slug: "shashi-mishra", category: "fitness", bio: "Fitness Trainer focused on overall wellness and strength.", focus: ["Fitness training", "Strength", "Wellness"], highlight: "Wellness Coach", color: "red", image: "assets/coaches/shashi-mishra.jpg" },
   ],
   testimonials: [
-    { name: "Udit Narayan", quote: "I went from being overweight with zero confidence to completely transforming my body. The coaching at Fitness Gurukul gave me the discipline and structure I never had. Every session was planned, every meal was guided. This is the best investment I have made in myself.", result: "Body Recomposition", rating: 5, galleryImage: STORY_MAP_IMAGES[0], before: 88, after: 74, unit: "kg", metric: "Weight", journey: [{ month: "Start", value: "88 kg" , clients: 70, rating: 4.9}, { month: "Month 2", value: "83 kg" }, { month: "Month 4", value: "79 kg" }, { month: "Month 6", value: "76 kg" }, { month: "Month 8", value: "74 kg" }], coach: "Fitness Gurukul" },
+    { name: "Udit Narayan", quote: "I went from being overweight with zero confidence to completely transforming my body. The coaching at Fitness Gurukul gave me the discipline and structure I never had. Every session was planned, every meal was guided. This is the best investment I have made in myself.", result: "Body Recomposition", rating: 5, galleryImage: STORY_MAP_IMAGES[0], before: 88, after: 74, unit: "kg", metric: "Weight", journey: [{ month: "Start", value: "88 kg" }, { month: "Month 2", value: "83 kg" }, { month: "Month 4", value: "79 kg" }, { month: "Month 6", value: "76 kg" }, { month: "Month 8", value: "74 kg" }], coach: "Fitness Gurukul" },
   { name: "Neha Chopra", quote: "I struggled with my weight for years. Nothing worked until I joined Fitness Gurukul. The combination of personalized training and nutrition coaching changed everything. I lost weight steadily, gained energy, and actually started enjoying fitness for the first time in my life.", result: "Weight Loss", rating: 5, galleryImage: STORY_MAP_IMAGES[1], before: 82, after: 65, unit: "kg", metric: "Weight", journey: [{ month: "Start", value: "82 kg" }, { month: "Month 2", value: "77 kg" }, { month: "Month 4", value: "72 kg" }, { month: "Month 6", value: "68 kg" }, { month: "Month 7", value: "65 kg" }], coach: "Fitness Gurukul" },
   { name: "Ramakrishna", quote: "At my age I thought getting back in shape was impossible. My coach proved me wrong. The training was tough but always safe, and the nutrition plan was practical and easy to follow. I feel 10 years younger now.", result: "Weight Loss", rating: 5, galleryImage: STORY_MAP_IMAGES[2], before: 88, after: 74, unit: "kg", metric: "Weight", journey: [{ month: "Start", value: "88 kg" }, { month: "Month 2", value: "84 kg" }, { month: "Month 4", value: "79 kg" }, { month: "Month 6", value: "74 kg" }], coach: "Fitness Gurukul" },
   { name: "Deepak", quote: "I came to Fitness Gurukul with low energy and bad habits. The structured program and constant accountability from my coach kept me on track. Six months later I am stronger, leaner, and more confident than I have ever been.", result: "Weight Loss", rating: 5, galleryImage: STORY_MAP_IMAGES[3], before: 90, after: 76, unit: "kg", metric: "Weight", journey: [{ month: "Start", value: "90 kg" }, { month: "Month 2", value: "85 kg" }, { month: "Month 4", value: "80 kg" }, { month: "Month 6", value: "76 kg" }], coach: "Fitness Gurukul" },
@@ -582,7 +582,7 @@ function renderMatchResultHtml(data) {
     '<div class="goal-match-plan"><span>Recommended</span><strong>' + safe(plan.name || match.plan || "") + '</strong><em>' + safe(plan.price || "") + '</em></div>' +
     '<div class="goal-match-coaches">' + (coachHtml || "<p>Browse all coaches to pick your fit.</p>") + '</div>' +
     '<div class="goal-match-actions">' +
-      '<a class="primary-button" href="' + safe(bookHref) + '">Buy Now</a>' +
+      '<a class="primary-button" href="' + safe(bookHref) + '">Book a consultation</a>' +
       '<a class="ghost-button" href="transformation-challenge.html#tcQuiz">Try challenge quiz</a>' +
       '<a class="ghost-button" href="https://wa.me/917207113310" target="_blank" rel="noopener">Have questions? Chat now</a>' +
     '</div>' +
@@ -882,12 +882,6 @@ function initInteractivePageExtras() {
   initCoachCategoryJump();
   initEventFilters();
   initToolsMatchHook();
-  // Rating filter on coaches page
-  var rating = qs("#coachRatingFilter");
-  if (rating && rating.dataset.wired !== "1") {
-    rating.dataset.wired = "1";
-    rating.addEventListener("change", renderFilteredCoaches);
-  }
 }
 
 function initMagneticCtas() {
@@ -945,59 +939,36 @@ function coachInitials(name = "") {
   return name.split(" ").filter(Boolean).slice(0, 2).map((part) => part[0]).join("").toUpperCase();
 }
 
-function fakeCoachMeta(coach, idx = 0) {
-  const seed = (coach?.slug || coach?.name || "coach").split("").reduce((sum, ch) => sum + ch.charCodeAt(0), 0) + idx;
-  const rating = (4.6 + (seed % 4) * 0.1).toFixed(1);
-  const reviews = 80 + (seed % 9) * 23;
-  const clients = 120 + (seed % 8) * 35;
-  const experience = 4 + (seed % 8);
-  const retention = 86 + (seed % 10);
-  const nextSlot = ["Today 6 PM", "Tomorrow 7 AM", "Today 8 PM", "Sat 9 AM", "Tomorrow 5 PM"][seed % 5];
-  const energy = ["Calm", "Power", "Focus", "Mobility", "Strength"][seed % 5];
-  return { rating, reviews, clients, experience, retention, nextSlot, energy };
-}
-
 function renderFilteredCoaches() {
   if (!has("#coachGrid")) return;
   const container = qs("#coachGrid");
   const search = qs("#coachSearch")?.value.trim().toLowerCase() || "";
-  const minRating = Number((qs("#coachRatingFilter") || {}).value || 0);
   const limit = Number(container.dataset.limit || 0);
-  const filtered = allCoaches.filter((coach, idx) => {
+  const filtered = allCoaches.filter((coach) => {
     const haystack = `${coach.name} ${coach.role} ${(coach.focus || []).join(" ")} ${coach.highlight || ""}`.toLowerCase();
     const matchesSearch = !search || haystack.includes(search);
     const matchesFilter = activeCoachFilter === "all" || coach.category === activeCoachFilter;
-    const meta = fakeCoachMeta(coach, idx);
-    const matchesRating = !minRating || Number(meta.rating) >= minRating;
-    return matchesSearch && matchesFilter && matchesRating;
+    return matchesSearch && matchesFilter;
   });
   const items = limit ? filtered.slice(0, limit) : filtered;
   var isHome = !has("#coachSearch") && !has("#coachFilters");
-  console.log("[renderFilteredCoaches] filtered:", filtered.length, "items:", items.length, "isHome:", isHome);
   container.innerHTML = items.map(function(coach, idx) {
     const ac = accentMap[coach.color] || accentMap.cyan;
-    const hc = coach.color === "red" ? "var(--white)" : coach.color === "blue" ? "var(--white)" : "var(--white)";
+    const hc = "var(--white)";
     const img = coach.image ? safe(coach.image) : "";
-    const meta = fakeCoachMeta(coach, idx);
+    const focusLabel = safe((coach.focus || [])[0] || coach.highlight || "Coach");
     if (isHome) {
       return `<article class="home-coach-card reveal" style="--accent:${ac};--delay:${idx * 0.08}s" data-coach-id="${safe(coach.slug)}">
         <div class="coach-avatar-wrap" style="--accent:${ac}">
           ${img ? '<img class="coach-avatar-img" src="' + img + '" alt="' + safe(coach.name) + '" />' : '<span class="coach-avatar-inner">' + safe(coachInitials(coach.name)) + '</span>'}
-          <span class="coach-rating-float">${meta.rating} ★</span>
         </div>
         <h3>${safe(coach.name)}</h3>
         <small class="coach-role">${safe(coach.role)}</small>
-        <div class="coach-mini-proof"><span>${meta.reviews} reviews</span></div>
         ${coach.highlight ? '<span class="coach-highlight-badge" style="--accent:' + ac + '">' + safe(coach.highlight) + '</span>' : ""}
         <button class="coach-card-book-btn" style="background:${ac}" data-coach="${safe(coach.name)}">Book ${safe(coach.name.split(" ")[0])}</button>
         <div class="coach-hover-layer">
-          <div class="coach-overlay-stats">
-            <span class="coach-ostat"><strong>${meta.experience}yr</strong> Exp</span>
-            <span class="coach-ostat"><strong>${meta.clients}+</strong> Clients</span>
-            <span class="coach-ostat"><strong>${meta.rating}</strong> Rating</span>
-          </div>
-          <p>${safe(coach.bio ? coach.bio.slice(0, 100) + "..." : "Expert coach dedicated to your transformation.")}</p>
-          <span class="coach-hover-tag" style="--accent:${ac}">${safe((coach.focus || [])[0] || "Fitness")}</span>
+          <p>${safe(coach.bio ? coach.bio.slice(0, 100) + "..." : "Certified Fitness Gurukul coach focused on personalized training.")}</p>
+          <span class="coach-hover-tag" style="--accent:${ac}">${focusLabel}</span>
         </div>
       </article>`;
     }
@@ -1005,16 +976,10 @@ function renderFilteredCoaches() {
       <div class="ccv2-avatar" style="color:${ac}">
         ${img ? '<img class="ccv2-avatar-img" src="' + img + '" alt="' + safe(coach.name) + '" />' : safe(coachInitials(coach.name))}
         <span class="ccv2-highlight-badge" style="background:${ac}">${safe(coach.highlight || "Coach")}</span>
-        <span class="ccv2-rating-orbit">${meta.rating} ★</span>
       </div>
       <div class="ccv2-body">
         <small class="ccv2-role">${safe(coach.role)}</small>
         <h3>${safe(coach.name)}</h3>
-        <div class="ccv2-proof-row">
-          <span><strong>${meta.rating}</strong> rating</span>
-          <span><strong>${meta.reviews}</strong> reviews</span>
-          <span><strong>${meta.clients}+</strong> clients</span>
-        </div>
         <div class="ccv2-tags">${(coach.focus || []).map(function(f) { return '<span style="border-color:' + hc + '33;color:' + hc + '">' + safe(f) + '</span>'; }).join("")}</div>
         <div class="ccv2-actions">
           <span class="ccv2-profile-btn" style="border-color:${ac}">View Profile</span>
@@ -1071,13 +1036,10 @@ function renderTestimonials(testimonials) {
 function renderMindsCarousel(coaches) {
   var container = qs("#mindsCarousel");
   if (!container) return;
-  var certMap = { yoga: ["RYT 500", "Yoga Alliance Certified", "E-RYT 200"], fitness: ["ACSM-CPT", "NSCA-CPT", "ACE-CPT"], sports: ["NSCA-CSCS", "NASM-PES"], kids: ["ACE-YFS", "NASM-YES"], rehab: ["NASM-CES", "FMS L1"], special: ["ACSM-EP", "NCPAD Certified"], hybrid: ["CF-L1", "IKFF-CKT"] };
   container.innerHTML = coaches.map(function(c, i) {
-    var certs = certMap[c.category] || certMap.fitness;
-    var cert = certs[i % certs.length];
-    var exp = (i % 5) + 3;
+    var focus = (c.focus && c.focus[0]) || c.highlight || "Coach";
     var img = c.image ? '<img src="' + safe(c.image) + '" alt="' + safe(c.name) + '" />' : '<div class="minds-card-avatar-fallback">' + safe(c.name.split(" ").filter(Boolean).slice(0, 2).map(function(p) { return p[0]; }).join("").toUpperCase()) + '</div>';
-    return '<div class="minds-card" data-index="' + i + '"><div class="minds-card-avatar">' + img + '</div><h4>' + safe(c.name) + '</h4><p>' + safe(c.role) + '</p><div class="minds-card-meta"><span class="minds-card-cert">' + safe(cert) + '</span><span class="minds-card-exp">' + exp + ' Years</span></div></div>';
+    return '<div class="minds-card" data-index="' + i + '"><div class="minds-card-avatar">' + img + '</div><h4>' + safe(c.name) + '</h4><p>' + safe(c.role) + '</p><div class="minds-card-meta"><span class="minds-card-cert">' + safe(focus) + '</span></div></div>';
   }).join("");
 }
 
@@ -1716,6 +1678,7 @@ function injectBookModal() {
         '<p class="book-modal-coach-name" id="bookModalCoachName"></p>' +
       '</div>' +
       '<form class="book-modal-frm" id="bookModalForm">' +
+        '<input type="hidden" name="form_type" value="consultation" />' +
         '<input type="hidden" name="coach" id="bookModalCoachInput" />' +
         '<div class="book-frm-row">' +
           '<label>Your Name<input name="name" autocomplete="name" required placeholder="e.g. Rahul Sharma" /></label>' +
@@ -1750,17 +1713,8 @@ function injectBookModal() {
 function renderCoachPopup(coach) {
   const body = qs("#coachPopupBody");
   if (!body) return;
-  var idx = allCoaches.indexOf(coach);
-  if (idx < 0) idx = 0;
   const ac = accentMap[coach.color] || accentMap.cyan;
   const img = coach.image ? '<img class="cp-avatar-img" src="' + safe(coach.image) + '" alt="' + safe(coach.name) + '" />' : '';
-  var meta = fakeCoachMeta(coach, idx);
-  var fakeExp = meta.experience + " Years Experience";
-  var fakeClients = meta.clients + "+ Transformations";
-  var fakeRating = meta.rating;
-  var fakeStars = Number(fakeRating) >= 4.9 ? "★★★★★" : "★★★★★";
-  var certs = ["Certified Personal Trainer", "CPR/AED Certified", "Sports Nutrition Specialist"];
-  var certHtml = certs.slice(0, 2 + (idx % 2)).map(function(c) { return '<span class="cp-cert">' + safe(c) + '</span>'; }).join("");
   body.innerHTML =
     '<div class="cp-hero" style="background:' + ac + '">' +
       (img || '<div class="cp-avatar-fallback" style="color:#fff">' + safe(coachInitials(coach.name)) + '</div>') +
@@ -1772,17 +1726,7 @@ function renderCoachPopup(coach) {
         '<h2 class="cp-name">' + safe(coach.name) + '</h2>' +
         '<small class="cp-role">' + safe(coach.role) + '</small>' +
       '</div>' +
-      '<div class="cp-stats">' +
-        '<div class="cp-stat"><span class="cp-stat-icon">Y</span><span class="cp-stat-value">' + safe(fakeExp) + '</span></div>' +
-        '<div class="cp-stat"><span class="cp-stat-icon">+</span><span class="cp-stat-value">' + safe(fakeClients) + '</span></div>' +
-        '<div class="cp-stat"><span class="cp-stat-icon">★</span><span class="cp-stat-value">' + safe(fakeRating) + ' <span class="cp-stars">' + fakeStars + '</span></span></div>' +
-      '</div>' +
-      '<div class="cp-trust-panel">' +
-        '<span><strong>' + meta.reviews + '</strong> member reviews</span>' +
-        '<span><strong>' + safe(meta.nextSlot) + '</strong> next slot</span>' +
-      '</div>' +
-      '<p class="cp-bio">' + safe(coach.bio) + '</p>' +
-      '<div class="cp-certs">' + certHtml + '</div>' +
+      '<p class="cp-bio">' + safe(coach.bio || (coach.name + " is a certified coach at Fitness Gurukul.")) + '</p>' +
       '<div class="cp-focus">' + (coach.focus || []).map(function(f) { return '<span style="border-color:' + ac + '44;color:' + ac + '">' + safe(f) + '</span>'; }).join("") + '</div>' +
       '<div class="cp-actions">' +
         '<button class="primary-button cp-book-btn" data-coach="' + safe(coach.name) + '" style="background:' + ac + ';border-color:' + ac + '">Book ' + safe(coach.name.split(" ")[0]) + '</button>' +
@@ -1825,50 +1769,95 @@ function openBookModal(coachName) {
   document.body.style.overflow = "hidden";
 }
 
+function buildWhatsAppLeadUrl(payload) {
+  if (typeof window !== "undefined" && typeof window.fgWhatsAppLeadUrl === "function") {
+    return window.fgWhatsAppLeadUrl(payload);
+  }
+  return "https://wa.me/917207113310";
+}
+
+function submitEndpointCandidates() {
+  if (typeof window !== "undefined" && typeof window.fgApiCandidates === "function") {
+    return window.fgApiCandidates("/api/submit");
+  }
+  var list = [apiUrl("/api/submit")];
+  if (!getApiBase()) list.push("/api/submit.php");
+  return list;
+}
+
+function rememberPendingLead(body) {
+  try {
+    var key = "fg_pending_leads";
+    var pending = JSON.parse(localStorage.getItem(key) || "[]");
+    if (!Array.isArray(pending)) pending = [];
+    pending.unshift(Object.assign({ savedAt: Date.now() }, body));
+    localStorage.setItem(key, JSON.stringify(pending.slice(0, 40)));
+  } catch (e) {}
+}
+
+async function postJsonCandidate(url, body) {
+  var res = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Accept: "application/json" },
+    body: JSON.stringify(body),
+  });
+  var data = {};
+  try { data = await res.json(); } catch (err) { data = {}; }
+  return { res: res, data: data, url: url };
+}
+
 async function submitFormPayload(payload, formEl) {
   var body = Object.assign({ form_type: payload.form_type || "consultation" }, payload || {});
+  // Corporate forms use contact_name; normalize for APIs that expect name.
+  if (!body.name && body.contact_name) body.name = body.contact_name;
   var remote = getApiBase();
-  var endpoint = apiUrl("/api/submit");
-  try {
-    var res = await fetch(endpoint, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-    });
-    var data = {};
-    try { data = await res.json(); } catch (err) { data = {}; }
-    if (res.ok && (data.ok || data.success)) {
-      data.savedToBackend = true;
-      data.apiEndpoint = endpoint;
-      return data;
+  var candidates = submitEndpointCandidates();
+  var lastError = null;
+  var validationError = null;
+
+  for (var i = 0; i < candidates.length; i++) {
+    var endpoint = candidates[i];
+    try {
+      var result = await postJsonCandidate(endpoint, body);
+      if (result.res.ok && (result.data.ok || result.data.success)) {
+        result.data.savedToBackend = true;
+        result.data.apiEndpoint = endpoint;
+        return result.data;
+      }
+      if (result.res.status === 400 && result.data && result.data.error) {
+        validationError = new Error(result.data.error + (result.data.fields ? (" (" + result.data.fields.join(", ") + ")") : ""));
+        // Validation failed on a live API — don't keep hopping endpoints.
+        if (result.res.headers.get("content-type") && String(result.res.headers.get("content-type")).indexOf("json") !== -1) {
+          throw validationError;
+        }
+      }
+      lastError = new Error(result.data.error || ("Submit failed (" + result.res.status + ")"));
+    } catch (err) {
+      if (err === validationError) throw err;
+      lastError = err;
     }
-    if (res.status === 404 || res.status >= 500) throw new Error("backend-unreachable");
-    throw new Error(data.error || "Submit failed");
-  } catch (err) {
-    // When a cloud API is configured, never divert leads elsewhere —
-    // they must land in the owner SQLite backend.
-    if (remote) {
-      throw new Error(
-        "Could not save to your backend API (" + remote + "). " +
-        "Check that the Render/Railway/Fly service is awake, then try again."
-      );
-    }
-    if (!formEl) throw err;
-    // Local/dev only emergency fallback when no cloud API is configured.
-    var fd = new FormData(formEl);
-    Object.keys(body).forEach(function(key) {
-      if (!fd.has(key) && body[key] != null) fd.append(key, body[key]);
-    });
-    var fallback = await fetch("https://formspree.io/f/mgejdqzj", {
-      method: "POST",
-      body: fd,
-      headers: { Accept: "application/json" },
-    });
-    var fallbackData = {};
-    try { fallbackData = await fallback.json(); } catch (e2) { fallbackData = {}; }
-    if (fallback.ok || fallbackData.ok || fallbackData.success) return { ok: true, savedToBackend: false };
-    throw err;
   }
+
+  // Guaranteed customer path: never leave the visitor with a dead form.
+  var waUrl = buildWhatsAppLeadUrl(body);
+  rememberPendingLead(body);
+  if (remote) {
+    return {
+      ok: true,
+      savedToBackend: false,
+      whatsappFallback: true,
+      whatsappUrl: waUrl,
+      warning: "Cloud API unreachable (" + remote + "). Send this lead on WhatsApp so we do not lose it.",
+    };
+  }
+  return {
+    ok: true,
+    savedToBackend: false,
+    whatsappFallback: true,
+    whatsappUrl: waUrl,
+    warning: "Could not reach the website database. Send this lead on WhatsApp so our team still gets it.",
+    cause: lastError ? String(lastError.message || lastError) : "",
+  };
 }
 
 function bindFormSubmit(form, statusEl, successMessage) {
@@ -1879,6 +1868,8 @@ function bindFormSubmit(form, statusEl, successMessage) {
     e.stopImmediatePropagation();
     var status = statusEl || form.querySelector(".form-status, .book-frm-status, .cp-consult-status, .coach-frm-status, .mg-corp-form-status, #leadStatus, #bookFormStatus, #corpFormStatus, #consultPageStatus");
     var payload = Object.fromEntries(new FormData(form).entries());
+    var submitBtn = form.querySelector('button[type="submit"], input[type="submit"]');
+    if (submitBtn) submitBtn.disabled = true;
     if (status) {
       status.textContent = "Sending\u2026";
       status.style.color = "rgba(255,255,255,0.6)";
@@ -1886,22 +1877,39 @@ function bindFormSubmit(form, statusEl, successMessage) {
     submitFormPayload(payload, form)
       .then(function(result) {
         if (status) {
-          var saved = result && result.savedToBackend;
-          status.textContent = successMessage || (saved
-            ? "\u2705 Saved to owner backend. We\u2019ll be in touch shortly."
-            : "\u2705 Thank you! We\u2019ll be in touch shortly.");
-          status.style.color = "#4ade80";
+          if (result && result.whatsappFallback && result.whatsappUrl) {
+            status.innerHTML =
+              "\u26a0\ufe0f " + (result.warning || "Could not save to the database.") +
+              ' <a href="' + result.whatsappUrl + '" target="_blank" rel="noopener" style="color:#4ade80;text-decoration:underline">Send on WhatsApp instead</a>';
+            status.style.color = "#fbbf24";
+            try { window.open(result.whatsappUrl, "_blank", "noopener"); } catch (err) {}
+          } else {
+            var saved = result && result.savedToBackend;
+            status.textContent = successMessage || (saved
+              ? "\u2705 Saved. We\u2019ll be in touch shortly."
+              : "\u2705 Thank you! We\u2019ll be in touch shortly.");
+            status.style.color = "#4ade80";
+          }
         }
         var coachValue = form.querySelector('input[name="coach"]');
         var keptCoach = coachValue ? coachValue.value : "";
-        form.reset();
-        if (coachValue && keptCoach) coachValue.value = keptCoach;
+        if (!(result && result.whatsappFallback)) {
+          form.reset();
+          if (coachValue && keptCoach) coachValue.value = keptCoach;
+        }
       })
-      .catch(function() {
+      .catch(function(err) {
         if (status) {
-          status.textContent = "\u26a0\ufe0f Something went wrong. Please try again.";
+          var wa = buildWhatsAppLeadUrl(payload);
+          status.innerHTML =
+            "\u26a0\ufe0f Something went wrong. Please try again or " +
+            '<a href="' + wa + '" target="_blank" rel="noopener" style="color:#4ade80;text-decoration:underline">message us on WhatsApp</a>.' +
+            (err && err.message ? " <span style='opacity:.7'>(" + safe(err.message) + ")</span>" : "");
           status.style.color = "#dc3545";
         }
+      })
+      .finally(function() {
+        if (submitBtn) submitBtn.disabled = false;
       });
   });
 }
@@ -1953,19 +1961,30 @@ function wireCoachPopups() {
       status.style.color = "rgba(255,255,255,0.6)";
     }
     submitFormPayload(payload, frm)
-      .then(function() {
+      .then(function(result) {
         if (status) {
-          status.textContent = "\u2705 Thank you! We\u2019ll be in touch shortly.";
-          status.style.color = "#4ade80";
+          if (result && result.whatsappFallback && result.whatsappUrl) {
+            status.innerHTML =
+              "\u26a0\ufe0f Could not save to database. " +
+              '<a href="' + result.whatsappUrl + '" target="_blank" rel="noopener" style="color:#4ade80;text-decoration:underline">Send on WhatsApp</a>';
+            status.style.color = "#fbbf24";
+            try { window.open(result.whatsappUrl, "_blank", "noopener"); } catch (err) {}
+          } else {
+            status.textContent = "\u2705 Thank you! We\u2019ll be in touch shortly.";
+            status.style.color = "#4ade80";
+            var coachInput = frm.querySelector('input[name="coach"]');
+            var kept = coachInput ? coachInput.value : "";
+            frm.reset();
+            if (coachInput && kept) coachInput.value = kept;
+          }
         }
-        var coachInput = frm.querySelector('input[name="coach"]');
-        var kept = coachInput ? coachInput.value : "";
-        frm.reset();
-        if (coachInput && kept) coachInput.value = kept;
       })
-      .catch(function() {
+      .catch(function(err) {
         if (status) {
-          status.textContent = "\u26a0\ufe0f Something went wrong. Please try again.";
+          var wa = buildWhatsAppLeadUrl(payload);
+          status.innerHTML =
+            "\u26a0\ufe0f Something went wrong. Please try again or " +
+            '<a href="' + wa + '" target="_blank" rel="noopener" style="color:#4ade80;text-decoration:underline">message us on WhatsApp</a>.';
           status.style.color = "#dc3545";
         }
       });
@@ -2777,7 +2796,7 @@ function injectFooter() {
   if (existing) existing.remove();
   var f = document.createElement("footer");
   f.className = "site-footer footer-refresh";
-  f.innerHTML = `<div class="footer-topline"><a class="footer-logo" href="index.html"><img src="assets/fitness-gurukul-logo.png" alt="Fitness Gurukul" /><span class="footer-logo-text"><strong>Fitness</strong><span>Gurukul</span></span></a><p>Personal training, made personal.</p><a class="footer-cta" href="contact.html">Talk to a coach <span aria-hidden="true">&rarr;</span></a></div><div class="footer-refresh-grid"><div class="footer-intro"><p>Built for stronger, healthier lives in Hyderabad&mdash;at the studio, at home, and wherever you train.</p><a href="tel:+917207113310">+91 72071 13310</a></div><div class="footer-col"><h4>Discover</h4><nav class="footer-nav"><a href="about.html">About us</a><a href="coaches.html">Our coaches</a><a href="transformation-challenge.html">Transformation challenge</a></nav></div><div class="footer-col"><h4>Start here</h4><nav class="footer-nav"><a href="tools.html">Fitness tools</a><a href="events.html">Events</a><a href="testimonials.html">Success stories</a><a href="contact.html">Book a consultation</a></nav></div><div class="footer-col"><h4>Contact Us</h4><div class="footer-contact-col"><a href="tel:+917207113310"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>+91 72071 13310</a><a href="mailto:contact@fitnessgurukul.co.in"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>contact@fitnessgurukul.co.in</a><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Manikonda, Hyderabad</span><a class="footer-contact-cta" href="contact.html">Get Directions &rarr;</a></div></div><div class="footer-col"><h4>Visit</h4><p class="footer-address">Manikonda, Hyderabad<br />Telangana, India</p><div class="footer-social"><a href="https://www.instagram.com/fitnessgurukulofficial/" target="_blank" rel="noopener" aria-label="Instagram">IG</a><a href="https://www.facebook.com/fitnessgurukul7/" target="_blank" rel="noopener" aria-label="Facebook">fb</a><a href="https://www.youtube.com/channel/UCLt2Qs1MeV_uf_xMJ7AaPlA" target="_blank" rel="noopener" aria-label="YouTube">YT</a></div></div></div><div class="footer-bottom"><p class="footer-copy">&copy; 2026 Fitness Gurukul. All rights reserved.</p><span class="footer-bottom-links"><a href="contact.html">Contact Us</a><a class="footer-staff-link" href="backend.html">Backend</a></span></div>`;
+  f.innerHTML = `<div class="footer-topline"><a class="footer-logo" href="index.html"><img src="assets/fitness-gurukul-logo.png" alt="Fitness Gurukul" /><span class="footer-logo-text"><strong>Fitness</strong><span>Gurukul</span></span></a><p>Personal training, made personal.</p><a class="footer-cta" href="book-consultation.html">Book a consultation <span aria-hidden="true">&rarr;</span></a></div><div class="footer-refresh-grid"><div class="footer-intro"><p>Built for stronger, healthier lives in Hyderabad&mdash;at the studio, at home, and wherever you train.</p><a href="tel:+917207113310">+91 72071 13310</a></div><div class="footer-col"><h4>Discover</h4><nav class="footer-nav"><a href="about.html">About us</a><a href="about.html#faq">FAQ</a><a href="coaches.html">Our coaches</a><a href="transformation-challenge.html">Transformation challenge</a></nav></div><div class="footer-col"><h4>Start here</h4><nav class="footer-nav"><a href="tools.html">Fitness tools</a><a href="events.html">Events</a><a href="testimonials.html">Success stories</a><a href="book-consultation.html">Book a consultation</a></nav></div><div class="footer-col"><h4>Contact Us</h4><div class="footer-contact-col"><a href="tel:+917207113310"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>+91 72071 13310</a><a href="https://wa.me/917207113310" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M20.5 3.5A11.4 11.4 0 0 0 12.05 0C5.5 0 .16 5.34.16 11.89c0 2.1.55 4.14 1.59 5.95L.06 24l6.3-1.65a11.9 11.9 0 0 0 5.69 1.45h.01c6.55 0 11.89-5.34 11.89-11.89A11.8 11.8 0 0 0 20.5 3.5z"/></svg>WhatsApp</a><a href="mailto:contact@fitnessgurukul.co.in"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>contact@fitnessgurukul.co.in</a><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Manikonda, Hyderabad</span><a class="footer-contact-cta" href="https://maps.google.com/?q=Fitness+Gurukul+Manikonda+Hyderabad" target="_blank" rel="noopener">Get Directions &rarr;</a></div></div><div class="footer-col"><h4>Visit</h4><p class="footer-address">Manikonda, Hyderabad<br />Telangana, India</p><div class="footer-social"><a href="https://www.instagram.com/fitnessgurukulofficial/" target="_blank" rel="noopener" aria-label="Instagram">IG</a><a href="https://www.facebook.com/fitnessgurukul7/" target="_blank" rel="noopener" aria-label="Facebook">fb</a><a href="https://www.youtube.com/channel/UCLt2Qs1MeV_uf_xMJ7AaPlA" target="_blank" rel="noopener" aria-label="YouTube">YT</a></div></div></div><div class="footer-bottom"><p class="footer-copy">&copy; 2026 Fitness Gurukul. All rights reserved.</p><span class="footer-bottom-links"><a href="contact.html">Contact Us</a><a href="about.html#faq">FAQ</a></span></div>`;
   document.body.appendChild(f);
 }
 
@@ -2979,7 +2998,7 @@ function injectSiteChatbot() {
       return "Fitness Gurukul runs community runs, corporate marathons, cycling events, bootcamps, and the Born Star running event. Check the Events page for upcoming dates or ask us to help you register.";
     }
     if (text.includes("contact") || text.includes("phone") || text.includes("whatsapp")) {
-      return "You can call 08042781491, WhatsApp +91 72071 13310, or email contact@fitnessgurukul.co.in. We are in Manikonda, Hyderabad.";
+      return "You can call or WhatsApp +91 72071 13310, or email contact@fitnessgurukul.co.in. We are in Manikonda, Hyderabad.";
     }
     return "I can help with Fitness Gurukul programs, coach recommendations, pricing, events, and booking. Try asking about personal training, yoga, weight loss, doorstep coaching, or upcoming events.";
   }
@@ -3413,12 +3432,6 @@ function initCycleCarousel() {
     return (slots || []).reduce(function(total, day) { return total + day.length; }, 0);
   }
 
-  function fakeCoachRating(id) {
-    var index = Object.keys(coachData).indexOf(id);
-    if (index < 0) index = 0;
-    return (4.5 + (index % 5) * 0.1).toFixed(1);
-  }
-
   function scheduleSlotClass(slot) {
     var lower = String(slot || "").toLowerCase();
     if (lower.indexOf("school") > -1 || lower.indexOf("gc") > -1) return "fg-schedule-slot group";
@@ -3430,11 +3443,10 @@ function initCycleCarousel() {
     var data = coachData[coachId] || {};
     var schedule = coachSchedules[coachId] || [[],[],[],[],[],[],[]];
     var total = scheduleTotal(schedule);
-    var meta = fakeCoachMeta({ slug: coachId, name: data.name }, Object.keys(coachData).indexOf(coachId));
     return '<section class="' + (compact ? "fg-coach-schedule compact" : "fg-coach-schedule") + '">' +
       '<div class="fg-schedule-head">' +
-        '<div><p class="eyebrow">Live weekly calendar</p><h2>' + safe(data.name || "Coach") + ' schedule</h2><p>June 2026 class slots, separated directly for this coach.</p></div>' +
-        '<div class="fg-schedule-stats"><span><strong>' + total + '</strong> weekly slots</span><span><strong>' + meta.rating + '</strong> rating</span><span><strong>' + meta.reviews + '</strong> reviews</span></div>' +
+        '<div><p class="eyebrow">Weekly calendar</p><h2>' + safe(data.name || "Coach") + ' schedule</h2><p>Published class slots for this coach.</p></div>' +
+        '<div class="fg-schedule-stats"><span><strong>' + total + '</strong> weekly slots</span></div>' +
       '</div>' +
       '<div class="fg-week-calendar">' +
         dayNamesFull.map(function(day, index) {
@@ -3546,14 +3558,7 @@ function initCycleCarousel() {
         document.body.style.overflow = "";
       }
       var overlay = document.getElementById("coachProfileOverlay");
-      var idx = Object.keys(coachData).indexOf(id);
-      if (idx < 0) idx = 0;
-      var fakeExp = (idx % 5) + 4 + " Years Experience";
-      var fakeClients = ((idx % 8) + 1) * 50 + " Transformations";
-      var fakeRating = (4.5 + (idx % 5) * 0.1).toFixed(1);
-      var fakeStars = parseInt(fakeRating) >= 5 ? "★★★★★" : parseInt(fakeRating) >= 4 ? "★★★★★" : "★★★★★";
-      var certs = ["Certified Personal Trainer", "CPR/AED Certified", "Sports Nutrition Specialist"];
-      var certHtml = certs.slice(0, 2 + (idx % 2)).map(function(c) { return '<span style="font-size:0.7rem;color:rgba(255,255,255,0.4);border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:3px 10px;display:inline-block">' + c + '</span>'; }).join("");
+      var weeklySlots = scheduleTotal(coachSchedules[id] || []);
       document.getElementById("cpBody").innerHTML =
         '<div style="position:relative;height:180px;background:rgba(255,255,255,0.04);overflow:hidden;display:flex;align-items:center;justify-content:center">' +
           '<img src="' + d.img + '" alt="' + d.name + '" style="width:100%;height:100%;object-fit:cover" />' +
@@ -3563,14 +3568,9 @@ function initCycleCarousel() {
         '<div style="padding:20px 24px 24px">' +
           '<h2 style="font-size:1.3rem;font-weight:700;color:#fff;margin:0 0 2px">' + d.name + '</h2>' +
           '<p style="font-size:0.8rem;color:rgba(255,255,255,0.4);margin:0 0 16px">' + d.role + '</p>' +
-          '<div style="display:flex;gap:12px;margin-bottom:16px">' +
-            '<div style="flex:1;text-align:center;padding:10px;border:1px solid rgba(255,255,255,0.06);border-radius:10px"><span style="font-size:0.7rem;color:#fff;font-weight:600;display:block">' + fakeExp.split(" ")[0] + '</span><span style="font-size:0.62rem;color:rgba(255,255,255,0.35)">Experience</span></div>' +
-            '<div style="flex:1;text-align:center;padding:10px;border:1px solid rgba(255,255,255,0.06);border-radius:10px"><span style="font-size:0.7rem;color:#fff;font-weight:600;display:block">' + fakeClients.split(" ")[0] + '</span><span style="font-size:0.62rem;color:rgba(255,255,255,0.35)">Clients</span></div>' +
-            '<div style="flex:1;text-align:center;padding:10px;border:1px solid rgba(255,255,255,0.06);border-radius:10px"><span style="font-size:0.7rem;color:#fff;font-weight:600;display:block">' + fakeRating + '</span><span style="font-size:0.62rem;color:rgba(255,255,255,0.35)">' + fakeStars + '</span></div>' +
-          '</div>' +
+          (weeklySlots ? '<p style="font-size:0.78rem;color:rgba(255,255,255,0.55);margin:0 0 14px"><strong style="color:#fff">' + weeklySlots + '</strong> published weekly slots</p>' : '') +
           '<p style="font-size:0.8rem;color:rgba(255,255,255,0.5);line-height:1.6;margin:0 0 14px">' + d.name + ' is a certified ' + d.role.toLowerCase() + ' at Fitness Gurukul, dedicated to helping clients achieve their fitness goals through personalized coaching.</p>' +
-          '<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px">' + d.tags.map(function(t) { return '<span style="font-size:0.68rem;color:rgba(255,255,255,0.5);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:3px 10px">' + t + '</span>'; }).join("") + '</div>' +
-          '<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px">' + certHtml + '</div>' +
+          '<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px">' + d.tags.map(function(t) { return '<span style="font-size:0.68rem;color:rgba(255,255,255,0.5);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:3px 10px">' + t + '</span>'; }).join("") + '</div>' +
           '<div style="display:flex;flex-direction:column;gap:10px">' +
             '<a href="book-consultation.html?coach=' + encodeURIComponent(d.name) + '" style="display:block;padding:12px;border-radius:10px;background:#fff;color:#000;font-weight:700;font-size:0.85rem;text-decoration:none;text-align:center">Book ' + d.name.split(" ")[0] + '</a>' +
             (coachSchedules[id] ? '<button type="button" id="cpViewSchedule" style="display:block;width:100%;padding:12px;border-radius:10px;background:transparent;border:1px solid rgba(255,255,255,0.2);color:#fff;font-weight:600;font-size:0.85rem;cursor:pointer;font-family:inherit">View schedule</button>' : '') +
