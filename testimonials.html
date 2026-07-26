@@ -12,12 +12,12 @@
   <meta property="og:url" content="https://fitnessgurukul.app/testimonials.html" />
   <meta property="og:title" content="Transformations | Fitness Gurukul" />
   <meta property="og:description" content="Original names. Real change. Before/after stories and event testimonials from Fitness Gurukul Hyderabad." />
-  <meta property="og:image" content="https://fitnessgurukul.app/assets/transforms/xf-page-hero.webp" />
+  <meta property="og:image" content="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=1600&q=80&auto=format&fit=crop" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Transformations | Fitness Gurukul" />
   <meta name="twitter:description" content="Original names, real before/after stories, and event testimonials from Fitness Gurukul." />
-  <meta name="twitter:image" content="https://fitnessgurukul.app/assets/transforms/xf-page-hero.webp" />
-  <link rel="preload" as="image" href="assets/transforms/xf-page-hero.webp" fetchpriority="high" />
+  <meta name="twitter:image" content="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=1600&q=80&auto=format&fit=crop" />
+  <link rel="preload" as="image" href="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=1800&q=80&auto=format&fit=crop" fetchpriority="high" />
   <link rel="stylesheet" href="styles.css" />
   <style>
     :root {
@@ -40,7 +40,7 @@
     body.xf-page::after,
     body.xf-page #bg-ambient { display: none !important; }
 
-    /* HERO — one composition, brand first, real FG full-bleed */
+    /* HERO — one composition, brand first, Unsplash full-bleed */
     .xf-hero {
       position: relative;
       min-height: 100vh;
@@ -54,8 +54,8 @@
       position: absolute; inset: 0;
       z-index: 0;
       background:
-        linear-gradient(180deg, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0.38) 42%, rgba(0,0,0,0.94) 100%),
-        url("assets/transforms/xf-page-hero.webp") center 40% / cover no-repeat;
+        linear-gradient(180deg, rgba(0,0,0,0.28) 0%, rgba(0,0,0,0.42) 38%, rgba(0,0,0,0.94) 100%),
+        url("https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=1800&q=80&auto=format&fit=crop") center 42% / cover no-repeat;
       transform: scale(1.03);
       will-change: transform;
       animation: xfKen 22s ease-in-out infinite alternate;
@@ -394,37 +394,49 @@
     .xf-video-item {
       scroll-snap-align: start;
       position: relative;
-      min-height: 360px;
+      min-height: 220px;
       overflow: hidden;
-      border: 0;
-      background: #000;
+      border: 1px solid rgba(255,255,255,0.12);
+      background:
+        linear-gradient(160deg, rgba(255,255,255,0.06), transparent 55%),
+        #0c0c0c;
       cursor: pointer;
       color: #fff;
       text-align: left;
       font: inherit;
-      padding: 0;
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 28px;
+      transition: border-color .2s, background .2s;
     }
-    .xf-video-item img {
-      width: 100%; height: 100%; object-fit: cover; object-position: 100% 18%;
-      display: block; filter: grayscale(1);
-      transition: transform .5s ease;
+    .xf-video-item:hover {
+      border-color: rgba(255,255,255,0.35);
+      background:
+        linear-gradient(160deg, rgba(255,255,255,0.1), transparent 55%),
+        #111;
     }
-    .xf-video-item:hover img { transform: scale(1.04); }
-    .xf-video-item .xf-video-shade {
-      position: absolute; inset: 0;
-      background: linear-gradient(180deg, transparent 35%, rgba(0,0,0,0.85));
+    .xf-video-item .xf-video-copy strong {
+      display: block;
+      font-size: 1.2rem;
+      letter-spacing: -0.02em;
+      margin-bottom: 6px;
     }
-    .xf-video-item .xf-video-copy {
-      position: absolute; left: 16px; right: 16px; bottom: 16px;
+    .xf-video-item .xf-video-copy span {
+      display: block;
+      color: rgba(255,255,255,0.65);
+      font-size: 0.88rem;
+      line-height: 1.4;
     }
     .xf-video-item .xf-play {
-      position: absolute; top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      width: 58px; height: 58px; border-radius: 50%;
+      width: 48px; height: 48px;
+      border-radius: 50%;
       display: grid; place-items: center;
-      background: rgba(255,255,255,0.92);
+      background: #fff;
       color: #111;
-      font-size: 1.1rem;
+      font-size: 0.95rem;
+      flex-shrink: 0;
     }
 
     /* CTA */
@@ -762,32 +774,24 @@
         <div class="xf-videos-head xf-reveal">
           <span class="section-kicker">On camera</span>
           <h2>Hear them say it</h2>
-          <p>Tap a face — Udit, Neha, Ramakrishna, and Deepak in their own words.</p>
+          <p>Member voices — tap a name to play. No event photos here.</p>
         </div>
         <div class="xf-video-rail xf-reveal" id="xfVideoRail">
           <button class="xf-video-item" type="button" data-video="TESTIMONIALS/NEHA%20.mp4" aria-label="Play Neha Chopra testimonial video">
-            <img src="assets/transforms/neha-video.webp" alt="" width="320" height="400" loading="lazy" decoding="async" />
-            <div class="xf-video-shade"></div>
+            <div class="xf-video-copy"><strong>Neha Chopra</strong><span>Weight loss · her story on camera</span></div>
             <div class="xf-play" aria-hidden="true">▶</div>
-            <div class="xf-video-copy"><strong>Neha Chopra</strong><div style="color:rgba(255,255,255,0.7);font-size:0.85rem;margin-top:4px">Weight loss · her story on camera</div></div>
           </button>
           <button class="xf-video-item" type="button" data-video="TESTIMONIALS/TESTIMONAL%20FINAL.mp4" aria-label="Play Udit Narayan testimonial video">
-            <img src="assets/transforms/udit-video.webp" alt="" width="320" height="400" loading="lazy" decoding="async" />
-            <div class="xf-video-shade"></div>
+            <div class="xf-video-copy"><strong>Udit Narayan</strong><span>Body recomposition · on camera</span></div>
             <div class="xf-play" aria-hidden="true">▶</div>
-            <div class="xf-video-copy"><strong>Udit Narayan</strong><div style="color:rgba(255,255,255,0.7);font-size:0.85rem;margin-top:4px">Body recomposition · on camera</div></div>
           </button>
           <button class="xf-video-item" type="button" data-video="TESTIMONIALS/FINAL%20TESTIMONIAL.mp4" aria-label="Play Ramakrishna testimonial video">
-            <img src="assets/transforms/ramakrishna-video.webp" alt="" width="320" height="400" loading="lazy" decoding="async" />
-            <div class="xf-video-shade"></div>
+            <div class="xf-video-copy"><strong>Ramakrishna</strong><span>Strength return · member voice</span></div>
             <div class="xf-play" aria-hidden="true">▶</div>
-            <div class="xf-video-copy"><strong>Ramakrishna</strong><div style="color:rgba(255,255,255,0.7);font-size:0.85rem;margin-top:4px">Strength return · member voice</div></div>
           </button>
           <button class="xf-video-item" type="button" data-video="TESTIMONIALS/TESTOMONIAL%20VID%201.mp4" aria-label="Play Deepak testimonial video">
-            <img src="assets/transforms/deepak-video.webp" alt="" width="320" height="400" loading="lazy" decoding="async" />
-            <div class="xf-video-shade"></div>
+            <div class="xf-video-copy"><strong>Deepak</strong><span>Energy rebuild · member voice</span></div>
             <div class="xf-play" aria-hidden="true">▶</div>
-            <div class="xf-video-copy"><strong>Deepak</strong><div style="color:rgba(255,255,255,0.7);font-size:0.85rem;margin-top:4px">Energy rebuild · member voice</div></div>
           </button>
         </div>
       </div>
