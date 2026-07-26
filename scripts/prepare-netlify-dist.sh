@@ -1,15 +1,18 @@
 #!/usr/bin/env bash
-# Pure-shell fallback for Netlify/Hostinger when npm install is skipped/failed.
-set -euo pipefail
+# Build a static-only dist/ for Netlify, Vercel, Hostinger, etc.
+# Never fails the deploy because of optional folders or missing node.
+set -u
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 
-if command -v node >/dev/null 2>&1; then
-  node scripts/prepare-netlify-dist.js
-  exit 0
+if command -v node >/dev/null 2>&1 && [[ -f scripts/prepare-netlify-dist.js ]]; then
+  if node scripts/prepare-netlify-dist.js; then
+    exit 0
+  fi
+  echo "node prepare failed — falling back to shell copy" >&2
 fi
 
-echo "node not found — using shell copy fallback"
+echo "Preparing dist with shell copy"
 DIST="$ROOT/dist"
 rm -rf "$DIST"
 mkdir -p "$DIST"
@@ -25,14 +28,20 @@ files=(
 
 for f in "${files[@]}"; do
   if [[ -f "$f" ]]; then
-    cp "$f" "$DIST/$f"
+    cp "$f" "$DIST/$f" || true
   fi
 done
 
 for d in assets coaches api TESTIMONIALS; do
   if [[ -d "$d" ]]; then
-    cp -a "$d" "$DIST/"
+    cp -a "$d" "$DIST/" || true
   fi
 done
 
-echo "Netlify dist ready (shell): $DIST"
+if [[ ! -f "$DIST/index.html" ]]; then
+  echo "ERROR: dist/index.html missing" >&2
+  exit 1
+fi
+
+echo "Static dist ready: $DIST"
+exit 0

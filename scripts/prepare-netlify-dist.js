@@ -63,12 +63,25 @@ fs.mkdirSync(dist, { recursive: true });
 
 for (const file of files) {
   const src = path.join(root, file);
-  if (fs.existsSync(src)) copyFile(src, path.join(dist, file));
+  if (fs.existsSync(src)) {
+    try { copyFile(src, path.join(dist, file)); } catch (err) {
+      console.warn("skip file", file, err.message);
+    }
+  }
 }
 
 for (const dir of dirs) {
   const src = path.join(root, dir);
-  if (fs.existsSync(src)) copyDir(src, path.join(dist, dir));
+  if (fs.existsSync(src)) {
+    try { copyDir(src, path.join(dist, dir)); } catch (err) {
+      console.warn("skip dir", dir, err.message);
+    }
+  }
 }
 
-console.log("Netlify dist ready:", dist);
+if (!fs.existsSync(path.join(dist, "index.html"))) {
+  console.error("ERROR: dist/index.html missing");
+  process.exit(1);
+}
+
+console.log("Static dist ready:", dist);

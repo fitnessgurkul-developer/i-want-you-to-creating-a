@@ -55,86 +55,33 @@ After deploy:
 4. Run `./scripts/verify-api.sh https://….onrender.com`
 5. Open `/backend.html` with password `fitnessgurukul` (or your `ADMIN_TOKEN`)
 
-## Deploy: Hostinger (recommended simple path)
+## Deploy the website (no errors)
 
-Keep `config.js` as `window.FG_API_BASE = ""`.
+The repo root is a **static site**. There is no `requirements.txt` / `package.json`, so Vercel, Netlify, and Hostinger will not try to install Python or Node deps.
 
-- Forms → `/api/submit.php` → `api/data/submissions.json`
-- Challenge joins → `/api/challenge-join.php`
-- Owner page → `backend.html` via `/api/admin-data.php`
-- Password → `api/config.php`
-
-If PHP is down, forms fall back to a prefilled WhatsApp message.
-
-## Deploy: Hostinger site + always-on API (Render / Railway / Fly)
-
-Optional upgrade if you want SQLite + AI chat on a cloud API:
-
-1. **Website files** on Hostinger (HTML/CSS/JS + `/api/*.php`)
-2. **Python API** (`server.py`) on Render, Railway, or Fly.io (always online)
-
-### A) Deploy the API (pick one)
-
-**Render (easiest)**
-1. Go to [https://render.com](https://render.com) → New → Blueprint / Web Service
-2. Connect this GitHub repo (`main`)
-3. Runtime: Python · Start command: `python server.py`
-4. Set env vars:
-   - `HOST=0.0.0.0`
-   - `ADMIN_TOKEN=` (choose a strong password)
-   - `CORS_ORIGINS=*` (or your Hostinger domain)
-5. Deploy → copy the URL, e.g. `https://fitness-gurukul-api.onrender.com`
-
-**Railway**
-1. [https://railway.app](https://railway.app) → New Project → Deploy from GitHub
-2. Uses the repo `Dockerfile` (`railway.toml`) — start command: `python server.py`
-3. Add the same env vars as above
-4. Generate a public domain and copy it
-
-**Vercel (static site only)**
-Vercel serves the front-end from `dist/` via `vercel.json` — **no Python serverless functions**. Backend stays on Hostinger PHP (`/api/*.php`) or Render/Railway/Fly (`server.py`). Do not point Vercel at `server.py`.
-
-**Fly.io**
-```bash
-fly launch
-fly secrets set ADMIN_TOKEN=your-strong-password CORS_ORIGINS=*
-fly deploy
-```
-
-Health check: open `https://YOUR-API-URL/api/health` — should return `{"ok": true, ...}`.
-
-### B) Point the Hostinger website at the API
-
-Edit `config.js` on Hostinger (or in Git then redeploy):
+Keep `config.js` as:
 
 ```js
-window.FG_API_BASE = "https://YOUR-API-URL";
+window.FG_API_BASE = "";
 ```
 
-Example:
+| Host | How |
+|------|-----|
+| **Hostinger** | Upload site files + `/api/*.php`. Forms → `submit.php`. Owner → `backend.html`. |
+| **Vercel** | Connect GitHub. Uses `vercel.json` → builds `dist/` (static only). |
+| **Netlify** | Connect GitHub. Uses `netlify.toml` → publishes `dist/`. |
+| **Any static host** | Run `bash scripts/prepare-netlify-dist.sh` and upload the `dist/` folder. |
 
-```js
-window.FG_API_BASE = "https://fitness-gurukul-api.onrender.com";
-```
+Leads on Hostinger: `/api/submit.php` → `api/data/submissions.json`. Password in `api/config.php`. If PHP is down, forms fall back to WhatsApp.
 
-Leave it as `""` only when the site and API are on the same origin (local `server.py`).
+## Optional: cloud Python API
 
-**This one setting is what keeps leads in your backend:**
-- Website forms → `POST {FG_API_BASE}/api/submit` → SQLite on the cloud API
-- Challenge joins → `POST {FG_API_BASE}/api/challenge-join` → same SQLite
-- Owner page `backend.html` → `GET {FG_API_BASE}/api/admin-data` → same SQLite
+Only if you want SQLite + AI chat on a separate service. Site stays static; set `FG_API_BASE` to the API URL after deploy.
 
-So Hostinger only hosts the pages; the cloud API owns the database.
+- **Render:** blueprint `render.yaml` · start `python server.py`
+- **Railway / Fly:** `Dockerfile` · start `python server.py`
 
-### C) Redeploy Hostinger
-
-Pull/upload the latest `main` (includes `config.js`) and make sure your edited API URL is live.
-
-Then forms, quiz, live stats, chat, and `backend.html` keep working with your laptop off. Open `https://yoursite.com/backend.html` and unlock with the same `ADMIN_TOKEN` from Render/Railway/Fly — new leads appear there.
-
-**Notes**
-- Free Render apps may sleep after idle; first request can take ~30s to wake.
-- SQLite on free tiers is usually ephemeral (resets on redeploy). For permanent leads, use a paid disk/volume or export regularly from the owner backend.
+Do **not** deploy `server.py` as a Vercel/Netlify serverless function.
 
 ## Pages
 

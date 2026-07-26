@@ -1,9 +1,9 @@
 FROM python:3.12-slim
 
 WORKDIR /app
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
 
+# Stdlib-only API — no pip dependencies.
+COPY server.py start.py ./
 COPY . .
 
 ENV HOST=0.0.0.0

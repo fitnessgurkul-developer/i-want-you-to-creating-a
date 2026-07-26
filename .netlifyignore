@@ -1,4 +1,4 @@
-# Static site only — never upload Python/cloud API files to Vercel.
+# Keep Netlify builds static-only. Publish comes from dist/ anyway.
 server.py
 start.py
 start.bat
@@ -11,14 +11,13 @@ render.yaml
 requirements.txt
 runtime.txt
 pyproject.toml
-Pipfile
-Pipfile.lock
 *.sqlite3
 .env
 .env.*
+.github
+.git
 __pycache__
 *.pyc
-.github
 tools
 data
 GALLERY

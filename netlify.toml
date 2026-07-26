@@ -1,6 +1,5 @@
-# Fitness Gurukul — static site on Netlify
-# No root package.json / requirements.txt on purpose so the
-# "Install dependencies" stage has nothing to install (avoids exit code 1).
+# Fitness Gurukul — static site only.
+# No root package.json / requirements.txt so dependency install cannot fail.
 
 [build]
   publish = "dist"
@@ -10,7 +9,6 @@
   NODE_VERSION = "20"
   GIT_LFS_ENABLED = "false"
   GIT_LFS_SKIP_SMUDGE = "1"
-  # Do not auto-select Yarn/PNPM
   NETLIFY_USE_YARN = "false"
 
 [[headers]]
@@ -44,3 +42,23 @@
   for = "/dashboard.html"
   [headers.values]
     X-Robots-Tag = "noindex, nofollow"
+
+[[redirects]]
+  from = "/backend"
+  to = "/backend.html"
+  status = 301
+
+[[redirects]]
+  from = "/office"
+  to = "/backend.html"
+  status = 301
+
+[[redirects]]
+  from = "/owner"
+  to = "/backend.html"
+  status = 301
+
+[[redirects]]
+  from = "/admin"
+  to = "/backend.html"
+  status = 301

@@ -3,7 +3,8 @@ services:
     name: fitness-gurukul-api
     runtime: python
     plan: free
-    buildCommand: pip install -r requirements.txt
+    # No requirements.txt — server.py is stdlib only.
+    buildCommand: "python -c \"print('stdlib api ready')\""
     startCommand: python server.py
     healthCheckPath: /api/health
     envVars:
@@ -12,6 +13,6 @@ services:
       - key: ADMIN_TOKEN
         generateValue: true
       - key: CORS_ORIGINS
-        value: "https://fitnessgurukul.co.in,https://www.fitnessgurukul.co.in,https://fitnessgurukul.in,https://www.fitnessgurukul.in"
+        value: "https://fitnessgurukul.app,https://www.fitnessgurukul.app,https://fitnessgurukul.co.in,https://www.fitnessgurukul.co.in,https://fitnessgurukul.in,https://www.fitnessgurukul.in"
       - key: PYTHON_VERSION
         value: "3.12.8"

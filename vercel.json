@@ -3,5 +3,11 @@
   "framework": null,
   "installCommand": "echo skip-install",
   "buildCommand": "bash scripts/prepare-netlify-dist.sh",
-  "outputDirectory": "dist"
+  "outputDirectory": "dist",
+  "rewrites": [
+    { "source": "/backend", "destination": "/backend.html" },
+    { "source": "/office", "destination": "/backend.html" },
+    { "source": "/owner", "destination": "/backend.html" },
+    { "source": "/admin", "destination": "/backend.html" }
+  ]
 }
