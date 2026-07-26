@@ -1,2 +1,2 @@
 # Fitness Gurukul API uses Python stdlib only — no pip packages required.
-# This file exists so Render / Railway / Fly can detect a Python service.
+# This file exists so Render can detect a Python service.

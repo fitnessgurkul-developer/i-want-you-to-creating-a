@@ -535,7 +535,7 @@
         var hint = qs("localHint");
         if (apiBase) {
           hint.classList.remove("hidden");
-          hint.innerHTML = "Leads from the website save into this cloud API:<br><code>" + esc(apiBase) + "</code><br>Use the same <code>ADMIN_TOKEN</code> you set on Render/Railway/Fly.";
+          hint.innerHTML = "Leads from the website save into this cloud API:<br><code>" + esc(apiBase) + "</code><br>Use the same <code>ADMIN_TOKEN</code> you set on Render.";
         } else if (!/^(localhost|127\.0\.0\.1)$/i.test(location.hostname)) {
           hint.classList.remove("hidden");
           hint.style.background = "rgba(74,222,128,0.08)";
