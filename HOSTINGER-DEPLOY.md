@@ -35,3 +35,7 @@ cd dist && zip -r ../fitness-gurukul-hostinger-public_html.zip .
 ## Git deployment (optional)
 
 If hPanel → Git is connected to this repo, deploy branch **`main`**, publish directory = repo root (or `dist` after build). Then clear cache.
+
+## Netlify note
+
+If Netlify fails at **Install dependencies**, ensure latest `main` is deployed (root `package.json` removed so install is a no-op).

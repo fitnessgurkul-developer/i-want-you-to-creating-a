@@ -127,6 +127,16 @@ After deploy:
 
 Primary site: **https://fitnessgurukul.app** (Hostinger)
 
+### Local start
+
+```bash
+./start.sh
+# or: node start-node.js
+# optional npm helper: npm --prefix tools/local-server start
+```
+
+Netlify builds are static-only (no root `package.json`) so the Install dependencies stage cannot fail.
+
 ## Deploy: Hostinger forms (works without Render)
 
 Hostinger shared hosting can save leads with the PHP endpoints in `/api/`:

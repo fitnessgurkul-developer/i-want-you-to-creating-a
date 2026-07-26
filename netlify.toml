@@ -1,20 +1,24 @@
-# Fitness Gurukul static site on Netlify (no Git LFS)
+# Fitness Gurukul — static site on Netlify
+# No root package.json / requirements.txt on purpose so the
+# "Install dependencies" stage has nothing to install (avoids exit code 1).
 
 [build]
   publish = "dist"
-  command = "node scripts/prepare-netlify-dist.js"
+  command = "bash scripts/prepare-netlify-dist.sh"
 
 [build.environment]
   NODE_VERSION = "20"
   GIT_LFS_ENABLED = "false"
   GIT_LFS_SKIP_SMUDGE = "1"
-  NPM_FLAGS = "--ignore-scripts"
+  # Do not auto-select Yarn/PNPM
+  NETLIFY_USE_YARN = "false"
 
 [[headers]]
   for = "/*.html"
   [headers.values]
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
+    X-FG-Deploy = "netlify-static"
 
 [[headers]]
   for = "/backend.html"

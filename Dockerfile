@@ -3,7 +3,7 @@ FROM python:3.12.11-slim
 WORKDIR /app
 
 # Install first for better layer caching.
-COPY requirements.txt .
+COPY requirements.python.txt ./requirements.txt
 RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt
 
@@ -18,7 +18,7 @@ COPY coaches ./coaches
 ENV HOST=0.0.0.0
 ENV PORT=8000
 ENV DATA_DIR=./data
-ENV CORS_ORIGINS=https://fitnessgurukul.co.in,https://www.fitnessgurukul.co.in,https://fitnessgurukul.in,https://www.fitnessgurukul.in
+ENV CORS_ORIGINS=https://fitnessgurukul.app,https://www.fitnessgurukul.app,https://fitnessgurukul.co.in,https://www.fitnessgurukul.co.in
 
 RUN mkdir -p /app/data
 EXPOSE 8000

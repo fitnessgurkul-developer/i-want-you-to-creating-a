@@ -1,0 +1,3 @@
+# Fitness Gurukul API uses Python stdlib only.
+# File kept for Docker layer caching / host detection.
+setuptools>=69.0.0
