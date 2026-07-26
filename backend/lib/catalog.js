@@ -43,6 +43,8 @@ const COACHES = [
   { name: "Ravi Pal", role: "Fitness Trainer & Injury Rehabilitation Coach", slug: "ravi-pal", category: "rehab", focus: ["Injury rehabilitation", "Recovery", "Strength"], bio: "Rehab-focused fitness coach." },
   { name: "B Yashwanth", role: "Basketball Coach", slug: "b-yashwanth", category: "sports", focus: ["Basketball", "Conditioning"], bio: "Sports performance coach." },
   { name: "Anand Yadav", role: "Children's Athletics Coach", slug: "anand-yadav", category: "kids", focus: ["Kids fitness", "Athletics"], bio: "Kids athletics coach." },
+  { name: "Shivajeet Kanaujiya", role: "Fitness Trainer", slug: "shivajeet-kanaujiya", category: "fitness", focus: ["Strength", "Fat loss"], bio: "Strength and body recomposition coach." },
+  { name: "Deepesh Kumar", role: "Fitness Trainer", slug: "deepesh-kumar", category: "fitness", focus: ["Weight loss", "Strength"], bio: "Weight-loss focused trainer." },
 ];
 
 const GOAL_MATCHES = {
@@ -55,10 +57,11 @@ const GOAL_MATCHES = {
 };
 
 const CHALLENGES = [
-  { id: "fat-burn-30", name: "30-Day Fat Burn Challenge", tag: "Fat loss", days: 30, level: "All levels", sessionsPerWeek: 4, focus: ["HIIT finishers", "Strength circuits", "Nutrition check-ins"], outcome: "Drop stubborn fat while keeping energy.", planCategory: "prime", goal: "weight-loss" },
-  { id: "strength-30", name: "30-Day Strength Challenge", tag: "Strength", days: 30, level: "Beginner to intermediate", sessionsPerWeek: 3, focus: ["Compound lifts", "Progressive overload"], outcome: "Build measurable strength safely.", planCategory: "signature", goal: "strength" },
-  { id: "mobility-21", name: "21-Day Mobility Reset", tag: "Yoga & recovery", days: 21, level: "All levels", sessionsPerWeek: 5, focus: ["Breathwork", "Hip & spine mobility"], outcome: "Move freer and reduce stiffness.", planCategory: "recovery", goal: "yoga" },
-  { id: "run-start-28", name: "28-Day Run Starter", tag: "Endurance", days: 28, level: "Beginner", sessionsPerWeek: 3, focus: ["Walk-run intervals", "Aerobic base"], outcome: "Build toward consistent 5K pacing.", planCategory: "endurance", goal: "running" },
+  { id: "fat-burn-30", name: "30-Day Fat Burn Challenge", tag: "Fat loss", days: 30, level: "All levels", sessionsPerWeek: 4, focus: ["HIIT finishers", "Strength circuits", "Nutrition check-ins"], outcome: "Drop stubborn fat while keeping energy.", planCategory: "prime", goal: "weight-loss", milestones: ["Week 1 foundations", "Week 2 intensity", "Week 3 consistency", "Week 4 finish"], image: "https://images.unsplash.com/photo-1549476464-37392f717541?w=1400&q=80&auto=format&fit=crop" },
+  { id: "strength-30", name: "30-Day Strength Challenge", tag: "Strength", days: 30, level: "Beginner to intermediate", sessionsPerWeek: 3, focus: ["Compound lifts", "Progressive overload"], outcome: "Build measurable strength safely.", planCategory: "signature", goal: "strength", milestones: ["Form week", "Load week", "Volume week", "PR week"], image: "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=1400&q=80&auto=format&fit=crop" },
+  { id: "mobility-21", name: "21-Day Mobility Reset", tag: "Yoga & recovery", days: 21, level: "All levels", sessionsPerWeek: 5, focus: ["Breathwork", "Hip & spine mobility"], outcome: "Move freer and reduce stiffness.", planCategory: "recovery", goal: "yoga", milestones: ["Breath reset", "Hip openers", "Spine flow"], image: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=1400&q=80&auto=format&fit=crop" },
+  { id: "run-start-28", name: "28-Day Run Starter", tag: "Endurance", days: 28, level: "Beginner", sessionsPerWeek: 3, focus: ["Walk-run intervals", "Aerobic base"], outcome: "Build toward consistent 5K pacing.", planCategory: "endurance", goal: "running", milestones: ["Walk-run", "Steady aerobic", "Longer continuous", "5K ready"], image: "https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?w=1400&q=80&auto=format&fit=crop" },
+  { id: "hyrox-21", name: "21-Day Hyrox Spark", tag: "Functional", days: 21, level: "Intermediate", sessionsPerWeek: 4, focus: ["Compromised running", "Station skills", "Grip & engine"], outcome: "Build race-style engine without burning out.", planCategory: "forge", goal: "strength", milestones: ["Engine base", "Station skills", "Race simulation"], image: "https://images.unsplash.com/photo-1571902943202-507ec2618e8f?w=1400&q=80&auto=format&fit=crop" },
 ];
 
 const CHAT_SUGGESTIONS = [
@@ -67,6 +70,46 @@ const CHAT_SUGGESTIONS = [
   "Help me pick a coach",
   "How do I book a consultation?",
 ];
+
+const PULSE_LINES = [
+  "A Hyderabad member just booked a free consultation",
+  "Coach match completed for yoga & mobility",
+  "Macro calculator used for Indian meal planning",
+  "Doorstep training inquiry from Gachibowli",
+  "Running plan comparison opened on Services",
+  "Someone just joined the 30-Day Fat Burn Challenge",
+  "Plan quiz completed — Signature coaching recommended",
+];
+
+const GOAL_ALIASES = {
+  "fat-loss": "weight-loss",
+  "lose-weight": "weight-loss",
+  recomp: "weight-loss",
+  muscle: "strength",
+  "build-muscle": "strength",
+  flexibility: "yoga",
+  stress: "yoga",
+  mobility: "yoga",
+  endurance: "running",
+  run: "running",
+  "5k": "running",
+  hyrox: "strength",
+  injury: "rehab",
+  recovery: "rehab",
+};
+
+function findChallenge(challengeId) {
+  return CHALLENGES.find((c) => c.id === String(challengeId || "")) || null;
+}
+
+function findPlan(categoryOrName) {
+  return (
+    PLANS.find((p) => p.category === categoryOrName) ||
+    PLANS.find((p) => p.name === categoryOrName) ||
+    SERVICES.find((s) => s.name === categoryOrName) ||
+    null
+  );
+}
 
 function contentPayload() {
   return {
@@ -93,52 +136,107 @@ function challengesPayload() {
   };
 }
 
+/** Flat live stats — matches frontend applyLiveStats / challenge page. */
 function livePayload() {
   const c = store.counts();
+  const idx = Math.floor(Date.now() / 45000) % PULSE_LINES.length;
   return {
     ok: true,
-    pulse: {
-      clientsTransformed: 1000 + c.submissions,
-      eventsHosted: 50,
-      expertCoaches: COACHES.length,
-      inquiriesToday: c.today,
-      challengeJoins: c.challengeJoins,
-      calculatorUses: c.calculations,
-      chatTurns: c.chats,
-    },
+    clientsTransformed: 1000 + c.submissions,
+    years: 13,
+    events: 50,
+    coaches: COACHES.length,
+    specialties: 7,
+    inquiriesToday: c.today,
+    toolUses: c.calculations,
+    chatSessions: c.chats,
+    challengeJoins: 48 + c.challengeJoins,
+    activeNow: 3 + (Math.floor(Date.now() / 30000) % 9),
+    pulse: PULSE_LINES[idx],
     updatedAt: Math.floor(Date.now() / 1000),
   };
 }
 
-function matchGoal(payload) {
-  const goal = String(payload.goal || payload.focus || "strength").toLowerCase();
-  const match = GOAL_MATCHES[goal] || GOAL_MATCHES.strength;
-  const plan = PLANS.find((p) => p.category === match.planCategory) || PLANS[2];
-  const coaches = COACHES.filter((c) => match.coachCategories.includes(c.category)).slice(0, 3);
-  return { ok: true, match, plan, coaches, challengeId: match.challengeId };
+function normalizeGoal(raw) {
+  const goal = String(raw || "")
+    .toLowerCase()
+    .replace(/\s+/g, "-")
+    .slice(0, 40);
+  return GOAL_ALIASES[goal] || goal;
 }
 
-function quizRecommend(payload) {
-  const goal = String(payload.goal || "").toLowerCase();
-  const experience = String(payload.experience || "").toLowerCase();
-  const preference = String(payload.preference || "").toLowerCase();
-  let category = "prime";
-  if (goal.includes("run")) category = "endurance";
-  else if (goal.includes("yoga") || goal.includes("stress")) category = "elite";
-  else if (goal.includes("muscle") || goal.includes("strength")) category = "signature";
-  else if (preference.includes("online") || preference.includes("virtual")) category = "elite";
-  else if (experience.includes("beginner")) category = "core";
-  const plan = PLANS.find((p) => p.category === category) || PLANS[2];
+function matchGoal(payload) {
+  const goal = normalizeGoal(payload.goal || payload.focus || "weight-loss");
+  const experience = String(payload.experience || "beginner").toLowerCase().slice(0, 40);
+  const preference = String(payload.preference || "in-person").toLowerCase().slice(0, 40);
+  const match = GOAL_MATCHES[goal] || GOAL_MATCHES["weight-loss"];
+  const coaches = COACHES.filter((c) => match.coachCategories.includes(c.category)).slice(0, 3);
+  let plan = findPlan(match.planCategory) || findPlan(match.plan) || PLANS[2];
+  const challenge = findChallenge(match.challengeId) || CHALLENGES[0];
+  const tip = {
+    beginner: "Start with a free consultation and a gentle 2-week ramp-up.",
+    intermediate: "Expect progressive overload with weekly check-ins.",
+    advanced: "We will bias intensity, recovery, and race or physique peaking.",
+  }[experience] || "Start with a free consultation.";
+  const mode =
+    ["in-person", "doorstep", "home", "studio"].includes(preference)
+      ? "Doorstep or studio sessions available in Hyderabad."
+      : "Virtual coaching with app check-ins works great for your schedule.";
   return {
     ok: true,
-    recommendation: plan,
-    reason: `Based on your goal (${goal || "general"}), experience (${experience || "any"}), and preference (${preference || "flexible"}).`,
-    next: "book-consultation.html",
+    match,
+    plan,
+    challenge,
+    coaches,
+    tip,
+    mode,
+    score: GOAL_MATCHES[goal] ? 92 : 78,
+    challengeId: match.challengeId,
   };
 }
 
-function findChallenge(challengeId) {
-  return CHALLENGES.find((c) => c.id === String(challengeId || "")) || null;
+function quizRecommend(payload) {
+  const goal = normalizeGoal(payload.goal || "");
+  const experience = String(payload.experience || payload.level || "beginner").toLowerCase().slice(0, 40);
+  const preference = String(payload.preference || payload.location || "in-person").toLowerCase().slice(0, 40);
+  const timeBudget = String(payload.time || payload.days || "30").toLowerCase().slice(0, 40);
+
+  const base = matchGoal({ goal, experience, preference });
+  let challenge = base.challenge || CHALLENGES[0];
+  let plan = base.plan;
+
+  if (["busy", "15", "21", "short"].includes(timeBudget)) {
+    const short = CHALLENGES.find((c) => (c.days || 30) <= 21 && c.goal === challenge.goal);
+    if (short) {
+      challenge = short;
+      plan = findPlan(short.planCategory) || plan;
+    }
+  } else if (["race", "hyrox", "functional"].includes(timeBudget) || goal === "hyrox") {
+    const hyrox = findChallenge("hyrox-21");
+    if (hyrox) {
+      challenge = hyrox;
+      plan = findPlan("forge") || plan;
+    }
+  }
+
+  const reasons = [
+    `Goal focus: ${(base.match && base.match.title) || goal || "general"}`,
+    `Training mode: ${["in-person", "doorstep", "home", "studio"].includes(preference) ? "in-person / doorstep" : "virtual"}`,
+    `Challenge length: ${challenge.days} days · ${challenge.sessionsPerWeek} sessions/week`,
+  ];
+
+  return {
+    ok: true,
+    score: base.score || 90,
+    match: base.match,
+    plan,
+    challenge,
+    coaches: base.coaches || [],
+    tip: base.tip,
+    mode: base.mode,
+    reasons,
+    nextStep: "book-consultation.html",
+  };
 }
 
 module.exports = {

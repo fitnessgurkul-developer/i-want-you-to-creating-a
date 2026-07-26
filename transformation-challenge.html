@@ -44,7 +44,7 @@
         radial-gradient(ellipse at center, transparent 42%, rgba(0,0,0,.72) 100%),
         linear-gradient(90deg, rgba(0,0,0,.92), rgba(0,0,0,.58) 46%, rgba(0,0,0,.9)),
         linear-gradient(180deg, rgba(0,0,0,.28), rgba(0,0,0,.88)),
-        url("assets/cdn/bg-1.png") center top / cover no-repeat;
+        url("assets/cdn/bg-1.jpg") center top / cover no-repeat;
       opacity: .45;
       filter: saturate(.8) contrast(1.04) brightness(.68);
     }
@@ -813,22 +813,49 @@
         requestAnimationFrame(frame);
       }
 
+      function apiUrls(path) {
+        if (window.fgApiCandidates) return window.fgApiCandidates(path);
+        var list = [window.fgApiUrl ? window.fgApiUrl(path) : path];
+        var php = {
+          "/api/live": "/api/live.php",
+          "/api/challenges": "/api/challenges.php",
+          "/api/quiz": "/api/quiz.php",
+          "/api/challenge-join": "/api/challenge-join.php"
+        };
+        if (php[path] && list.indexOf(php[path]) === -1) list.push(php[path]);
+        return list;
+      }
+
+      async function fetchJson(path, options) {
+        var candidates = apiUrls(path);
+        var lastErr = null;
+        for (var i = 0; i < candidates.length; i++) {
+          try {
+            var res = await fetch(candidates[i], options || {});
+            var data = await res.json();
+            if (res.ok && data) return data;
+            lastErr = new Error((data && data.error) || ("HTTP " + res.status));
+          } catch (err) {
+            lastErr = err;
+          }
+        }
+        throw lastErr || new Error("Request failed");
+      }
+
       async function loadLive() {
         try {
-          var res = await fetch((window.fgApiUrl ? window.fgApiUrl("/api/live") : "/api/live"));
-          var live = await res.json();
+          var live = await fetchJson("/api/live");
           if (!live || !live.ok) return;
           animateCount($("tcJoined"), live.challengeJoins || live.inquiriesToday || 0);
           animateCount($("tcActive"), live.activeNow || 0);
           animateCount($("tcClients"), live.clientsTransformed || 0);
-          if (live.pulse) $("tcPulse").textContent = live.pulse;
+          if (live.pulse) $("tcPulse").textContent = typeof live.pulse === "string" ? live.pulse : "";
         } catch (e) {}
       }
 
       async function loadChallenges() {
         try {
-          var res = await fetch((window.fgApiUrl ? window.fgApiUrl("/api/challenges") : "/api/challenges"));
-          var data = await res.json();
+          var data = await fetchJson("/api/challenges");
           challenges = (data && data.challenges) || [];
         } catch (e) {
           challenges = [];
@@ -938,15 +965,23 @@
 
       async function runQuiz() {
         var panel = $("tcQuizResult");
-        panel.innerHTML = '<div class="tc-result-empty"><strong>Matching via /api/quiz…</strong><span>Pulling live plans and coaches.</span></div>';
+        panel.innerHTML = '<div class="tc-result-empty"><strong>Matching your plan…</strong><span>Pulling plans and coaches.</span></div>';
         try {
-          var res = await fetch((window.fgApiUrl ? window.fgApiUrl("/api/quiz") : "/api/quiz"), {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(answers)
-          });
-          var data = await res.json();
-          if (!data || !data.ok) throw new Error("quiz failed");
+          var data;
+          try {
+            data = await fetchJson("/api/quiz", {
+              method: "POST",
+              headers: { "Content-Type": "application/json", Accept: "application/json" },
+              body: JSON.stringify(answers)
+            });
+            if (!data || !data.ok) throw new Error("quiz failed");
+          } catch (apiErr) {
+            if (window.FG && typeof window.FG.localQuizRecommend === "function") {
+              data = window.FG.localQuizRecommend(answers);
+            } else {
+              throw apiErr;
+            }
+          }
           var plan = data.plan || {};
           var challenge = data.challenge || {};
           var coaches = data.coaches || [];
@@ -956,6 +991,9 @@
             document.querySelectorAll("#tcFilters button").forEach(function (b) {
               b.classList.toggle("active", b.getAttribute("data-filter") === "all");
             });
+            if (!challenges.some(function (c) { return c.id === challenge.id; })) {
+              challenges.unshift(challenge);
+            }
             renderSelected();
           }
           var coachHtml = coaches.slice(0, 3).map(function (c) {
@@ -976,7 +1014,7 @@
               '<a class="ghost-button" href="book-consultation.html">Buy Now</a>' +
             "</div>";
         } catch (e) {
-          panel.innerHTML = '<div class="tc-result-empty"><strong>Could not reach the quiz API</strong><span>Try again or <a href="book-consultation.html">book a consultation</a>.</span></div>';
+          panel.innerHTML = '<div class="tc-result-empty"><strong>Could not finish the quiz</strong><span>Try again or <a href="book-consultation.html">book a consultation</a>.</span></div>';
         }
       }
 

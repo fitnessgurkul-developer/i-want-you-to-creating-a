@@ -73,6 +73,8 @@ let allCoaches = [];
 let activeAdminTab = "leads";
 let adminData = { leads: [], checkins: [], ai_scans: [], newsletter: [], calculations: [] };
 let usesLocalBackend = false;
+/** Full Node/Python API (chat, calculators). False on Hostinger PHP-only. */
+let usesChatBackend = false;
 let coachProfiles = [];
 
 const accentMap = {
@@ -343,48 +345,197 @@ function getApiBase() {
   return "";
 }
 
+function sitePathPrefix() {
+  return /\/coaches\//i.test(String(location.pathname || "")) ? "../" : "";
+}
+
 function apiUrl(path) {
+  // Sync host guard into FG_API_BASE before config.js fgApiUrl reads it.
+  var base = getApiBase();
+  if (typeof window !== "undefined") window.FG_API_BASE = base;
   if (typeof window !== "undefined" && typeof window.fgApiUrl === "function") {
     return window.fgApiUrl(path);
   }
-  var base = getApiBase();
   if (!path) return base || "/";
   if (/^https?:\/\//i.test(path)) return path;
   if (!base) return path.charAt(0) === "/" ? path : "/" + path;
   return base + (path.charAt(0) === "/" ? path : "/" + path);
 }
 
-async function api(path, options = {}) {
-  const controller = new AbortController();
-  const timer = setTimeout(function() { controller.abort(); }, 8000);
-  try {
-    const res = await fetch(apiUrl(path), {
-      headers: { "Content-Type": "application/json" },
-      signal: controller.signal,
-      ...options,
-    });
-    const text = await res.text();
-    if (!text) return {};
-    const payload = JSON.parse(text);
-    if (!res.ok) throw new Error(payload.error || "Request failed");
-    return payload;
-  } finally {
-    clearTimeout(timer);
+function apiCandidates(path) {
+  if (typeof window !== "undefined" && typeof window.fgApiCandidates === "function") {
+    return window.fgApiCandidates(path);
   }
+  var list = [apiUrl(path)];
+  var phpMap = {
+    "/api/health": "/api/health.php",
+    "/api/quiz": "/api/quiz.php",
+    "/api/match": "/api/match.php",
+    "/api/live": "/api/live.php",
+    "/api/challenges": "/api/challenges.php",
+    "/api/challenge-join": "/api/challenge-join.php",
+    "/api/submit": "/api/submit.php"
+  };
+  var clean = path.charAt(0) === "/" ? path : "/" + path;
+  if (phpMap[clean] && list.indexOf(phpMap[clean]) === -1) list.push(phpMap[clean]);
+  return list;
+}
+
+async function api(path, options = {}) {
+  const candidates = apiCandidates(path);
+  let lastError = null;
+  for (let i = 0; i < candidates.length; i++) {
+    const controller = new AbortController();
+    const timer = setTimeout(function() { controller.abort(); }, 8000);
+    try {
+      const res = await fetch(candidates[i], {
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        signal: controller.signal,
+        ...options,
+      });
+      const text = await res.text();
+      let payload = {};
+      if (text) {
+        try { payload = JSON.parse(text); } catch (parseErr) {
+          lastError = new Error("Invalid JSON from " + candidates[i]);
+          continue;
+        }
+      }
+      if (!res.ok) {
+        // Validation / auth from a live API — stop hopping.
+        if (res.status === 400 || res.status === 401 || res.status === 422) {
+          throw new Error(payload.error || "Request failed");
+        }
+        lastError = new Error(payload.error || ("Request failed (" + res.status + ")"));
+        continue;
+      }
+      return payload;
+    } catch (err) {
+      if (err && /Request failed|Missing|Unauthorized|required/i.test(String(err.message || ""))) throw err;
+      lastError = err;
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+  throw lastError || new Error("Request failed");
 }
 
 async function detectBackend() {
   try {
     const health = await api("/api/health");
-    usesLocalBackend = Boolean(health.ok);
+    usesLocalBackend = Boolean(health && health.ok);
+    var engine = String((health && health.engine) || "");
+    // PHP health means forms/quiz/live work; chat still stays client-side.
+    usesChatBackend = usesLocalBackend && !/php|hostinger/i.test(engine);
     if (usesLocalBackend && typeof document !== "undefined") {
       document.documentElement.dataset.apiReady = "1";
       if (getApiBase()) document.documentElement.dataset.apiRemote = "1";
+      if (engine) document.documentElement.dataset.apiEngine = engine;
     }
   } catch (e) {
     usesLocalBackend = false;
+    usesChatBackend = false;
   }
   return usesLocalBackend;
+}
+
+/** Client-side match/quiz when API is unreachable — same contract as /api/match + /api/quiz. */
+function localGoalMatch(payload) {
+  var aliases = {
+    "fat-loss": "weight-loss", "lose-weight": "weight-loss", recomp: "weight-loss",
+    muscle: "strength", "build-muscle": "strength", flexibility: "yoga", stress: "yoga",
+    mobility: "yoga", endurance: "running", run: "running", "5k": "running",
+    hyrox: "strength", injury: "rehab", recovery: "rehab"
+  };
+  var goal = String((payload && payload.goal) || "weight-loss").toLowerCase().replace(/\s+/g, "-");
+  goal = aliases[goal] || goal;
+  var experience = String((payload && payload.experience) || "beginner").toLowerCase();
+  var preference = String((payload && payload.preference) || "in-person").toLowerCase();
+  var goals = {
+    "weight-loss": { goal: "weight-loss", title: "Fat Loss & Body Recomposition", summary: "Strength + Indian nutrition for sustainable fat loss.", plan: "Fitness Gurukul Prime", planCategory: "prime", coachCategories: ["fitness", "yoga"], challengeId: "fat-burn-30" },
+    strength: { goal: "strength", title: "Strength & Muscle Building", summary: "Progressive personal training with form coaching.", plan: "Fitness Gurukul Signature", planCategory: "signature", coachCategories: ["fitness"], challengeId: "strength-30" },
+    yoga: { goal: "yoga", title: "Yoga, Breathwork & Stress Relief", summary: "Mobility and nervous-system reset.", plan: "Yogic Wellness", planCategory: "recovery", coachCategories: ["yoga"], challengeId: "mobility-21" },
+    running: { goal: "running", title: "Running & Endurance", summary: "Periodized run plans with strength support.", plan: "Fitness Gurukul Endurance", planCategory: "endurance", coachCategories: ["fitness", "sports"], challengeId: "run-start-28" },
+    rehab: { goal: "rehab", title: "Injury Rehab & Return to Train", summary: "Guided recovery programming.", plan: "Personal Training", planCategory: "training", coachCategories: ["rehab", "fitness"], challengeId: "mobility-21" },
+    kids: { goal: "kids", title: "Kids Athletics & Confidence", summary: "Age-appropriate movement for children.", plan: "Kids Programs", planCategory: "training", coachCategories: ["kids"], challengeId: "strength-30" }
+  };
+  var challenges = {
+    "fat-burn-30": { id: "fat-burn-30", name: "30-Day Fat Burn Challenge", tag: "Fat loss", days: 30, sessionsPerWeek: 4, level: "All levels", goal: "weight-loss", planCategory: "prime", outcome: "Drop stubborn fat while keeping energy." },
+    "strength-30": { id: "strength-30", name: "30-Day Strength Challenge", tag: "Strength", days: 30, sessionsPerWeek: 3, level: "Beginner to intermediate", goal: "strength", planCategory: "signature", outcome: "Build measurable strength safely." },
+    "mobility-21": { id: "mobility-21", name: "21-Day Mobility Reset", tag: "Yoga & recovery", days: 21, sessionsPerWeek: 5, level: "All levels", goal: "yoga", planCategory: "recovery", outcome: "Move freer and reduce stiffness." },
+    "run-start-28": { id: "run-start-28", name: "28-Day Run Starter", tag: "Endurance", days: 28, sessionsPerWeek: 3, level: "Beginner", goal: "running", planCategory: "endurance", outcome: "Build toward consistent 5K pacing." },
+    "hyrox-21": { id: "hyrox-21", name: "21-Day Hyrox Spark", tag: "Functional", days: 21, sessionsPerWeek: 4, level: "Intermediate", goal: "strength", planCategory: "forge", outcome: "Build race-style engine without burning out." }
+  };
+  var match = goals[goal] || goals["weight-loss"];
+  var plans = (realData && realData.services) || [];
+  var plan = plans.find(function(p) { return p.category === match.planCategory; }) || plans[1] || { name: match.plan, price: "", summary: match.summary, category: match.planCategory };
+  var coaches = ((allCoaches && allCoaches.length ? allCoaches : (realData && realData.coaches)) || [])
+    .filter(function(c) { return (match.coachCategories || []).indexOf(c.category) !== -1; })
+    .slice(0, 3);
+  var challenge = challenges[match.challengeId] || challenges["fat-burn-30"];
+  var tip = ({ beginner: "Start with a free consultation and a gentle 2-week ramp-up.", intermediate: "Expect progressive overload with weekly check-ins.", advanced: "We will bias intensity, recovery, and race or physique peaking." })[experience] || "Start with a free consultation.";
+  var mode = ["in-person", "doorstep", "home", "studio"].indexOf(preference) !== -1
+    ? "Doorstep or studio sessions available in Hyderabad."
+    : "Virtual coaching with app check-ins works great for your schedule.";
+  return {
+    ok: true,
+    match: match,
+    plan: plan,
+    challenge: challenge,
+    coaches: coaches,
+    tip: tip,
+    mode: mode,
+    score: goals[goal] ? 92 : 78,
+    challengeId: match.challengeId,
+    source: "client"
+  };
+}
+
+function localQuizRecommend(payload) {
+  var answers = payload || {};
+  var base = localGoalMatch(answers);
+  var timeBudget = String(answers.time || answers.days || "30").toLowerCase();
+  var challenge = base.challenge;
+  var plan = base.plan;
+  if (["busy", "15", "21", "short"].indexOf(timeBudget) !== -1 && challenge && challenge.goal === "yoga") {
+    challenge = { id: "mobility-21", name: "21-Day Mobility Reset", tag: "Yoga & recovery", days: 21, sessionsPerWeek: 5, level: "All levels", goal: "yoga", planCategory: "recovery", outcome: "Move freer and reduce stiffness." };
+  } else if (["busy", "15", "21", "short"].indexOf(timeBudget) !== -1) {
+    // Prefer a short challenge when available for the same goal family.
+    if (challenge && challenge.goal === "yoga") { /* already short */ }
+    else if (String(answers.goal || "").toLowerCase().indexOf("yoga") !== -1 || String(answers.goal || "").toLowerCase() === "mobility") {
+      challenge = { id: "mobility-21", name: "21-Day Mobility Reset", days: 21, sessionsPerWeek: 5, goal: "yoga", planCategory: "recovery", tag: "Yoga & recovery", level: "All levels", outcome: "Move freer and reduce stiffness." };
+    }
+  }
+  if (["race", "hyrox", "functional"].indexOf(timeBudget) !== -1 || String(answers.goal || "").toLowerCase() === "hyrox") {
+    challenge = { id: "hyrox-21", name: "21-Day Hyrox Spark", tag: "Functional", days: 21, sessionsPerWeek: 4, level: "Intermediate", goal: "strength", planCategory: "forge", outcome: "Build race-style engine without burning out." };
+    var forge = ((realData && realData.services) || []).find(function(p) { return p.category === "forge"; });
+    if (forge) plan = forge;
+  }
+  var preference = String(answers.preference || "in-person").toLowerCase();
+  return {
+    ok: true,
+    score: base.score || 90,
+    match: base.match,
+    plan: plan,
+    challenge: challenge,
+    coaches: base.coaches || [],
+    tip: base.tip,
+    mode: base.mode,
+    reasons: [
+      "Goal focus: " + ((base.match && base.match.title) || answers.goal || "general"),
+      "Training mode: " + (["in-person", "doorstep", "home", "studio"].indexOf(preference) !== -1 ? "in-person / doorstep" : "virtual"),
+      "Challenge length: " + (challenge.days || "") + " days · " + (challenge.sessionsPerWeek || "") + " sessions/week"
+    ],
+    nextStep: "book-consultation.html",
+    source: "client"
+  };
+}
+
+if (typeof window !== "undefined") {
+  window.FG = window.FG || {};
+  window.FG.localGoalMatch = localGoalMatch;
+  window.FG.localQuizRecommend = localQuizRecommend;
+  window.FG.apiCandidates = apiCandidates;
 }
 
 function setStatus(element, message, isError = false) {
@@ -570,7 +721,7 @@ function bookLinkFromMatch(data) {
   if (coach.name) params.set("coach", coach.name);
   if (data && data.challenge && data.challenge.name) params.set("challenge", data.challenge.name);
   var qs = params.toString();
-  return "book-consultation.html" + (qs ? "?" + qs : "");
+  return sitePathPrefix() + "book-consultation.html" + (qs ? "?" + qs : "");
 }
 
 function renderMatchResultHtml(data) {
@@ -593,7 +744,7 @@ function renderMatchResultHtml(data) {
     '<div class="goal-match-coaches">' + (coachHtml || "<p>Browse all coaches to pick your fit.</p>") + '</div>' +
     '<div class="goal-match-actions">' +
       '<a class="primary-button" href="' + safe(bookHref) + '">Buy Now</a>' +
-      '<a class="ghost-button" href="transformation-challenge.html#tcQuiz">Try challenge quiz</a>' +
+      '<a class="ghost-button" href="' + sitePathPrefix() + 'transformation-challenge.html#tcQuiz">Try challenge quiz</a>' +
       '<a class="ghost-button" href="https://wa.me/917207113310" target="_blank" rel="noopener">Have questions? Chat now</a>' +
     '</div>' +
   '</div>';
@@ -610,12 +761,17 @@ function initGoalMatcher() {
     result.classList.remove("is-ready");
     result.innerHTML = '<div class="goal-match-loading">Matching you with a plan and coach…</div>';
     try {
-      var data = await api("/api/match", { method: "POST", body: JSON.stringify(payload) });
+      var data;
+      try {
+        data = await api("/api/match", { method: "POST", body: JSON.stringify(payload) });
+      } catch (apiErr) {
+        data = localGoalMatch(payload);
+      }
       result.innerHTML = renderMatchResultHtml(data);
       result.classList.add("is-ready");
       result.scrollIntoView({ behavior: "smooth", block: "nearest" });
     } catch (err) {
-      result.innerHTML = '<div class="goal-match-error">Could not match right now. <a href="book-consultation.html">Book a consultation</a> instead.</div>';
+      result.innerHTML = '<div class="goal-match-error">Could not match right now. <a href="' + sitePathPrefix() + 'book-consultation.html">Book a consultation</a> instead.</div>';
     }
   });
 }
@@ -685,12 +841,17 @@ function initPlanQuiz() {
     result.hidden = false;
     result.innerHTML = '<div class="goal-match-loading">Matching via /api/quiz…</div>';
     try {
-      var data = await api("/api/quiz", { method: "POST", body: JSON.stringify(answers) });
+      var data;
+      try {
+        data = await api("/api/quiz", { method: "POST", body: JSON.stringify(answers) });
+      } catch (apiErr) {
+        data = localQuizRecommend(answers);
+      }
       result.innerHTML = renderMatchResultHtml(data);
       result.classList.add("is-ready");
       result.scrollIntoView({ behavior: "smooth", block: "nearest" });
     } catch (e) {
-      result.innerHTML = '<div class="goal-match-error">Quiz API unavailable. <a href="transformation-challenge.html#tcQuiz">Open full challenge quiz</a>.</div>';
+      result.innerHTML = '<div class="goal-match-error">Quiz unavailable. <a href="' + sitePathPrefix() + 'transformation-challenge.html#tcQuiz">Open full challenge quiz</a>.</div>';
     }
   }
 
@@ -1687,7 +1848,9 @@ function matchCoach(answers, coaches) {
 }
 
 function injectAmbientBg() {
-  if (qs(".bg-ambient")) return;
+  // Challenge page owns its own atmosphere via body.tc-page — do not stack orbs.
+  if (document.body && document.body.classList.contains("tc-page")) return;
+  if (qs(".bg-ambient") || qs("#bg-ambient")) return;
   const el = document.createElement("div");
   el.className = "bg-ambient";
   el.innerHTML =
@@ -2861,8 +3024,7 @@ function initHomePage() {
 function injectFooter() {
   var existing = qs(".site-footer");
   if (existing) existing.remove();
-  var inCoaches = /\/coaches\//i.test(String(location.pathname || ""));
-  var p = inCoaches ? "../" : "";
+  var p = sitePathPrefix();
   var f = document.createElement("footer");
   f.className = "site-footer footer-refresh";
   f.innerHTML = `<div class="footer-topline"><a class="footer-logo" href="${p}index.html"><img src="${p}assets/fitness-gurukul-logo.jpg" alt="Fitness Gurukul" /><span class="footer-logo-text"><strong>Fitness</strong><span>Gurukul</span></span></a><p>Personal training, made personal.</p><a class="footer-cta" href="${p}contact.html">Talk to a coach <span aria-hidden="true">&rarr;</span></a></div><div class="footer-refresh-grid"><div class="footer-intro"><p>Built for stronger, healthier lives in Hyderabad&mdash;at the studio, at home, and wherever you train.</p><a href="tel:+917207113310">+91 72071 13310</a></div><div class="footer-col"><h4>Discover</h4><nav class="footer-nav"><a href="${p}about.html">About us</a><a href="${p}coaches.html">Our coaches</a><a href="${p}transformation-challenge.html">Transformation challenge</a></nav></div><div class="footer-col"><h4>Start here</h4><nav class="footer-nav"><a href="${p}tools.html">Fitness tools</a><a href="${p}events.html">Events</a><a href="${p}testimonials.html">Success stories</a><a href="${p}contact.html">Book a consultation</a></nav></div><div class="footer-col"><h4>Contact Us</h4><div class="footer-contact-col"><a href="tel:+917207113310"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>+91 72071 13310</a><a href="mailto:contact@fitnessgurukul.co.in"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>contact@fitnessgurukul.co.in</a><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Manikonda, Hyderabad</span><a class="footer-contact-cta" href="${p}contact.html">Get Directions &rarr;</a></div></div><div class="footer-col"><h4>Visit</h4><p class="footer-address">Manikonda, Hyderabad<br />Telangana, India</p><div class="footer-social"><a href="https://www.instagram.com/fitnessgurukulofficial/" target="_blank" rel="noopener" aria-label="Instagram">IG</a><a href="https://www.facebook.com/fitnessgurukul7/" target="_blank" rel="noopener" aria-label="Facebook">fb</a><a href="https://www.youtube.com/channel/UCLt2Qs1MeV_uf_xMJ7AaPlA" target="_blank" rel="noopener" aria-label="YouTube">YT</a></div></div></div><div class="footer-bottom"><p class="footer-copy">&copy; 2026 Fitness Gurukul. All rights reserved.</p><span class="footer-bottom-links"><a href="${p}contact.html">Contact Us</a><a class="footer-staff-link" href="${p}backend.html">Backend</a></span></div>`;
@@ -2915,7 +3077,7 @@ function injectSiteChatbot() {
         '</button>' +
       '</div>' +
       '<div class="fg-chatbot-foot">' +
-        '<a class="fg-chatbot-cta" href="contact.html">Talk to a coach</a>' +
+        '<a class="fg-chatbot-cta" href="' + sitePathPrefix() + 'contact.html">Talk to a coach</a>' +
         '<span class="fg-chatbot-powered">Powered by Fitness Gurukul AI</span>' +
       '</div>' +
     '</section>';
@@ -3073,7 +3235,7 @@ function injectSiteChatbot() {
   }
 
   async function requestChatReply(message) {
-    if (usesLocalBackend) {
+    if (usesChatBackend) {
       var controller = new AbortController();
       var timer = setTimeout(function() { controller.abort(); }, 30000);
       try {
@@ -3091,6 +3253,8 @@ function injectSiteChatbot() {
         var payload = text ? JSON.parse(text) : {};
         if (!res.ok) throw new Error(payload.error || "Request failed");
         return payload;
+      } catch (chatErr) {
+        // Fall through to local assistant if Node chat is down.
       } finally {
         clearTimeout(timer);
       }
@@ -3138,7 +3302,7 @@ function injectSiteChatbot() {
   }
 
   async function loadChatStatus() {
-    if (!usesLocalBackend) {
+    if (!usesChatBackend) {
       renderSuggestions(chatSuggestions);
       return;
     }
