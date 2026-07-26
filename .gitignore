@@ -12,3 +12,4 @@ api/data/*.json
 !api/data/.htaccess
 *.bak
 .DS_Store
+dist/

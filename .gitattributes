@@ -2,3 +2,11 @@ GALLERY/** filter=lfs diff=lfs merge=lfs -text
 *.mp4 filter=lfs diff=lfs merge=lfs -text
 *.jpg filter=lfs diff=lfs merge=lfs -text
 *.png filter=lfs diff=lfs merge=lfs -text
+
+# Transformation composites — regular blobs (avoid LFS budget failures)
+udit.png !filter !diff !merge -text
+neha.png !filter !diff !merge -text
+deepak.png !filter !diff !merge -text
+ramakrishna.png !filter !diff !merge -text
+assets/fitness-gurukul-logo.png !filter !diff !merge -text
+assets/transforms/** !filter !diff !merge -text

@@ -3,34 +3,33 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Transformation Challenge | Fitness Gurukul Hyderabad</title>
-  <meta name="description" content="Take the Fitness Gurukul challenge quiz, pick a plan path, and join a coached transformation challenge." />
+  <title>Transformation Challenge | Fitness Gurukul</title>
+  <meta name="description" content="Join Fitness Gurukul transformation challenges in Hyderabad. Take a quick quiz for a plan recommendation, pick a challenge, and start with coach support." />
   <link rel="canonical" href="https://www.fitnessgurukul.co.in/transformation-challenge.html" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Fitness Gurukul" />
   <meta property="og:url" content="https://www.fitnessgurukul.co.in/transformation-challenge.html" />
-  <meta property="og:title" content="Transformation Challenge | Fitness Gurukul Hyderabad" />
-  <meta property="og:description" content="Take the Fitness Gurukul challenge quiz, pick a plan path, and join a coached transformation challenge." />
+  <meta property="og:title" content="Transformation Challenge | Fitness Gurukul" />
+  <meta property="og:description" content="Join Fitness Gurukul transformation challenges in Hyderabad. Take a quick quiz for a plan recommendation, pick a challenge, and start with coach support." />
   <meta property="og:image" content="https://www.fitnessgurukul.co.in/assets/fitness-gurukul-logo.png" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Transformation Challenge | Fitness Gurukul Hyderabad" />
-  <meta name="twitter:description" content="Take the Fitness Gurukul challenge quiz, pick a plan path, and join a coached transformation challenge." />
+  <meta name="twitter:title" content="Transformation Challenge | Fitness Gurukul" />
+  <meta name="twitter:description" content="Join Fitness Gurukul transformation challenges in Hyderabad. Take a quick quiz for a plan recommendation, pick a challenge, and start with coach support." />
   <meta name="twitter:image" content="https://www.fitnessgurukul.co.in/assets/fitness-gurukul-logo.png" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
   <style>
     :root {
-      --tc-ink: #f3f6f4;
-      --tc-muted: rgba(243,246,244,0.68);
-      --tc-line: rgba(255,255,255,0.12);
-      --tc-accent: #b8f23d;
-      --tc-ember: #ff6a3d;
-      --tc-deep: #07110c;
-      --tc-panel: rgba(10, 22, 16, 0.72);
-      --tc-display: "Barlow Condensed", "Public Sans", sans-serif;
-      --tc-body: "Manrope", "Public Sans", sans-serif;
+      /* Match main site: black / white / soft gray */
+      --tc-ink: #ffffff;
+      --tc-muted: #999999;
+      --tc-line: rgba(255,255,255,0.1);
+      --tc-accent: #ffffff;
+      --tc-ember: rgba(255,255,255,0.55);
+      --tc-deep: #000000;
+      --tc-panel: rgba(17, 17, 17, 0.92);
+      --tc-accent-soft: rgba(255,255,255,0.08);
+      --tc-display: "Public Sans", Helvetica, Arial, sans-serif;
+      --tc-body: "Public Sans", Helvetica, Arial, sans-serif;
     }
 
     body.tc-page {
@@ -39,10 +38,13 @@
       color: var(--tc-ink);
       overflow-x: hidden;
     }
+    body.tc-page::before,
+    body.tc-page::after,
+    body.tc-page #bg-ambient { display: none !important; }
     body.tc-page h1, body.tc-page h2, body.tc-page h3, .tc-brand {
       font-family: var(--tc-display);
-      letter-spacing: 0.01em;
-      text-transform: uppercase;
+      letter-spacing: -0.02em;
+      text-transform: none;
     }
 
     .tc-hero {
@@ -55,7 +57,7 @@
     .tc-hero-media {
       position: absolute; inset: 0;
       background:
-        linear-gradient(180deg, rgba(7,17,12,0.2) 0%, rgba(7,17,12,0.55) 45%, rgba(7,17,12,0.94) 100%),
+        linear-gradient(180deg, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.55) 45%, rgba(0,0,0,0.94) 100%),
         url("https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=1800&q=85&auto=format&fit=crop") center/cover no-repeat;
       transform: scale(1.05);
       animation: tcKen 16s ease-in-out infinite alternate;
@@ -77,7 +79,7 @@
       line-height: 0.9;
       font-weight: 800;
     }
-    .tc-brand span { color: var(--tc-accent); display: block; }
+    .tc-brand span { color: rgba(255,255,255,0.72); display: block; }
     .tc-hero h1 {
       margin: 0 0 12px;
       max-width: 16ch;
@@ -110,7 +112,7 @@
 
     .tc-live {
       border-block: 1px solid var(--tc-line);
-      background: linear-gradient(90deg, rgba(184,242,61,0.08), transparent 40%, rgba(255,106,61,0.08));
+      background: rgba(255,255,255,0.02);
     }
     .tc-live-inner {
       width: min(1120px, calc(100% - 40px));
@@ -128,14 +130,14 @@
     }
     .tc-dot {
       width: 8px; height: 8px; border-radius: 50%;
-      background: var(--tc-accent);
-      box-shadow: 0 0 0 0 rgba(184,242,61,0.55);
+      background: #fff;
+      box-shadow: 0 0 0 0 rgba(255,255,255,0.45);
       animation: tcDot 1.8s ease-out infinite;
     }
     @keyframes tcDot {
-      0% { box-shadow: 0 0 0 0 rgba(184,242,61,0.55); }
-      70% { box-shadow: 0 0 0 10px rgba(184,242,61,0); }
-      100% { box-shadow: 0 0 0 0 rgba(184,242,61,0); }
+      0% { box-shadow: 0 0 0 0 rgba(255,255,255,0.45); }
+      70% { box-shadow: 0 0 0 10px rgba(255,255,255,0); }
+      100% { box-shadow: 0 0 0 0 rgba(255,255,255,0); }
     }
     .tc-live-stats { display: flex; gap: 18px; flex-wrap: wrap; }
     .tc-live-stats strong {
@@ -148,9 +150,7 @@
 
     .tc-section {
       padding: 72px 0;
-      background:
-        radial-gradient(ellipse at 0% 0%, rgba(184,242,61,0.1), transparent 42%),
-        radial-gradient(ellipse at 100% 20%, rgba(255,106,61,0.08), transparent 38%);
+      background: #000;
     }
     .tc-shell { width: min(1120px, calc(100% - 40px)); margin: 0 auto; }
     .tc-section-head { margin-bottom: 28px; max-width: 640px; }
@@ -175,9 +175,9 @@
     }
     .tc-filters button:hover { color: #fff; border-color: rgba(255,255,255,0.28); transform: translateY(-1px); }
     .tc-filters button.active {
-      color: #0a1408;
-      background: var(--tc-accent);
-      border-color: var(--tc-accent);
+      color: #000;
+      background: #fff;
+      border-color: #fff;
     }
 
     .tc-stage {
@@ -211,8 +211,8 @@
     }
     .tc-spotlight-copy .tag {
       display: inline-block;
-      color: #0a1408;
-      background: var(--tc-accent);
+      color: #000;
+      background: #fff;
       font-size: 0.72rem;
       font-weight: 700;
       letter-spacing: 0.06em;
@@ -333,16 +333,14 @@
     .tc-challenge-list button small { font-size: 0.72rem; }
     .tc-challenge-list button:hover { transform: translateY(-2px); color: #fff; }
     .tc-challenge-list button.active {
-      border-color: var(--tc-accent);
-      background: rgba(184,242,61,0.1);
+      border-color: #fff;
+      background: rgba(255,255,255,0.08);
       color: #fff;
     }
 
     .tc-quiz-section {
       padding: 72px 0;
-      background:
-        linear-gradient(180deg, rgba(255,106,61,0.08), transparent 30%),
-        radial-gradient(ellipse at 80% 0%, rgba(184,242,61,0.1), transparent 40%);
+      background: #050505;
     }
     .tc-quiz-layout {
       display: grid;
@@ -367,7 +365,7 @@
       display: block;
       height: 100%;
       width: 25%;
-      background: linear-gradient(90deg, var(--tc-accent), var(--tc-ember));
+      background: #fff;
       transition: width .35s ease;
     }
     .tc-q {
@@ -391,8 +389,8 @@
     }
     .tc-option:hover { border-color: rgba(255,255,255,0.35); transform: translateX(3px); }
     .tc-option.selected {
-      border-color: var(--tc-accent);
-      background: rgba(184,242,61,0.12);
+      border-color: #fff;
+      background: rgba(255,255,255,0.1);
     }
     .tc-quiz-nav {
       display: flex;
@@ -428,8 +426,8 @@
     }
     .tc-result-panel .lead { color: var(--tc-muted); margin: 0 0 14px; }
     .tc-plan-box {
-      border: 1px solid rgba(184,242,61,0.35);
-      background: rgba(184,242,61,0.08);
+      border: 1px solid rgba(255,255,255,0.22);
+      background: rgba(255,255,255,0.06);
       padding: 14px;
       margin-bottom: 14px;
     }
@@ -468,26 +466,84 @@
     .tc-coach small { color: var(--tc-muted); }
 
     .tc-join {
-      padding: 72px 0 90px;
+      padding: 88px 0 100px;
+      border-top: 1px solid var(--tc-line);
+      background:
+        radial-gradient(ellipse at 12% 0%, rgba(255,255,255,0.06), transparent 42%),
+        #000;
     }
     .tc-join-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 24px;
-      align-items: stretch;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 40px;
+      align-items: center;
+    }
+    .tc-join-copy {
+      max-width: 34rem;
+      padding: 8px 0 8px 22px;
+      border-left: 2px solid #fff;
+    }
+    .tc-join-copy .section-kicker {
+      color: rgba(255,255,255,0.5);
     }
     .tc-join-copy h2 {
-      margin: 8px 0 12px;
-      font-size: clamp(1.9rem, 3.4vw, 2.8rem);
+      margin: 10px 0 14px;
+      font-size: clamp(2.1rem, 4vw, 3.2rem);
       line-height: 0.95;
+      letter-spacing: -0.035em;
+      max-width: 11ch;
     }
-    .tc-join-copy p { color: var(--tc-muted); max-width: 42ch; }
+    .tc-join-copy > p {
+      color: var(--tc-muted);
+      max-width: 36ch;
+      margin: 0 0 26px;
+      font-size: 1.02rem;
+      line-height: 1.55;
+    }
+    .tc-join-points {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 14px;
+    }
+    .tc-join-points li {
+      display: grid;
+      grid-template-columns: 28px 1fr;
+      gap: 12px;
+      align-items: start;
+      color: rgba(255,255,255,0.82);
+      font-size: 0.95rem;
+      line-height: 1.4;
+    }
+    .tc-join-points b {
+      display: grid;
+      place-items: center;
+      width: 28px;
+      height: 28px;
+      border: 1px solid rgba(255,255,255,0.35);
+      color: #fff;
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+    .tc-join-points span { color: var(--tc-muted); display: block; margin-top: 2px; font-size: 0.86rem; }
     .tc-join-form {
       border: 1px solid var(--tc-line);
-      background: var(--tc-panel);
-      padding: 22px;
+      background: rgba(17,17,17,0.96);
+      padding: 28px 24px;
       display: grid;
-      gap: 12px;
+      gap: 14px;
+    }
+    .tc-join-form .tc-form-title {
+      margin: 0 0 4px;
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    .tc-join-form .tc-form-note {
+      margin: -4px 0 6px;
+      color: var(--tc-muted);
+      font-size: 0.86rem;
     }
     .tc-join-form label {
       display: grid;
@@ -497,16 +553,21 @@
     }
     .tc-join-form input, .tc-join-form select {
       border: 1px solid var(--tc-line);
-      background: rgba(0,0,0,0.25);
+      background: rgba(0,0,0,0.35);
       color: #fff;
-      padding: 12px 12px;
+      padding: 13px 12px;
       font: inherit;
     }
     .tc-join-form input:focus, .tc-join-form select:focus {
-      outline: 1px solid var(--tc-accent);
-      border-color: var(--tc-accent);
+      outline: 1px solid #fff;
+      border-color: #fff;
     }
-    .tc-join-status { min-height: 1.2em; color: var(--tc-accent); font-size: 0.9rem; }
+    .tc-join-form .primary-button {
+      width: 100%;
+      justify-content: center;
+      margin-top: 4px;
+    }
+    .tc-join-status { min-height: 1.2em; color: rgba(255,255,255,0.85); font-size: 0.9rem; }
 
     .tc-reveal {
       opacity: 0;
@@ -588,7 +649,7 @@
           <a class="primary-button" href="#tcQuiz">Take the quiz</a>
           <a class="ghost-button" href="#tcChallenges">Browse challenges</a>
         </div>
-        <div class="tc-scroll-hint">Live from API · scrub days · join in one tap</div>
+        <div class="tc-scroll-hint">Scrub the days · pick a challenge · join in one tap</div>
       </div>
     </section>
 
@@ -631,7 +692,7 @@
             <div class="tc-spotlight-copy">
               <span class="tag" id="tcTag">Challenge</span>
               <h3 id="tcName">Loading…</h3>
-              <p id="tcOutcome">Fetching challenges from the Fitness Gurukul API.</p>
+              <p id="tcOutcome">Loading challenges — tap one below to preview the timeline.</p>
             </div>
           </div>
 
@@ -668,7 +729,7 @@
         <div class="tc-section-head tc-reveal">
           <span class="section-kicker">Quick plan quiz</span>
           <h2>Easy plan recommendation</h2>
-          <p>Four taps. We call the live quiz API and match you to a challenge plus coaching plan.</p>
+          <p>Four quick answers. We’ll match you to a challenge and a coaching plan that fits.</p>
         </div>
 
         <div class="tc-quiz-layout tc-reveal">
@@ -685,8 +746,8 @@
           <div class="tc-result-panel" id="tcQuizResult" aria-live="polite">
             <div class="tc-result-empty">
               <div class="tc-score">?</div>
-              <strong>Your match appears here</strong>
-              <span>Answer the quiz to unlock a plan + challenge from `/api/quiz`.</span>
+              <strong>Your plan shows up here</strong>
+              <span>Answer four quick questions and we’ll match you to a challenge, coaching plan, and coach.</span>
             </div>
           </div>
         </div>
@@ -696,11 +757,27 @@
     <section class="tc-join" id="tcJoin">
       <div class="tc-shell tc-join-grid">
         <div class="tc-join-copy tc-reveal">
-          <span class="section-kicker">Commit</span>
-          <h2>Lock your challenge seat</h2>
-          <p>Saves to the Fitness Gurukul database via `/api/challenge-join` so a coach can follow up. No payment on this step.</p>
+          <span class="section-kicker">Fitness Gurukul</span>
+          <h2>Start your challenge</h2>
+          <p>Tell us who you are and which challenge you want. A coach follows up — no payment on this step.</p>
+          <ol class="tc-join-points">
+            <li>
+              <b>1</b>
+              <div>Pick your challenge<span>21 or 30 days with a clear weekly focus</span></div>
+            </li>
+            <li>
+              <b>2</b>
+              <div>Share your contact<span>Name and phone so we can reach you</span></div>
+            </li>
+            <li>
+              <b>3</b>
+              <div>Get coached<span>We match you and confirm your start plan</span></div>
+            </li>
+          </ol>
         </div>
         <form class="tc-join-form tc-reveal" id="tcJoinForm">
+          <p class="tc-form-title">Join this challenge</p>
+          <p class="tc-form-note">Takes under a minute. Free to reserve your seat.</p>
           <label>Your name
             <input name="name" autocomplete="name" required placeholder="e.g. Rahul Sharma" />
           </label>
@@ -713,7 +790,7 @@
           <label>Challenge
             <select name="challengeId" id="tcJoinSelect" required></select>
           </label>
-          <button class="primary-button" type="submit">Join challenge</button>
+          <button class="primary-button" type="submit">Reserve my seat</button>
           <p class="tc-join-status" id="tcJoinStatus" role="status"></p>
         </form>
       </div>
@@ -914,7 +991,7 @@
 
       async function runQuiz() {
         var panel = $("tcQuizResult");
-        panel.innerHTML = '<div class="tc-result-empty"><strong>Matching via /api/quiz…</strong><span>Pulling live plans and coaches.</span></div>';
+        panel.innerHTML = '<div class="tc-result-empty"><strong>Finding your match…</strong><span>Matching you to a challenge, plan, and coach.</span></div>';
         try {
           var res = await fetch((window.fgApiUrl ? window.fgApiUrl("/api/quiz") : "/api/quiz"), {
             method: "POST",
@@ -952,7 +1029,7 @@
               '<a class="ghost-button" href="book-consultation.html">Book a consultation</a>' +
             "</div>";
         } catch (e) {
-          panel.innerHTML = '<div class="tc-result-empty"><strong>Could not reach the quiz API</strong><span>Try again or <a href="book-consultation.html">book a consultation</a>.</span></div>';
+          panel.innerHTML = '<div class="tc-result-empty"><strong>We couldn’t load your match</strong><span>Try again in a moment, or <a href="book-consultation.html">book a consultation</a>.</span></div>';
         }
       }
 

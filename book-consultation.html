@@ -32,9 +32,6 @@
     }
     .consult-page-trust { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 18px; color: rgba(255,255,255,0.55); font-size: 0.78rem; }
     .consult-page-trust span { display: inline-flex; align-items: center; gap: 6px; }
-    .consult-live-trust { display: flex; gap: 16px; flex-wrap: wrap; margin: 0 0 18px; }
-    .consult-live-trust strong { display: block; font-size: 1.2rem; color: #b8f23d; }
-    .consult-live-trust span { color: rgba(255,255,255,0.55); font-size: 0.75rem; }
     @media (max-width: 640px) { .consult-row { grid-template-columns: 1fr; } }
   </style>
 </head>
@@ -91,19 +88,6 @@
   </div>
 </nav>
 
-  <section class="site-live-bar" id="liveStats" aria-live="polite">
-    <div class="site-live-inner">
-      <div class="site-live-pulse">
-        <span class="site-live-dot" aria-hidden="true"></span>
-        <span data-live-pulse>Loading live activity…</span>
-      </div>
-      <div class="site-live-stats">
-        <div><strong data-live="activeNow" data-live-raw>0</strong><span>Active now</span></div>
-        <div><strong data-live="inquiriesToday" data-live-raw>0</strong><span>Inquiries today</span></div>
-        <div><strong data-live="clientsTransformed">0</strong><span>Transformed</span></div>
-      </div>
-    </div>
-  </section>
 
   <main class="consult-page">
     <div class="consult-page-card">
@@ -113,11 +97,6 @@
       <h1>Book a Free Consultation</h1>
       <p>Tell us about yourself and we'll craft a plan for you. Prefills from the quiz or challenge matcher when you arrive with a link.</p>
 
-      <div class="consult-live-trust">
-        <div><strong data-live="inquiriesToday" data-live-raw>0</strong><span>Inquiries today</span></div>
-        <div><strong data-live="coaches" data-live-raw>0</strong><span>Coaches ready</span></div>
-        <div><strong data-live="challengeJoins" data-live-raw>0</strong><span>Challenge joins</span></div>
-      </div>
 
       <div class="consult-match-preview goal-match-result" id="consultMatchPreview" hidden></div>
 
@@ -150,7 +129,6 @@
       <div class="consult-page-trust">
         <span>Free — no commitment</span>
         <span>Response within 24 hours</span>
-        <span>Saved to office database</span>
         <a href="transformation-challenge.html#tcQuiz">Prefer the challenge quiz?</a>
       </div>
     </div>

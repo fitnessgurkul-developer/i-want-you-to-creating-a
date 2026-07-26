@@ -83,22 +83,7 @@
 </nav>
 
   <main>
-
-  <section class="site-live-bar" id="liveStats" aria-live="polite">
-    <div class="site-live-inner">
-      <div class="site-live-pulse">
-        <span class="site-live-dot" aria-hidden="true"></span>
-        <span data-live-pulse>Loading live activity…</span>
-      </div>
-      <div class="site-live-stats">
-        <div><strong data-live="activeNow" data-live-raw>0</strong><span>Active now</span></div>
-        <div><strong data-live="inquiriesToday" data-live-raw>0</strong><span>Inquiries today</span></div>
-        <div><strong data-live="clientsTransformed">0</strong><span>Transformed</span></div>
-      </div>
-    </div>
-  </section>
-
-    <!-- Fittr-style Hero -->
+<!-- Fittr-style Hero -->
     <section class="hero-fittr">
       <div class="hero-fittr-bg">
         <img src="https://images.unsplash.com/photo-1526506118085-60ce8714f8c5?w=1600&q=80" alt="" />
@@ -109,11 +94,6 @@
         <h1 class="hero-fittr-headline">Meet the Minds Behind Your Transformation</h1>
         <p class="hero-fittr-sub">24 certified professionals, each with a unique specialty — from yoga and strength to sports conditioning and rehab — united by one mission: your success.</p>
         <a class="primary-button" href="#allCoaches" style="justify-content:center">Find Your Coach</a>
-      </div>
-      <div class="hero-fittr-counters">
-        <div class="counter-item"><span class="counter-num" data-live="coaches" data-target="10">0</span><span class="counter-label">Expert Coaches</span></div>
-        <div class="counter-item"><span class="counter-num" data-live="years" data-target="13">0</span><span class="counter-label">Years Combined Experience</span></div>
-        <div class="counter-item"><span class="counter-num" data-live="specialties" data-target="7">0</span><span class="counter-label">Specialties</span></div>
       </div>
     </section>
 
@@ -222,27 +202,43 @@
     <!-- All Coaches -->
     <section class="section-shell" id="allCoaches">
       <div class="page-shell">
-      <div class="section-heading reveal">
-        <div>
-          <span class="section-kicker" style="display:block;margin-bottom:6px">Team</span>
-          <h2>All Coaches</h2>
-          <p>Browse our full roster of certified professionals and find the perfect match for your goals</p>
-          <p class="coach-live-count" id="coachCount">Loading roster…</p>
+      <div class="coach-roster-head reveal">
+        <div class="coach-roster-copy">
+          <span class="section-kicker">Fitness Gurukul</span>
+          <h2>Meet the roster</h2>
+          <p>Certified coaches for strength, yoga, sports, kids, rehab, and doorstep training across Hyderabad.</p>
+        </div>
+        <div class="coach-roster-stat">
+          <strong id="coachCountNum">—</strong>
+          <span id="coachCount">Loading roster…</span>
         </div>
       </div>
       <div class="coach-tools">
         <div class="coach-tools-row">
-          <input id="coachSearch" placeholder="Search by name..." />
-</div>
-        <div class="filter-tabs" id="coachFilters">
-          <button data-coach-filter="all" class="active">All</button>
-          <button data-coach-filter="yoga">Yoga</button>
-          <button data-coach-filter="fitness">Fitness</button>
-          <button data-coach-filter="sports">Sports</button>
-          <button data-coach-filter="kids">Kids</button>
-          <button data-coach-filter="rehab">Rehab</button>
-          <button data-coach-filter="special">Special</button>
-          <button data-coach-filter="hybrid">Hybrid</button>
+          <input id="coachSearch" placeholder="Search by name..." aria-label="Search coaches by name" />
+          <label class="coach-filter-label">
+            <span>Specialty</span>
+            <select id="coachFilters" aria-label="Filter by specialty">
+              <option value="all">All specialties</option>
+              <option value="yoga">Yoga</option>
+              <option value="fitness">Fitness</option>
+              <option value="sports">Sports</option>
+              <option value="kids">Kids</option>
+              <option value="rehab">Rehab</option>
+              <option value="special">Special</option>
+              <option value="hybrid">Hybrid</option>
+            </select>
+          </label>
+          <label class="coach-filter-label">
+            <span>Rating</span>
+            <select id="coachRatingFilter" aria-label="Filter by rating">
+              <option value="all">All ratings</option>
+              <option value="4.9">4.9+</option>
+              <option value="4.8">4.8+</option>
+              <option value="4.7">4.7+</option>
+              <option value="4.6">4.6+</option>
+            </select>
+          </label>
         </div>
       </div>
       <div class="coach-grid" id="coachGrid" aria-live="polite">
