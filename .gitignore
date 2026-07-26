@@ -9,3 +9,4 @@ data/*.json
 !data/.gitkeep
 *.bak
 .DS_Store
+dist/

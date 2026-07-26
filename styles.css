@@ -13206,7 +13206,7 @@ from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:transl
 /* ── Shared interactive mounts (site-wide) ── */
 .site-live-bar {
   border-block: 1px solid rgba(255,255,255,0.08);
-  background: linear-gradient(90deg, rgba(184,242,61,0.07), transparent 45%, rgba(255,106,61,0.07));
+  background: linear-gradient(90deg, rgba(255,255,255,0.06), transparent 55%);
 }
 .site-live-inner {
   width: min(1120px, calc(100% - 40px));
@@ -13225,14 +13225,14 @@ from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:transl
 }
 .site-live-dot {
   width: 8px; height: 8px; border-radius: 50%;
-  background: #b8f23d;
-  box-shadow: 0 0 0 0 rgba(184,242,61,0.5);
+  background: #fff;
+  box-shadow: 0 0 0 0 rgba(255,255,255,0.45);
   animation: siteLiveDot 1.8s ease-out infinite;
 }
 @keyframes siteLiveDot {
-  0% { box-shadow: 0 0 0 0 rgba(184,242,61,0.5); }
-  70% { box-shadow: 0 0 0 10px rgba(184,242,61,0); }
-  100% { box-shadow: 0 0 0 0 rgba(184,242,61,0); }
+  0% { box-shadow: 0 0 0 0 rgba(255,255,255,0.45); }
+  70% { box-shadow: 0 0 0 10px rgba(255,255,255,0); }
+  100% { box-shadow: 0 0 0 0 rgba(255,255,255,0); }
 }
 .site-live-stats { display: flex; gap: 16px; flex-wrap: wrap; }
 .site-live-stats strong {
@@ -13260,7 +13260,7 @@ from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:transl
   display: block;
   height: 100%;
   width: 33%;
-  background: linear-gradient(90deg, #b8f23d, #ff6a3d);
+  background: linear-gradient(90deg, #fff, #999);
   transition: width .3s ease;
 }
 .plan-quiz-q {
@@ -13281,8 +13281,8 @@ from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:transl
 }
 .plan-quiz-option:hover { border-color: rgba(255,255,255,0.35); transform: translateX(3px); }
 .plan-quiz-option.selected {
-  border-color: #b8f23d;
-  background: rgba(184,242,61,0.12);
+  border-color: #fff;
+  background: rgba(255,255,255,0.1);
 }
 .plan-quiz-nav {
   display: flex;
@@ -13327,9 +13327,9 @@ from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:transl
 }
 .event-filter-bar button.active,
 .event-filter-bar button:hover {
-  color: #0a1408;
-  background: #b8f23d;
-  border-color: #b8f23d;
+  color: #000;
+  background: #fff;
+  border-color: #fff;
 }
 
 .services-api-grid {
@@ -13376,5 +13376,5 @@ from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:transl
   color: rgba(255,255,255,0.75);
 }
 .coach-scroll-track .cc-card[data-coach-jump]:hover {
-  outline: 1px solid rgba(184,242,61,0.45);
+  outline: 1px solid rgba(255,255,255,0.45);
 }
