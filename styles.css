@@ -7143,7 +7143,6 @@ from { opacity: 0; transform: translateY(24px); }
 }
 
 @media (max-width:540px) {
-  .fg-popular-search { padding: 28px 18px 44px; }
   .footer-refresh { width: calc(100% - 24px); margin-top: 56px; }
 
   .footer-refresh .footer-topline { align-items: flex-start; flex-wrap: wrap; gap: 15px; padding: 22px; }
