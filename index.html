@@ -8,10 +8,12 @@
   <meta property="og:type" content="website" />
   <meta property="og:title" content="Fitness Gurukul | Premium Personal Training in Hyderabad" />
   <meta property="og:description" content="1:1 personal training, Indian nutrition, and doorstep coaching in Hyderabad since 2013." />
-  <meta property="og:image" content="assets/fitness-gurukul-logo.png" />
+  <meta property="og:image" content="assets/transforms/home-hero.webp" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Fitness Gurukul | Premium Personal Training in Hyderabad" />
   <meta name="twitter:description" content="1:1 personal training, Indian nutrition, and doorstep coaching in Hyderabad since 2013." />
+  <meta name="twitter:image" content="assets/transforms/home-hero.webp" />
+  <link rel="preload" as="image" href="assets/transforms/home-hero.webp" type="image/webp" fetchpriority="high" />
   <link rel="stylesheet" href="styles.css" />
   <script src="config.js"></script>
   <script src="app.js" defer></script>
@@ -83,18 +85,18 @@
 
 <main class="home-page">
   <!-- HERO -->
-  <section class="hero-fittr">
+  <section class="hero-fittr hero-fittr--home">
     <div class="hero-fittr-bg">
-      <img src="assets/ai-fitness-hero.png" alt="" />
+      <img src="assets/transforms/home-hero.webp" alt="Fitness Gurukul community ride in Hyderabad" width="1920" height="1200" fetchpriority="high" />
     </div>
     <div class="hero-fittr-overlay"></div>
     <div class="hero-fittr-content">
-      <p class="hero-fittr-brand">Fitness Gurukul</p>
-      <h1 class="hero-fittr-headline" id="heroHeadline">Train Smarter.<br>Live Stronger.</h1>
+      <p class="hero-fittr-brand">Fitness <span>Gurukul</span></p>
+      <h1 class="hero-fittr-headline" id="heroHeadline">Train smarter. Live stronger.</h1>
       <p class="hero-fittr-sub" id="heroSubheadline">1:1 personal training in Hyderabad — Indian nutrition and doorstep coaching built around your body and schedule.</p>
       <div class="hero-actions">
         <a class="primary-button" href="book-consultation.html">Buy Now</a>
-        <a class="ghost-button" href="https://wa.me/917207113310" target="_blank" rel="noopener">Have questions? Chat now</a>
+        <a class="ghost-button" href="#homeProof">See real change</a>
       </div>
     </div>
   </section>
@@ -139,13 +141,42 @@
   </section>
 
 
+  <!-- PROOF — interactive before / after -->
+  <section class="home-proof reveal" id="homeProof" aria-label="Real transformations">
+    <div class="page-shell home-proof-grid">
+      <div class="home-proof-copy">
+        <span class="section-kicker">Real change</span>
+        <h2>Drag to see the difference</h2>
+        <p>Original Fitness Gurukul members. Scrub start to now — then explore the full stories.</p>
+        <div class="home-proof-people" id="homeProofPeople" role="tablist" aria-label="Choose a transformation"></div>
+        <div class="home-proof-meta">
+          <strong id="homeProofName">Udit Narayan</strong>
+          <span id="homeProofResult">88 → 74 kg · Body recomposition</span>
+        </div>
+        <blockquote id="homeProofQuote">“The coaching at Fitness Gurukul gave me the discipline and structure I never had.”</blockquote>
+        <div class="home-proof-actions">
+          <a class="primary-button" href="testimonials.html">All transformations</a>
+          <a class="ghost-button" href="book-consultation.html">Start my plan</a>
+        </div>
+      </div>
+      <div class="home-proof-stage">
+        <div class="home-proof-compare" id="homeProofCompare" role="slider" tabindex="0" aria-label="Before and after comparison" aria-valuemin="5" aria-valuemax="95" aria-valuenow="50" aria-valuetext="Showing 50 percent start photo">
+          <div class="home-proof-after" id="homeProofAfter"></div>
+          <div class="home-proof-before" id="homeProofBefore"></div>
+          <div class="home-proof-handle" id="homeProofHandle" aria-hidden="true"></div>
+          <div class="home-proof-labels"><span>Start</span><span>Now</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- INTERACTIVE GOAL MATCHER -->
   <section class="goal-match-section reveal" id="goalMatcher">
     <div class="page-shell">
       <div class="goal-match-head">
         <span class="section-kicker">Interactive Match</span>
-        <h2>Find Your Path in <em>60 Seconds</em></h2>
-        <p>Answer three quick prompts and we will recommend a plan and coach from live Fitness Gurukul data. Or jump into the <a href="transformation-challenge.html#tcQuiz">Transformation Challenge quiz</a>.</p>
+        <h2>Find your path in <em>60 seconds</em></h2>
+        <p>Answer three quick prompts and we’ll recommend a plan and coach. Prefer taps? Take the <a href="transformation-challenge.html#tcQuiz">Challenge quiz</a>.</p>
       </div>
       <form class="goal-match-form" id="goalMatchForm">
         <div class="goal-match-steps">
@@ -179,20 +210,6 @@
         <button class="primary-button" type="submit">Match me</button>
       </form>
       <div class="goal-match-result" id="goalMatchResult" hidden></div>
-    </div>
-  </section>
-
-
-  <section class="ix-section reveal" id="planQuiz">
-    <div class="page-shell">
-      <div class="section-heading">
-        <div>
-          <span class="section-kicker">Interactive</span>
-          <h2>Quick plan quiz</h2>
-          <p>Prefer taps over dropdowns? Same live recommendation engine.</p>
-        </div>
-      </div>
-      <div id="planQuizRoot"></div>
     </div>
   </section>
 

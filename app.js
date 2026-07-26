@@ -589,6 +589,134 @@ function renderMatchResultHtml(data) {
   '</div>';
 }
 
+function initHomeProofCompare() {
+  var compare = qs("#homeProofCompare");
+  var beforeEl = qs("#homeProofBefore");
+  var afterEl = qs("#homeProofAfter");
+  var handleEl = qs("#homeProofHandle");
+  var peopleEl = qs("#homeProofPeople");
+  if (!compare || !beforeEl || !afterEl || !handleEl || !peopleEl) return;
+  if (compare.dataset.wired === "1") return;
+  compare.dataset.wired = "1";
+
+  var stories = [
+    {
+      id: "udit",
+      name: "Udit Narayan",
+      result: "88 → 74 kg · Body recomposition",
+      quote: "The coaching at Fitness Gurukul gave me the discipline and structure I never had.",
+      image: "assets/transforms/udit.webp"
+    },
+    {
+      id: "neha",
+      name: "Neha Chopra",
+      result: "82 → 65 kg · Weight loss",
+      quote: "Personalized training and nutrition coaching changed everything.",
+      image: "assets/transforms/neha.webp"
+    },
+    {
+      id: "ramakrishna",
+      name: "Ramakrishna",
+      result: "88 → 74 kg · Strength return",
+      quote: "The training was tough but always safe — and the nutrition plan was practical.",
+      image: "assets/transforms/ramakrishna.webp"
+    }
+  ];
+
+  var activeId = stories[0].id;
+  var pos = 50;
+  var dragging = false;
+  var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function activeStory() {
+    return stories.find(function(s) { return s.id === activeId; }) || stories[0];
+  }
+
+  function setPos(next) {
+    pos = Math.max(5, Math.min(95, next));
+    beforeEl.style.clipPath = "inset(0 " + (100 - pos) + "% 0 0)";
+    handleEl.style.left = pos + "%";
+    compare.setAttribute("aria-valuenow", String(Math.round(pos)));
+    compare.setAttribute("aria-valuetext", "Showing " + Math.round(pos) + " percent start photo");
+  }
+
+  function renderStory() {
+    var story = activeStory();
+    beforeEl.style.backgroundImage = 'url("' + story.image + '")';
+    afterEl.style.backgroundImage = 'url("' + story.image + '")';
+    beforeEl.style.backgroundPosition = "0% 18%";
+    afterEl.style.backgroundPosition = "100% 18%";
+    beforeEl.style.backgroundSize = "200% 100%";
+    afterEl.style.backgroundSize = "200% 100%";
+    var nameEl = qs("#homeProofName");
+    var resultEl = qs("#homeProofResult");
+    var quoteEl = qs("#homeProofQuote");
+    if (nameEl) nameEl.textContent = story.name;
+    if (resultEl) resultEl.textContent = story.result;
+    if (quoteEl) quoteEl.textContent = "“" + story.quote + "”";
+    peopleEl.querySelectorAll("button").forEach(function(btn) {
+      var on = btn.getAttribute("data-id") === story.id;
+      btn.classList.toggle("active", on);
+      btn.setAttribute("aria-selected", on ? "true" : "false");
+    });
+    setPos(50);
+  }
+
+  peopleEl.innerHTML = stories.map(function(s) {
+    return '<button type="button" role="tab" data-id="' + safe(s.id) + '" aria-selected="false">' + safe(s.name) + "</button>";
+  }).join("");
+
+  peopleEl.addEventListener("click", function(e) {
+    var btn = e.target.closest("button[data-id]");
+    if (!btn) return;
+    activeId = btn.getAttribute("data-id");
+    renderStory();
+  });
+
+  function pointerPos(ev) {
+    var rect = compare.getBoundingClientRect();
+    var x = (ev.touches && ev.touches[0] ? ev.touches[0].clientX : ev.clientX) - rect.left;
+    return (x / rect.width) * 100;
+  }
+
+  compare.addEventListener("pointerdown", function(e) {
+    dragging = true;
+    compare.setPointerCapture(e.pointerId);
+    setPos(pointerPos(e));
+  });
+  compare.addEventListener("pointermove", function(e) {
+    if (!dragging) return;
+    setPos(pointerPos(e));
+  });
+  function endDrag(e) {
+    if (!dragging) return;
+    dragging = false;
+    try { compare.releasePointerCapture(e.pointerId); } catch (err) {}
+  }
+  compare.addEventListener("pointerup", endDrag);
+  compare.addEventListener("pointercancel", endDrag);
+  compare.addEventListener("keydown", function(e) {
+    if (e.key === "ArrowLeft") { e.preventDefault(); setPos(pos - 4); }
+    if (e.key === "ArrowRight") { e.preventDefault(); setPos(pos + 4); }
+  });
+
+  renderStory();
+
+  if (!reduceMotion) {
+    var dir = 1;
+    var sweepTimer = setInterval(function() {
+      if (dragging) return;
+      var next = pos + dir * 0.75;
+      if (next >= 70) dir = -1;
+      if (next <= 30) dir = 1;
+      setPos(next);
+    }, 48);
+    function stopSweep() { clearInterval(sweepTimer); }
+    compare.addEventListener("pointerdown", stopSweep, { once: true });
+    peopleEl.addEventListener("click", stopSweep, { once: true });
+  }
+}
+
 function initGoalMatcher() {
   var form = qs("#goalMatchForm");
   var result = qs("#goalMatchResult");
@@ -3379,6 +3507,7 @@ async function boot() {
   try { if (d.live) applyLiveStats(d.live); } catch (e) { console.warn("boot:applyLiveStats", e); }
   try { initLivePulse(); } catch (e) { console.warn("boot:initLivePulse", e); }
   try { initGoalMatcher(); } catch (e) { console.warn("boot:initGoalMatcher", e); }
+  try { initHomeProofCompare(); } catch (e) { console.warn("boot:initHomeProofCompare", e); }
   try { hydrateProgramSelects(d.plans || realData.plans); } catch (e) { console.warn("boot:hydrateProgramSelects", e); }
   try { initInteractivePageExtras(); } catch (e) { console.warn("boot:initInteractivePageExtras", e); }
   try { initHeroCarousel(); } catch (e) { console.warn("boot:initHeroCarousel", e); }
