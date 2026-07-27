@@ -10933,6 +10933,21 @@ from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:transl
 
 .plans-bw-header p { color: rgba(255,255,255,0.5); font-size: 0.95rem; max-width: 560px; margin: 0 auto; }
 
+.fitbudd-embed {
+  width: 100%;
+  max-width: 980px;
+  margin: 0 auto;
+  min-height: 120px;
+  overflow: hidden;
+  background: transparent;
+}
+
+.fitbudd-embed iframe {
+  display: block;
+  width: 100%;
+  background: transparent;
+}
+
 .plans-hz-card {
   display: flex;
   width: 100%;
