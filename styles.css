@@ -489,6 +489,12 @@ main,
 .plan-overlay-cta-ghost {
   background: transparent !important;
   border: 1px solid rgba(255,255,255,0.35) !important;
+  color: #fff !important;
+}
+
+.plan-overlay-cta-ghost:hover {
+  background: rgba(255,255,255,0.06) !important;
+  border-color: rgba(255,255,255,0.5) !important;
 }
 
 .header-play-btn svg,
@@ -11471,19 +11477,23 @@ from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:transl
 .plan-overlay-cta {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
-  padding: 12px 32px;
+  padding: 12px 28px;
   border-radius: 10px;
   background: #fff;
-  color: #000;
+  color: #111;
   font-size: 0.85rem;
   font-weight: 700;
   text-decoration: none;
-  transition: transform 0.25s, box-shadow 0.25s;
-  margin-top: 8px;
+  transition: transform 0.25s, box-shadow 0.25s, background 0.25s;
+  border: 1px solid transparent;
 }
 
-.plan-overlay-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(255,255,255,0.15); }
+.plan-overlay-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(255,255,255,0.15);
+}
 
 .plan-overlay-visual {
   position: sticky;
