@@ -9,5 +9,11 @@
     { "source": "/office", "destination": "/backend.html" },
     { "source": "/owner", "destination": "/backend.html" },
     { "source": "/admin", "destination": "/backend.html" }
-  ]
+  ],
+  "functions": {
+    "api/submit.js": {
+      "memory": 256,
+      "maxDuration": 10
+    }
+  }
 }

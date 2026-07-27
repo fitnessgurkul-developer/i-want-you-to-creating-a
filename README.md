@@ -68,9 +68,28 @@ window.FG_API_BASE = "";
 | Host | How |
 |------|-----|
 | **Hostinger** | Upload site files + `/api/*.php`. Forms → `submit.php`. Owner → `backend.html`. |
-| **Vercel** | Connect GitHub. Uses `vercel.json` → builds `dist/` (static only). |
+| **Vercel** | Connect GitHub. Uses `vercel.json` → builds `dist/` + serverless `api/submit.js` for leads. Set `RESEND_API_KEY` (or Mailgun) in Vercel env for email alerts. |
 | **Netlify** | Connect GitHub. Uses `netlify.toml` → publishes `dist/`. |
 | **Any static host** | Run `bash scripts/prepare-netlify-dist.sh` and upload the `dist/` folder. |
+
+### Vercel lead emails (required for form alerts)
+
+In the Vercel project → Settings → Environment Variables, add:
+
+```text
+RESEND_API_KEY=re_xxxxxxxx
+LEAD_FROM_EMAIL=Fitness Gurukul <onboarding@resend.dev>
+```
+
+Or Mailgun:
+
+```text
+MAILGUN_API_KEY=key-xxxxxxxx
+MAILGUN_DOMAIN=mg.yourdomain.com
+```
+
+Emails go to `contact@fitnessgurukul.co.in` and `fitnessgurukul01@gmail.com`.
+Without an email provider key, forms still save/accept on Vercel but no email is sent.
 
 Leads on Hostinger: `/api/submit.php` → `api/data/submissions.json`. Password in `api/config.php`. If PHP is down, forms fall back to WhatsApp.
 
