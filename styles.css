@@ -10933,7 +10933,7 @@ from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:transl
   100% { transform: translateX(-50%); }
 }
 
-.plans-bw-header { text-align: center; padding: 0 8px; margin-bottom: 28px; }
+.plans-bw-header { text-align: center; padding: 0 8px; margin-bottom: 32px; }
 
 .plans-bw-header h2 { font-size: clamp(1.8rem, 3vw, 2.4rem); font-weight: 700; color: #fff; margin: 0 0 10px; }
 
@@ -10943,24 +10943,134 @@ from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:transl
   width: min(1120px, calc(100% - 32px));
 }
 
-.fitbudd-embed {
-  width: 100%;
-  margin: 0 auto;
-  min-height: 2400px;
-  overflow: visible;
-  background: #FFFBEB;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 18px;
-  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+.fg-pay-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
 }
 
-.fitbudd-embed iframe {
-  display: block;
-  width: 100%;
-  min-height: 2400px;
-  border: 0;
-  background: #FFFBEB;
+.fg-pay-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 24px 22px 22px;
   border-radius: 18px;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02)),
+    rgba(17, 17, 17, 0.92);
+  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0 18px 48px rgba(0,0,0,0.28);
+  transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+}
+
+.fg-pay-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(250, 204, 21, 0.35);
+  background:
+    linear-gradient(180deg, rgba(250,204,21,0.08), rgba(255,255,255,0.02)),
+    rgba(17, 17, 17, 0.96);
+}
+
+.fg-pay-card--featured {
+  border-color: rgba(250, 204, 21, 0.45);
+  background:
+    linear-gradient(165deg, rgba(250,204,21,0.14), transparent 42%),
+    rgba(17, 17, 17, 0.96);
+}
+
+.fg-pay-tag {
+  display: inline-flex;
+  align-self: flex-start;
+  padding: 5px 10px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #111;
+  background: #facc15;
+}
+
+.fg-pay-card h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  line-height: 1.25;
+  color: #fff;
+}
+
+.fg-pay-sub {
+  margin: 0;
+  color: rgba(255,255,255,0.58);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  min-height: 2.7em;
+}
+
+.fg-pay-price {
+  margin: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  color: #fff;
+}
+
+.fg-pay-price span {
+  font-size: 1.85rem;
+  font-weight: 750;
+  letter-spacing: -0.03em;
+}
+
+.fg-pay-price small {
+  color: rgba(255,255,255,0.5);
+  font-size: 0.9rem;
+}
+
+.fg-pay-card ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 8px;
+  flex: 1;
+}
+
+.fg-pay-card li {
+  position: relative;
+  padding-left: 18px;
+  color: rgba(255,255,255,0.78);
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.fg-pay-card li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #facc15;
+}
+
+.fg-pay-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 6px;
+  min-height: 46px;
+  padding: 0 18px;
+  border-radius: 999px;
+  background: #facc15;
+  color: #111;
+  font-weight: 750;
+  text-decoration: none;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.fg-pay-btn:hover {
+  background: #ffe066;
+  transform: translateY(-1px);
 }
 
 .fitbudd-pay-actions {
@@ -10968,17 +11078,18 @@ from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:transl
   flex-wrap: wrap;
   gap: 12px;
   justify-content: center;
-  margin-top: 22px;
+  margin-top: 26px;
+}
+
+@media (max-width: 960px) {
+  .fg-pay-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
 @media (max-width: 720px) {
   .plans-bw-section { padding: 56px 0 68px; }
   .fitbudd-plans-shell { width: min(100% - 20px, 1120px); }
-  .fitbudd-embed,
-  .fitbudd-embed iframe {
-    min-height: 3200px;
-    border-radius: 14px;
-  }
+  .fg-pay-grid { grid-template-columns: 1fr; }
+  .fg-pay-sub { min-height: 0; }
   .fitbudd-pay-actions { flex-direction: column; align-items: stretch; }
   .fitbudd-pay-actions .primary-button,
   .fitbudd-pay-actions .ghost-button {

@@ -709,61 +709,91 @@
       <div class="page-shell fitbudd-plans-shell">
         <div class="plans-bw-header">
           <h2>Choose Your Plan</h2>
-          <p>Every plan includes a dedicated coach, personalized nutrition, and the Fitness Gurukul app. Select a pack below and complete payment securely with Razorpay.</p>
+          <p>Every plan includes a dedicated coach, personalized nutrition, and the Fitness Gurukul app. Pay securely through FitBudd checkout powered by Razorpay.</p>
         </div>
 
-        <div class="fitbudd-embed" id="fitbuddEmbed">
-          <iframe
-            id="fitbudd"
-            title="Fitness Gurukul payment packs"
-            src="https://fitnessgurukul.fitbudd.com/packs?embed=2"
-            allow="payment *; publickey-credentials-get *; clipboard-write *"
-            allowtransparency="true"
-            scrolling="no"
-            style="width:100%; min-height:2400px; height:2400px; border:none; display:block; background:#FFFBEB;">
-          </iframe>
+        <div class="fg-pay-grid">
+          <article class="fg-pay-card fg-pay-card--featured">
+            <span class="fg-pay-tag">Most Popular</span>
+            <h3>Fitness Gurukul Core</h3>
+            <p class="fg-pay-sub">1:1 coaching + weekly in-person PT at your doorstep</p>
+            <p class="fg-pay-price"><span>₹5,999</span><small>/month</small></p>
+            <ul>
+              <li>Dedicated fitness &amp; nutrition coach</li>
+              <li>Custom workout &amp; Indian meal plan</li>
+              <li>1 in-person PT session per week</li>
+            </ul>
+            <a class="fg-pay-btn" href="https://fitnessgurukul.fitbudd.com/packs/evGNGcNlmDQviKRqFK27" target="_blank" rel="noopener">Pay now</a>
+          </article>
+
+          <article class="fg-pay-card">
+            <span class="fg-pay-tag">Best Value</span>
+            <h3>Fitness Gurukul Signature</h3>
+            <p class="fg-pay-sub">Daily PT for a complete fitness transformation</p>
+            <p class="fg-pay-price"><span>₹15,999</span><small>/month</small></p>
+            <ul>
+              <li>Everything in Core</li>
+              <li>5 in-person PT sessions per week</li>
+              <li>Priority coach availability</li>
+            </ul>
+            <a class="fg-pay-btn" href="https://fitnessgurukul.fitbudd.com/packs/sBd3TAU6V2hHBNxkBbGg" target="_blank" rel="noopener">Pay now</a>
+          </article>
+
+          <article class="fg-pay-card">
+            <h3>Fitness Gurukul Prime</h3>
+            <p class="fg-pay-sub">3× weekly PT with full nutrition coaching</p>
+            <p class="fg-pay-price"><span>₹9,500</span><small>/month</small></p>
+            <ul>
+              <li>3 in-person PT sessions per week</li>
+              <li>Monthly progress reviews</li>
+              <li>Full nutritional coaching</li>
+            </ul>
+            <a class="fg-pay-btn" href="https://fitnessgurukul.fitbudd.com/packs/vlfs2cBCk2Gts81RK4Ub" target="_blank" rel="noopener">Pay now</a>
+          </article>
+
+          <article class="fg-pay-card">
+            <h3>Virtual 1:1 Elite</h3>
+            <p class="fg-pay-sub">Fully online coaching for fat loss &amp; lean muscle</p>
+            <p class="fg-pay-price"><span>₹1,999</span><small>/month</small></p>
+            <ul>
+              <li>Dedicated remote coach</li>
+              <li>Custom workouts + Indian macros</li>
+              <li>Weekly video reviews + daily chat</li>
+            </ul>
+            <a class="fg-pay-btn" href="https://fitnessgurukul.fitbudd.com/packs/7BFXhJoGj53Ci6RQPGKG" target="_blank" rel="noopener">Pay now</a>
+          </article>
+
+          <article class="fg-pay-card">
+            <h3>Fitness Gurukul Endurance</h3>
+            <p class="fg-pay-sub">Running coaching, S&amp;C, and race strategy</p>
+            <p class="fg-pay-price"><span>₹1,199</span><small>/month</small></p>
+            <ul>
+              <li>Dedicated running coach</li>
+              <li>Periodized run program</li>
+              <li>Race-day nutrition &amp; pacing</li>
+            </ul>
+            <a class="fg-pay-btn" href="https://fitnessgurukul.fitbudd.com/packs/hgX9svTJxnewUKFLd9wO" target="_blank" rel="noopener">Pay now</a>
+          </article>
+
+          <article class="fg-pay-card">
+            <h3>Fitness Gurukul Forge</h3>
+            <p class="fg-pay-sub">Hyrox / OCR strength &amp; conditioning prep</p>
+            <p class="fg-pay-price"><span>₹999</span><small>/month</small></p>
+            <ul>
+              <li>Dedicated S&amp;C coach</li>
+              <li>Rowing, SkiErg, sleds &amp; wall balls</li>
+              <li>Compromised running stamina work</li>
+            </ul>
+            <a class="fg-pay-btn" href="https://fitnessgurukul.fitbudd.com/packs/z0vdU1aAH5D3HyOiAmXC" target="_blank" rel="noopener">Pay now</a>
+          </article>
         </div>
 
         <div class="fitbudd-pay-actions">
-          <a class="primary-button" href="https://fitnessgurukul.fitbudd.com/packs" target="_blank" rel="noopener">Open payment packs</a>
+          <a class="primary-button" href="https://fitnessgurukul.fitbudd.com/packs" target="_blank" rel="noopener">View all FitBudd packs</a>
           <a class="ghost-button" href="https://wa.me/917207113310" target="_blank" rel="noopener">Need help choosing? Chat now</a>
         </div>
       </div>
     </section>
-
-    <script>
-      (function () {
-        var frame = document.getElementById("fitbudd");
-        if (!frame) return;
-
-        function applyFrameHeight(height) {
-          var next = Number(height);
-          if (!next || next < 400) return;
-          frame.style.height = next + "px";
-          frame.style.minHeight = next + "px";
-        }
-
-        window.addEventListener("message", function (e) {
-          var data = e && e.data;
-          if (!data || typeof data !== "object") return;
-          if (Object.prototype.hasOwnProperty.call(data, "frameHeight")) {
-            applyFrameHeight(data.frameHeight);
-          }
-          if (Object.prototype.hasOwnProperty.call(data, "goto") && data.goto) {
-            window.location.href = data.goto;
-          }
-        });
-
-        frame.addEventListener("load", function () {
-          setTimeout(function () {
-            try { frame.contentWindow.postMessage({ fitbudd: "resize" }, "*"); } catch (err) {}
-          }, 800);
-          setTimeout(function () {
-            try { frame.contentWindow.postMessage({ fitbudd: "resize" }, "*"); } catch (err) {}
-          }, 2000);
-        });
-      })();
-    </script>
 
     
   <section class="ix-section reveal" id="planQuiz">
