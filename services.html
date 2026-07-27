@@ -710,6 +710,11 @@
       <div class="plans-bw-header">
         <h2>Choose Your Plan</h2>
         <p>Every plan includes a dedicated coach, personalized nutrition, and the Fitness Gurukul app. Pick the level of support that fits your life.</p>
+        <div class="plans-compare-bar" id="compareBar" hidden>
+          <span><strong id="compareCount">0</strong> plans selected</span>
+          <button class="plans-compare-btn" id="compareBtn" onclick="openCompare()">Compare Plans</button>
+          <button class="plans-compare-clear" onclick="clearCompare()">Clear</button>
+        </div>
       </div>
 
       <div class="plans-hz-card" onclick="openPlan('core')">
@@ -905,6 +910,11 @@
         <div class="plan-how-step"><div class="step-num">Step 06</div><h4>Daily Tracking &amp; Review</h4><p>Log meals, water, and steps daily. Your coach monitors in real time. End of month, a full review of weight, measurements, and consistency sets up your next cycle.</p></div>
       </div>
     </div>
+  </div>
+
+  <div class="plan-overlay-bw" id="compareOverlay">
+    <button class="plan-overlay-close" onclick="closeCompare()">&times;</button>
+    <div class="compare-inner" id="compareInner"></div>
   </div>
 
   <section class="fg-app-section reveal" style="padding-bottom:0">
@@ -1139,14 +1149,97 @@ var planData = {
   }
 };
 
+var compareSet = new Set();
+
+function updateCompareBar() {
+  var bar = document.getElementById('compareBar');
+  var count = document.getElementById('compareCount');
+  var btn = document.getElementById('compareBtn');
+  count.textContent = compareSet.size;
+  bar.hidden = compareSet.size === 0;
+  btn.disabled = compareSet.size < 2;
+}
+
+function toggleCompare(key, e) {
+  if (e) { e.stopPropagation(); e.preventDefault(); }
+  if (compareSet.has(key)) { compareSet.delete(key); } else if (compareSet.size < 4) { compareSet.add(key); }
+  updateCompareBar();
+  document.querySelectorAll('.plans-hz-compare-check').forEach(function(cb) {
+    cb.classList.toggle('checked', compareSet.has(cb.dataset.plan));
+  });
+}
+
+function clearCompare() {
+  compareSet.clear();
+  updateCompareBar();
+  document.querySelectorAll('.plans-hz-compare-check').forEach(function(cb) {
+    cb.classList.remove('checked');
+  });
+}
+
+function openCompare() {
+  if (compareSet.size < 2) return;
+  var keys = Array.from(compareSet);
+  var html = '<div class="compare-header"><h2>Compare Plans</h2><p>Side-by-side comparison of your selected plans</p></div>';
+  html += '<div class="compare-grid" style="grid-template-columns:200px repeat(' + keys.length + ',1fr)">';
+
+  var rows = [
+    { label: 'Price', fn: function(d) { return d.tiers[0].price + ' <small>' + d.tiers[0].period + '</small>'; } },
+    { label: 'Sessions', fn: function(d) { return d.sessions; } },
+    { label: 'Duration Options', fn: function(d) { return d.tiers.map(function(t) { return t.label; }).join(', '); } },
+  ];
+  var allFeatures = [];
+  keys.forEach(function(k) { (planData[k].includes || []).forEach(function(f) { if (allFeatures.indexOf(f) === -1) allFeatures.push(f); }); });
+
+  html += '<div class="compare-cell compare-label"></div>';
+  keys.forEach(function(k) {
+    var d = planData[k];
+    var packUrl = d.packId ? 'https://fitnessgurukul.fitbudd.com/packs/' + d.packId : '#';
+    html += '<div class="compare-cell compare-plan-head"><h3>' + d.name + '</h3><p>' + d.sub + '</p>';
+    html += '<a class="plan-pay-btn" href="' + packUrl + '" target="_blank" rel="noopener">Pay now</a></div>';
+  });
+
+  rows.forEach(function(r) {
+    html += '<div class="compare-cell compare-label">' + r.label + '</div>';
+    keys.forEach(function(k) { html += '<div class="compare-cell">' + r.fn(planData[k]) + '</div>'; });
+  });
+
+  allFeatures.forEach(function(feat) {
+    html += '<div class="compare-cell compare-label compare-feat-label">' + feat + '</div>';
+    keys.forEach(function(k) {
+      var has = (planData[k].includes || []).indexOf(feat) !== -1;
+      html += '<div class="compare-cell compare-check">' + (has ? '<span class="compare-yes">&#10003;</span>' : '<span class="compare-no">—</span>') + '</div>';
+    });
+  });
+  html += '</div>';
+
+  document.getElementById('compareInner').innerHTML = html;
+  document.getElementById('compareOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeCompare() {
+  document.getElementById('compareOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
 function openPlan(id) {
   var d = planData[id];
   if (!d) return;
+  var packUrl = d.packId ? 'https://fitnessgurukul.fitbudd.com/packs/' + d.packId : '';
+
+  var text = '';
+  if (packUrl) {
+    text += '<div class="plan-overlay-pay-hero"><a class="plan-pay-btn plan-pay-btn--lg" href="' + packUrl + '" target="_blank" rel="noopener">Pay Now — ' + d.tiers[0].price + d.tiers[0].period + '</a></div>';
+  }
+
   var badge = d.bestValue ? '<div class="overlay-best-value">Best Value</div>' : '';
-  var text = badge + '<h2>' + d.name + '</h2><div class="plan-overlay-sub">' + d.sub + '</div>';
+  text += badge + '<h2>' + d.name + '</h2><div class="plan-overlay-sub">' + d.sub + '</div>';
+
   text += '<div class="plan-overlay-tiers">';
-  d.tiers.forEach(function(t) {
-    text += '<div class="plan-tier-bw"><div class="tier-name">' + t.label + '</div><div class="tier-price">' + t.price + ' <small>' + t.period + '</small></div></div>';
+  d.tiers.forEach(function(t, i) {
+    var tierUrl = packUrl ? packUrl : '#';
+    text += '<a class="plan-tier-bw' + (i === 0 ? ' plan-tier-bw--active' : '') + '" href="' + tierUrl + '" target="_blank" rel="noopener"><div class="tier-name">' + t.label + '</div><div class="tier-price">' + t.price + ' <small>' + t.period + '</small></div></a>';
   });
   text += '</div>';
   text += '<div class="plan-overlay-sessions">' + d.sessions + '</div>';
@@ -1155,16 +1248,18 @@ function openPlan(id) {
   d.includes.forEach(function(i) { text += '<li>' + i + '</li>'; });
   text += '</ul></div>';
 
-  if (d.packId) {
-    var packUrl = 'https://fitnessgurukul.fitbudd.com/packs/' + d.packId;
+  if (packUrl) {
     text += '<div class="plan-overlay-fitbudd">';
-    text += '<h3>Pay &amp; Get Started</h3>';
+    text += '<h3>Checkout</h3>';
     text += '<div class="plan-overlay-fitbudd-frame"><iframe title="' + d.name + ' checkout" src="' + packUrl + '?embed=3" allow="payment *" allowtransparency="true" style="width:100%;min-height:520px;height:520px;border:none;display:block;background:#FFFBEB;border-radius:12px;"></iframe></div>';
-    text += '<a class="plan-overlay-cta plan-overlay-pay-link" href="' + packUrl + '" target="_blank" rel="noopener">Open full checkout page &rarr;</a>';
     text += '</div>';
   }
 
-  text += '<div class="plan-overlay-cta-row"><a class="plan-overlay-cta" href="book-consultation.html">Book a consultation</a><a class="plan-overlay-cta plan-overlay-cta-ghost" href="https://wa.me/917207113310" target="_blank" rel="noopener">Have questions? Chat now</a></div>';
+  text += '<div class="plan-overlay-cta-row">';
+  if (packUrl) text += '<a class="plan-pay-btn" href="' + packUrl + '" target="_blank" rel="noopener">Pay Now</a>';
+  text += '<a class="plan-overlay-cta" href="book-consultation.html">Book a consultation</a>';
+  text += '<a class="plan-overlay-cta plan-overlay-cta-ghost" href="https://wa.me/917207113310" target="_blank" rel="noopener">Have questions? Chat now</a>';
+  text += '</div>';
 
   var visual = '<img src="' + d.img + '" alt="' + d.name + '" loading="lazy" />';
   visual += '<div class="plan-overlay-visual-cap"><span>' + d.name + '</span></div>';
@@ -1204,11 +1299,34 @@ document.querySelectorAll('.svc-hz-card').forEach(function(card) {
 
 document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') {
+    closePlan();
+    closeCompare();
     document.querySelectorAll('.svc-hz-card.active').forEach(function(card) {
       card.classList.remove('active');
     });
     document.body.style.overflow = '';
   }
+});
+
+(function addCompareCheckboxes() {
+  var planKeys = ['core','signature','prime','endurance','forge','elite'];
+  var cards = document.querySelectorAll('.plans-hz-card');
+  cards.forEach(function(card, i) {
+    if (!planKeys[i]) return;
+    var key = planKeys[i];
+    var cb = document.createElement('button');
+    cb.className = 'plans-hz-compare-check';
+    cb.dataset.plan = key;
+    cb.type = 'button';
+    cb.setAttribute('aria-label', 'Compare ' + (planData[key] ? planData[key].name : ''));
+    cb.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><polyline points="4 12 9 17 20 6"/></svg> Compare';
+    cb.addEventListener('click', function(e) { toggleCompare(key, e); });
+    card.querySelector('.plans-hz-card-body').appendChild(cb);
+  });
+})();
+
+document.getElementById('compareOverlay').addEventListener('click', function(e) {
+  if (e.target === this) closeCompare();
 });
 
 window.addEventListener('message', function(e) {
