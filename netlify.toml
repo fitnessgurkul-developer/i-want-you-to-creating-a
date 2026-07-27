@@ -4,6 +4,7 @@
 [build]
   publish = "dist"
   command = "bash scripts/prepare-netlify-dist.sh"
+  functions = "netlify/functions"
 
 [build.environment]
   NODE_VERSION = "20"

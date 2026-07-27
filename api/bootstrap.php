@@ -81,6 +81,56 @@ function fg_require_admin($config) {
   }
 }
 
+function fg_send_lead_email($payload, $config) {
+  $notifyEmails = [
+    "contact@fitnessgurukul.co.in",
+    "fitnessgurukul01@gmail.com",
+  ];
+
+  $name = trim($payload["name"] ?? ($payload["contact_name"] ?? "Unknown"));
+  $phone = trim($payload["phone"] ?? "—");
+  $email = trim($payload["email"] ?? "—");
+  $program = trim($payload["program"] ?? "—");
+  $goal = trim($payload["goal"] ?? "—");
+  $coach = trim($payload["coach"] ?? "—");
+  $formType = trim($payload["form_type"] ?? "consultation");
+  $message = trim($payload["message"] ?? "");
+
+  $subject = "New {$formType} lead: {$name}";
+
+  $lines = [
+    "New lead from the Fitness Gurukul website",
+    "",
+    "Name: {$name}",
+    "Phone: {$phone}",
+    "Email: {$email}",
+    "Program: {$program}",
+    "Goal: {$goal}",
+    "Coach: {$coach}",
+    "Form: {$formType}",
+  ];
+  if (!empty($payload["company"])) $lines[] = "Company: " . $payload["company"];
+  if (!empty($payload["event_type"])) $lines[] = "Event: " . $payload["event_type"];
+  if (!empty($payload["attendees"])) $lines[] = "Attendees: " . $payload["attendees"];
+  if (!empty($payload["preferred_date"])) $lines[] = "Preferred date: " . $payload["preferred_date"];
+  if (!empty($payload["budget"])) $lines[] = "Budget: " . $payload["budget"];
+  if (!empty($payload["location"])) $lines[] = "Location: " . $payload["location"];
+  if ($message) {
+    $lines[] = "";
+    $lines[] = "Message:";
+    $lines[] = $message;
+  }
+  $lines[] = "";
+  $lines[] = "— Fitness Gurukul Website";
+
+  $body = implode("\n", $lines);
+  $to = implode(", ", $notifyEmails);
+  $from = $config["contact_email"] ?? "contact@fitnessgurukul.co.in";
+  $headers = "From: Fitness Gurukul <{$from}>\r\nReply-To: {$from}\r\nContent-Type: text/plain; charset=UTF-8";
+
+  @mail($to, $subject, $body, $headers);
+}
+
 function fg_save_submission($storeFile, $payload) {
   $formType = fg_clip($payload["form_type"] ?? "consultation", 64) ?: "consultation";
   $name = fg_clip($payload["name"] ?? ($payload["contact_name"] ?? ""), 120);
