@@ -7,7 +7,32 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST") {
 
 $payload = fg_read_json_body();
 $challengeId = fg_clip($payload["challengeId"] ?? ($payload["challenge"] ?? ""), 80);
-$challengeName = $challengeId !== "" ? $challengeId : "Transformation Challenge";
+$challengeName = $challengeId !== "" ? $challengeId : "90 Day Transformation Challenge";
+
+$age = fg_clip($payload["age"] ?? "", 10);
+$weight = fg_clip($payload["weight"] ?? "", 20);
+$height = fg_clip($payload["height"] ?? "", 20);
+$measurements = fg_clip($payload["measurements"] ?? "", 240);
+$incomingMessage = fg_clip($payload["message"] ?? "", 700);
+
+$parts = ["90 Day Transformation Challenge registration"];
+if ($age !== "") {
+  $parts[] = "Age: " . $age;
+}
+if ($weight !== "") {
+  $parts[] = "Weight: " . $weight . " kg";
+}
+if ($height !== "") {
+  $parts[] = "Height: " . $height . " cm";
+}
+if ($measurements !== "") {
+  $parts[] = "Measurements: " . $measurements;
+}
+if ($incomingMessage !== "") {
+  $parts[] = $incomingMessage;
+}
+$parts[] = "Mode: online · Platform: Fitness Gurukul App · Consent: yes";
+$message = implode(" | ", $parts);
 
 $join = [
   "form_type" => "challenge-join",
@@ -16,7 +41,7 @@ $join = [
   "email" => $payload["email"] ?? "",
   "program" => $challengeName,
   "goal" => $payload["goal"] ?? "transformation",
-  "message" => $payload["message"] ?? ("Joined challenge: " . $challengeName),
+  "message" => $message,
   "coach" => "",
 ];
 
@@ -35,7 +60,7 @@ foreach ($rows as $row) {
 
 fg_json_out([
   "ok" => true,
-  "message" => "You are in. A coach will reach out soon.",
+  "message" => "You’re registered. Download the app, join the WhatsApp community, and send your baseline photos.",
   "id" => $id,
   "challenge" => ["id" => $challengeId, "name" => $challengeName],
   "stats" => ["totalJoined" => $joined],

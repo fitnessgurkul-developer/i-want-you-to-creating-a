@@ -750,7 +750,7 @@
       display: grid;
       grid-template-columns: 1.05fr 0.95fr;
       gap: 40px;
-      align-items: center;
+      align-items: start;
     }
     .tc-join-copy {
       max-width: 34rem;
@@ -823,16 +823,40 @@
       font-size: 0.82rem;
       color: var(--tc-muted);
     }
-    .tc-join-form input, .tc-join-form select {
+    .tc-join-form input, .tc-join-form select, .tc-join-form textarea {
       border: 1px solid var(--tc-line);
       background: rgba(0,0,0,0.35);
       color: #fff;
       padding: 13px 12px;
       font: inherit;
+      width: 100%;
     }
-    .tc-join-form input:focus, .tc-join-form select:focus {
+    .tc-join-form input[type="file"] {
+      padding: 10px;
+      font-size: 0.8rem;
+    }
+    .tc-join-form input:focus, .tc-join-form select:focus, .tc-join-form textarea:focus {
       outline: 1px solid #fff;
       border-color: #fff;
+    }
+    .tc-form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .tc-form-grid .full { grid-column: 1 / -1; }
+    .tc-consent {
+      display: flex !important;
+      align-items: flex-start;
+      gap: 10px;
+      color: rgba(255,255,255,0.78) !important;
+      font-size: 0.82rem !important;
+      line-height: 1.4;
+    }
+    .tc-consent input {
+      width: auto;
+      margin-top: 3px;
+      accent-color: #fff;
     }
     .tc-join-form .primary-button {
       width: 100%;
@@ -859,9 +883,9 @@
       .tc-spotlight { min-height: 360px; }
       .tc-proof { grid-template-columns: 1fr; }
     }
-    @media (max-width: 640px) {
+      @media (max-width: 640px) {
       .tc-metrics { grid-template-columns: 1fr; }
-      .tc-challenge-list, .tc-why, .tc-week { grid-template-columns: 1fr; }
+      .tc-challenge-list, .tc-why, .tc-week, .tc-form-grid { grid-template-columns: 1fr; }
       .tc-hero-inner { padding-top: 110px; }
     }
   </style>
@@ -922,12 +946,12 @@
       <div class="tc-hero-inner">
         <p class="tc-brand">Fitness <span>Gurukul</span></p>
         <h1>90 Day Transformation Challenge</h1>
-        <p>Train with coaches, check in on the app every day, and finish with a body — and habit — that sticks.</p>
+        <p>Online · 90 days · on the Fitness Gurukul App. Open for everyone — download the app, join the community, and register.</p>
         <div class="tc-actions">
-          <a class="primary-button" href="#tcJoin">Join the challenge</a>
-          <a class="ghost-button" href="#tcWhy">Why join</a>
+          <a class="primary-button" href="#tcJoin">Register now</a>
+          <a class="ghost-button" href="#tcDetails">Challenge details</a>
         </div>
-        <div class="tc-scroll-hint">90 days · coach support · app community</div>
+        <div class="tc-scroll-hint">App-first · daily logs · real transformations</div>
       </div>
     </section>
 
@@ -945,33 +969,57 @@
       </div>
     </section>
 
-    <section class="tc-section" id="tcWhy">
+    <section class="tc-section" id="tcDetails">
       <div class="tc-shell">
         <div class="tc-section-head tc-reveal">
-          <span class="section-kicker">Why this challenge</span>
-          <h2>Built to grow the app, the community, and your results</h2>
-          <p>Every week is designed to push daily activity, real testimonials, and a stronger Fitness Gurukul community.</p>
+          <span class="section-kicker">Challenge details</span>
+          <h2>90 days. Online. App-only.</h2>
+          <p>Built to grow Fitness Gurukul app users, daily activity, real testimonials, and social engagement.</p>
         </div>
-        <div class="tc-why tc-reveal">
+        <div class="tc-why tc-reveal" style="grid-template-columns: repeat(4, minmax(0, 1fr));">
           <article>
-            <strong>More app users</strong>
-            <p>Workouts, check-ins, and progress live inside the Fitness Gurukul app.</p>
+            <strong>Duration</strong>
+            <p>90 days of consistent training, tracking, and weekly updates.</p>
           </article>
           <article>
-            <strong>Daily activity</strong>
-            <p>Stories, reminders, and weekly live sessions keep you showing up.</p>
+            <strong>Mode</strong>
+            <p>Fully online — follow the challenge from anywhere.</p>
+          </article>
+          <article>
+            <strong>Platform</strong>
+            <p>Fitness Gurukul App for workouts, nutrition, and progress.</p>
+          </article>
+          <article>
+            <strong>Eligibility</strong>
+            <p>Open for everyone ready to commit to the full 90 days.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="tc-section alt" id="tcWhy">
+      <div class="tc-shell">
+        <div class="tc-section-head tc-reveal">
+          <span class="section-kicker">Primary objective</span>
+          <h2>What this challenge is built to grow</h2>
+          <p>Every rule and weekly rhythm supports these four outcomes.</p>
+        </div>
+        <div class="tc-why tc-reveal" style="grid-template-columns: repeat(4, minmax(0, 1fr));">
+          <article>
+            <strong>More app users</strong>
+            <p>Every participant must use the Fitness Gurukul App throughout the challenge.</p>
+          </article>
+          <article>
+            <strong>Active users</strong>
+            <p>Daily workout logs and weekly weigh-ins keep the app alive every day.</p>
           </article>
           <article>
             <strong>Real testimonials</strong>
-            <p>Weekly weigh-ins and spotlights turn progress into proof.</p>
+            <p>Consistent photos and measurements create authentic before/after proof.</p>
           </article>
           <article>
-            <strong>Social energy</strong>
-            <p>Reels, polls, and community challenges keep the feed moving.</p>
-          </article>
-          <article>
-            <strong>Stronger community</strong>
-            <p>Train with coaches and members who finish the full 90 days together.</p>
+            <strong>Social engagement</strong>
+            <p>Stories, reels, and hashtags grow the Fitness Gurukul community.</p>
           </article>
         </div>
       </div>
@@ -1101,53 +1149,95 @@
     <section class="tc-section" id="tcRules">
       <div class="tc-shell">
         <div class="tc-section-head tc-reveal">
-          <span class="section-kicker">Rules &amp; prizes</span>
-          <h2>Simple rules. Real rewards.</h2>
-          <p>Show up in the app, stay consistent, and you stay in the running.</p>
+          <span class="section-kicker">Challenge rules</span>
+          <h2>Stay consistent. Stay honest. Stay in.</h2>
+          <p>App tracking, weekly updates, and daily photos are compulsory for the full 90 days.</p>
         </div>
         <div class="tc-rules-grid tc-reveal">
           <ol class="tc-rules-list">
             <li>
               <b>01</b>
               <div>
-                <strong>Register + download the app</strong>
-                <span>Join the challenge and complete daily check-ins inside the Fitness Gurukul app.</span>
+                <strong>Use the Fitness Gurukul App every day</strong>
+                <span>Workouts must be logged daily. Nutrition must be tracked on the app only.</span>
               </div>
             </li>
             <li>
               <b>02</b>
               <div>
-                <strong>Train 4+ sessions a week</strong>
-                <span>Follow your track plan — strength, fat loss, mobility, running, or functional.</span>
+                <strong>Weekly weight + body measurements</strong>
+                <span>Both updates are compulsory. Missing updates for more than 5 consecutive days may mean disqualification.</span>
               </div>
             </li>
             <li>
               <b>03</b>
               <div>
-                <strong>Log weekly progress</strong>
-                <span>Weigh-ins, photos, or run/cycle clips count. Best UGC gets featured.</span>
+                <strong>Daily photo, Sunday set</strong>
+                <span>One photo every day in the same light, place, camera, pose, and distance. Every Sunday: front, side &amp; back for comparison.</span>
               </div>
             </li>
             <li>
               <b>04</b>
               <div>
-                <strong>Stay for the full 90 days</strong>
-                <span>Finishers unlock prizes, badges, and a transformation story spotlight.</span>
+                <strong>No fake progress</strong>
+                <span>No steroids, no edited photos, no cheating. Judges’ decision is final.</span>
+              </div>
+            </li>
+            <li>
+              <b>05</b>
+              <div>
+                <strong>Social media minimums</strong>
+                <span>At least 4 stories every week and 1 reel every week when possible. Use #FGTransformationChallenge and #FitnessGurukul.</span>
               </div>
             </li>
           </ol>
           <aside class="tc-prize">
-            <h3>Prize reveal</h3>
-            <p>Top finishers and most consistent members earn recognition across the campaign.</p>
+            <h3>Prizes</h3>
+            <p>Finish strong and create content that inspires the community.</p>
             <ul>
-              <li>Transformation showcase on Fitness Gurukul channels</li>
-              <li>Achievement badges inside the app</li>
-              <li>Coach shout-outs + participant spotlights</li>
-              <li>Referral bonuses for friends who join mid-challenge</li>
-              <li>Corporate challenge options for teams</li>
+              <li>Cash prize</li>
+              <li>6-month free membership</li>
+              <li>Best Reel Creator Award</li>
+              <li>Most Inspirational Story Award</li>
             </ul>
           </aside>
         </div>
+
+        <div class="tc-community tc-reveal" style="margin-top:36px">
+          <div>
+            <span class="section-kicker">Photo &amp; social guidelines</span>
+            <h2>Story ideas that count</h2>
+            <p>Workout clips, healthy meals, transformation progress, running, and gym selfies — keep lighting and pose consistent so judges can compare fairly.</p>
+            <div class="tc-tags" aria-label="Required hashtags">
+              <span>#FGTransformationChallenge</span>
+              <span>#FitnessGurukul</span>
+            </div>
+          </div>
+          <ul class="tc-ugc">
+            <li>Daily photo: same light, place, camera, pose, distance</li>
+            <li>Sunday: front, side &amp; back photos for comparison</li>
+            <li>Minimum 4 stories every week</li>
+            <li>Minimum 1 reel every week (if possible)</li>
+            <li>App-only nutrition tracking + daily workout logs</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="tc-section alt" id="tcTerms">
+      <div class="tc-shell">
+        <div class="tc-section-head tc-reveal">
+          <span class="section-kicker">Terms &amp; conditions</span>
+          <h2>By joining, you agree</h2>
+          <p>Clear ground rules so every participant competes fairly.</p>
+        </div>
+        <ul class="tc-ugc tc-reveal" style="max-width:720px">
+          <li>Fitness Gurukul reserves the right to modify rules.</li>
+          <li>Participants must disclose medical conditions if needed.</li>
+          <li>No fake updates. No edited photos. No cheating.</li>
+          <li>Participation means consent to use photos and videos for marketing.</li>
+          <li>Organizers’ decision will be final.</li>
+        </ul>
       </div>
     </section>
 
@@ -1171,7 +1261,7 @@
           <div class="tc-app-copy">
             <span class="section-kicker">App demo</span>
             <h2>The challenge lives in the app</h2>
-            <p>Workouts, nutrition tips, weekly progress, and coach check-ins — download Fitness Gurukul and stay daily-active for the full 90 days.</p>
+            <p>Mode is online and the platform is the Fitness Gurukul App. Log workouts daily, track nutrition on the app only, and stay active for the full 90 days.</p>
             <div class="tc-actions">
               <a class="primary-button" href="https://play.google.com/store/apps/details?id=com.fitnessgurukul.app" target="_blank" rel="noopener">Android — Google Play</a>
               <a class="ghost-button" href="https://apps.apple.com/us/app/fitness-gurukul/id6771451272" target="_blank" rel="noopener">iOS — App Store</a>
@@ -1228,29 +1318,28 @@
       <div class="tc-shell">
         <div class="tc-community tc-reveal">
           <div>
-            <span class="section-kicker">Community &amp; UGC</span>
-            <h2>Post it. We feature it.</h2>
-            <p>Share workout selfies, meal photos, progress updates, weekly weigh-ins, and running or cycling clips. The best submissions get spotlighted every Thursday.</p>
-            <div class="tc-tags" aria-label="Challenge hashtags">
-              <span>#FGTransformationChallenge</span>
-              <span>#FitnessGurukul</span>
-              <span>#90DayChallenge</span>
-              <span>#TransformYourself</span>
-              <span>#FitnessJourney</span>
-              <span>#ConsistencyWins</span>
-              <span>#HealthyLifestyle</span>
-              <span>#WorkoutMotivation</span>
-              <span>#FitIndia</span>
-              <span>#TransformationStartsToday</span>
+            <span class="section-kicker">Registration steps</span>
+            <h2>Three steps to start</h2>
+            <p>Download the app, join the Fitness Gurukul community WhatsApp group, then complete the registration form below with your baseline photos and measurements.</p>
+            <div class="tc-actions" style="margin-top:18px">
+              <a class="primary-button" href="https://play.google.com/store/apps/details?id=com.fitnessgurukul.app" target="_blank" rel="noopener">Get the app</a>
+              <a class="ghost-button" href="https://wa.me/917207113310?text=Hi%20Fitness%20Gurukul%20—%20please%20add%20me%20to%20the%2090%20Day%20Transformation%20Challenge%20WhatsApp%20group" target="_blank" rel="noopener">Join WhatsApp community</a>
             </div>
           </div>
-          <ul class="tc-ugc">
-            <li>Daily stories: polls, countdowns, hydration reminders</li>
-            <li>Reels: participant journeys, coach workouts, meal ideas, myths vs facts</li>
-            <li>Weekly live sessions with coaches</li>
-            <li>WhatsApp engagement + referral mini-challenges</li>
-            <li>Corporate challenges for teams who want to join together</li>
-          </ul>
+          <ol class="tc-join-points">
+            <li>
+              <b>1</b>
+              <div>Download the Fitness Gurukul App<span>Android or iOS — required for the full challenge</span></div>
+            </li>
+            <li>
+              <b>2</b>
+              <div>Join the community WhatsApp group<span>Updates, reminders, and weekly check-ins land here</span></div>
+            </li>
+            <li>
+              <b>3</b>
+              <div>Fill the registration form<span>Name, age, contact, photos, weight, height, measurements</span></div>
+            </li>
+          </ol>
         </div>
       </div>
     </section>
@@ -1288,40 +1377,67 @@
     <section class="tc-join" id="tcJoin">
       <div class="tc-shell tc-join-grid">
         <div class="tc-join-copy tc-reveal">
-          <span class="section-kicker">Fitness Gurukul</span>
-          <h2>Start your 90 days</h2>
-          <p>Reserve your seat, download the app, and meet your coach. No payment on this step.</p>
+          <span class="section-kicker">Registration form</span>
+          <h2>Register for 90 days</h2>
+          <p>Fill every field, attach baseline photos, then finish onboarding in the app and WhatsApp community.</p>
           <ol class="tc-join-points">
             <li>
               <b>1</b>
-              <div>Pick your track<span>Fat loss, strength, mobility, running, or functional</span></div>
+              <div>Download the Fitness Gurukul App<span>Required platform for the entire challenge</span></div>
             </li>
             <li>
               <b>2</b>
-              <div>Share your contact<span>Name and phone so we can onboard you</span></div>
+              <div>Join the WhatsApp community<span>Ask to be added to the challenge group</span></div>
             </li>
             <li>
               <b>3</b>
-              <div>Get the app + coach<span>Daily check-ins start when your seat is confirmed</span></div>
+              <div>Submit this form<span>Photos: front, side, back — plus weight, height, measurements</span></div>
             </li>
           </ol>
         </div>
-        <form class="tc-join-form tc-reveal" id="tcJoinForm">
-          <p class="tc-form-title">Join the 90 Day Challenge</p>
-          <p class="tc-form-note">Takes under a minute. Free to reserve your seat.</p>
-          <label>Your name
-            <input name="name" autocomplete="name" required placeholder="e.g. Rahul Sharma" />
-          </label>
-          <label>Phone
-            <input name="phone" type="tel" autocomplete="tel" required placeholder="+91 98765 43210" />
-          </label>
-          <label>Email <span style="opacity:.6">(optional)</span>
-            <input name="email" type="email" autocomplete="email" placeholder="you@example.com" />
-          </label>
-          <label>Track
-            <select name="challengeId" id="tcJoinSelect" required></select>
-          </label>
-          <button class="primary-button" type="submit">Reserve my seat</button>
+        <form class="tc-join-form tc-reveal" id="tcJoinForm" enctype="multipart/form-data">
+          <p class="tc-form-title">90 Day Transformation Challenge</p>
+          <p class="tc-form-note">Online · Fitness Gurukul App · Open for everyone</p>
+          <div class="tc-form-grid">
+            <label class="full">Full name
+              <input name="name" autocomplete="name" required placeholder="e.g. Rahul Sharma" />
+            </label>
+            <label>Age
+              <input name="age" type="number" min="12" max="90" required placeholder="e.g. 28" />
+            </label>
+            <label>Phone
+              <input name="phone" type="tel" autocomplete="tel" required placeholder="+91 98765 43210" />
+            </label>
+            <label class="full">Email
+              <input name="email" type="email" autocomplete="email" required placeholder="you@example.com" />
+            </label>
+            <label>Weight (kg)
+              <input name="weight" type="number" min="30" max="250" step="0.1" required placeholder="e.g. 78.5" />
+            </label>
+            <label>Height (cm)
+              <input name="height" type="number" min="120" max="230" step="0.1" required placeholder="e.g. 172" />
+            </label>
+            <label class="full">Body measurements
+              <textarea name="measurements" rows="2" required placeholder="Chest / waist / hips / arms (cm)"></textarea>
+            </label>
+            <label class="full">Track
+              <select name="challengeId" id="tcJoinSelect" required></select>
+            </label>
+            <label>Front photo
+              <input name="photoFront" type="file" accept="image/*" required />
+            </label>
+            <label>Side photo
+              <input name="photoSide" type="file" accept="image/*" required />
+            </label>
+            <label class="full">Back photo
+              <input name="photoBack" type="file" accept="image/*" required />
+            </label>
+            <label class="full tc-consent">
+              <input name="consent" type="checkbox" value="yes" required />
+              <span>I agree to the challenge rules and T&amp;Cs, disclose any medical conditions if needed, and consent to Fitness Gurukul using my photos/videos for marketing.</span>
+            </label>
+          </div>
+          <button class="primary-button" type="submit">Submit registration</button>
           <p class="tc-join-status" id="tcJoinStatus" role="status"></p>
         </form>
       </div>
@@ -1430,12 +1546,12 @@
             { value: "advanced", label: "Advanced — chasing a peak" }
           ]
         },
-        {
+          {
           key: "preference",
-          q: "How do you want to train?",
+          q: "How will you complete this online challenge?",
           options: [
-            { value: "in-person", label: "In-person / doorstep in Hyderabad" },
-            { value: "virtual", label: "Virtual coaching + app check-ins" }
+            { value: "virtual", label: "App-first — daily logs + virtual coaching" },
+            { value: "in-person", label: "App tracking + Hyderabad in-person sessions" }
           ]
         },
         {
@@ -1707,8 +1823,39 @@
         $("tcJoinForm").addEventListener("submit", async function (e) {
           e.preventDefault();
           var status = $("tcJoinStatus");
-          status.textContent = "Saving your seat…";
-          var payload = Object.fromEntries(new FormData($("tcJoinForm")).entries());
+          status.textContent = "Submitting registration…";
+          var form = $("tcJoinForm");
+          var raw = Object.fromEntries(new FormData(form).entries());
+          var photoFront = form.querySelector('[name="photoFront"]').files[0];
+          var photoSide = form.querySelector('[name="photoSide"]').files[0];
+          var photoBack = form.querySelector('[name="photoBack"]').files[0];
+          if (!photoFront || !photoSide || !photoBack) {
+            status.textContent = "Please attach front, side, and back photos.";
+            return;
+          }
+          var message = [
+            "90 Day Transformation Challenge registration",
+            "Age: " + (raw.age || ""),
+            "Weight: " + (raw.weight || "") + " kg",
+            "Height: " + (raw.height || "") + " cm",
+            "Measurements: " + (raw.measurements || ""),
+            "Baseline photos selected: " + [photoFront.name, photoSide.name, photoBack.name].join(", "),
+            "Consent: yes · Mode: online · Platform: Fitness Gurukul App",
+            "Next: join WhatsApp community and send baseline photos"
+          ].join(" | ");
+          var payload = {
+            challengeId: raw.challengeId,
+            name: raw.name,
+            phone: raw.phone,
+            email: raw.email,
+            age: raw.age,
+            weight: raw.weight,
+            height: raw.height,
+            measurements: raw.measurements,
+            goal: "transformation",
+            message: message,
+            consent: raw.consent || "yes"
+          };
           var candidates = (window.fgApiCandidates
             ? window.fgApiCandidates("/api/challenge-join")
             : [(window.fgApiUrl ? window.fgApiUrl("/api/challenge-join") : "/api/challenge-join"), "/api/challenge-join.php"]);
@@ -1722,7 +1869,13 @@
               });
               var data = await res.json().catch(function () { return {}; });
               if (!res.ok || !data.ok) continue;
-              status.textContent = data.message || "You’re in the 90 Day Challenge.";
+              var waPhotos = "https://wa.me/917207113310?text=" + encodeURIComponent(
+                "Hi Fitness Gurukul — I registered for the 90 Day Transformation Challenge.\n" +
+                "Name: " + payload.name + "\nPhone: " + payload.phone + "\n" +
+                "Please add me to the community group. I will send front/side/back baseline photos next."
+              );
+              status.innerHTML = (data.message || "You’re registered.") +
+                ' <a href="' + waPhotos + '" target="_blank" rel="noopener" style="color:#fff;text-decoration:underline">Send baseline photos on WhatsApp</a>';
               if (data.stats && data.stats.totalJoined != null) {
                 animateCount($("tcJoined"), data.stats.totalJoined);
               }
@@ -1740,10 +1893,10 @@
               email: payload.email,
               program: payload.challengeId || "90 Day Transformation Challenge",
               goal: "transformation",
-              message: "90 Day Challenge join request"
+              message: payload.message
             };
             var wa = window.fgWhatsAppLeadUrl ? window.fgWhatsAppLeadUrl(waPayload) : "https://wa.me/917207113310";
-            status.innerHTML = 'Could not save online. <a href="' + wa + '" target="_blank" rel="noopener" style="color:#fff;text-decoration:underline">Send join request on WhatsApp</a>';
+            status.innerHTML = 'Could not save online. <a href="' + wa + '" target="_blank" rel="noopener" style="color:#fff;text-decoration:underline">Send registration on WhatsApp</a>';
             try { window.open(wa, "_blank", "noopener"); } catch (err2) {}
           }
         });

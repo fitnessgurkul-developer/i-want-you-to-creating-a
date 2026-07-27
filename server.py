@@ -1345,14 +1345,28 @@ class handler(SimpleHTTPRequestHandler):
             name = clip(payload.get("name", ""), 80)
             phone = clip(payload.get("phone", ""), 40)
             email = clip(payload.get("email", ""), 120)
+            age = clip(payload.get("age", ""), 10)
+            weight = clip(payload.get("weight", ""), 20)
+            height = clip(payload.get("height", ""), 20)
+            measurements = clip(payload.get("measurements", ""), 240)
+            details = [
+                "90 Day Transformation Challenge registration",
+                f"Age: {age}" if age else "",
+                f"Weight: {weight} kg" if weight else "",
+                f"Height: {height} cm" if height else "",
+                f"Measurements: {measurements}" if measurements else "",
+                clip(payload.get("message", ""), 700),
+                "Mode: online · Platform: Fitness Gurukul App · Consent: yes",
+            ]
+            message = " | ".join([part for part in details if part])
             join_payload = {
                 "form_type": "challenge-join",
                 "name": name,
                 "phone": phone,
                 "email": email,
-                "program": (challenge or {}).get("name", "Transformation Challenge"),
+                "program": (challenge or {}).get("name", "90 Day Transformation Challenge"),
                 "goal": (challenge or {}).get("goal") or clip(payload.get("goal", "transformation"), 80) or "transformation",
-                "message": clip(payload.get("message", "Joined from transformation-challenge page"), 500),
+                "message": clip(message, 2000) or "Joined 90 Day Transformation Challenge",
                 "coach": "",
             }
             submission_id, missing = save_submission(join_payload)
@@ -1360,7 +1374,7 @@ class handler(SimpleHTTPRequestHandler):
                 return self.send_json({"ok": False, "error": "Missing fields", "missing": missing}, 400)
             return self.send_json({
                 "ok": True,
-                "message": "You are in. A coach will reach out soon.",
+                "message": "You’re registered. Download the app, join the WhatsApp community, and send your baseline photos.",
                 "challenge": challenge,
                 "id": submission_id,
                 "stats": challenges_payload(),
