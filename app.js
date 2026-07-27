@@ -147,7 +147,7 @@ const realData = {
     {n:"Tabata Dumbbell Workout: 4 Minutes of Pain",c:"Quick",l:"All Levels",d:"4 min"},
     {n:"20-Min HIIT Treadmill Workout",c:"HIIT",l:"Intermediate",d:"20 min"},
     {n:"20-Min Tabata Fat Burner",c:"HIIT",l:"All Levels",d:"20 min"},
-    {n:"30-Day HIIT Fat Burn Challenge",c:"HIIT",l:"All Levels",d:"30 days"},
+    {n:"90-Day Fat Loss Challenge Track",c:"HIIT",l:"All Levels",d:"90 days"},
     {n:"30-Min Home Dumbbell Workout",c:"Home",l:"Beginner",d:"30 min"},
     {n:"25-Min Foam Roller & Mobility Routine",c:"Recovery",l:"All Levels",d:"25 min"},
     {n:"5/3/1 Wendler Strength Program for Intermediates",c:"Strength",l:"Intermediate",d:"12 weeks"},
@@ -248,7 +248,7 @@ const realData = {
     {n:"Powerlifting Meet Prep: 12 Weeks",c:"Goal-Oriented",l:"Advanced",d:"12 weeks"},
     {n:"Summer Shred: 8-Week Cutting Program",c:"Goal-Oriented",l:"Intermediate",d:"8 weeks"},
     {n:"Wedding Day Physique: 12-Week Program",c:"Goal-Oriented",l:"All Levels",d:"12 weeks"},
-    {n:"30-Day Strength Challenge",c:"Challenge",l:"All Levels",d:"30 days"},
+    {n:"90-Day Strength Challenge Track",c:"Challenge",l:"All Levels",d:"90 days"},
     {n:"Active Aging: Over 60 Mobility & Strength",c:"Life Stage",l:"Beginner",d:"8 weeks"},
     {n:"Busy Parent: 30-Minute Training",c:"Life Stage",l:"All Levels",d:"8 weeks"},
     {n:"College Student: Dorm Room Workout",c:"Life Stage",l:"Beginner",d:"6 weeks"},
@@ -3047,7 +3047,7 @@ function injectPageRelated() {
     "index.html": [
       { t: "IT desk transformations", d: "See engineers and PMs who rebuilt energy around real Hyderabad work weeks.", h: "testimonials.html" },
       { t: "Doorstep PT near tech parks", d: "Coach comes to Gachibowli, Kondapur, Madhapur, and Manikonda societies.", h: "book-consultation.html" },
-      { t: "30-day challenge for busy weeks", d: "Short blocks that still work when release calendars take over.", h: "transformation-challenge.html" }
+      { t: "90-day challenge for busy weeks", d: "App check-ins, coach support, and weekly spotlights for the full transformation.", h: "transformation-challenge.html" }
     ],
     "services.html": [
       { t: "Which plan fits a 9–6 engineer?", d: "Compare Core, Prime, and Signature for desk jobs and Indian meals.", h: "book-consultation.html?goal=weight-loss" },

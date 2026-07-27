@@ -213,7 +213,7 @@ GOAL_MATCHES = {
         "planCategory": "prime",
         "coachCategories": ["fitness", "yoga"],
         "cta": "book-consultation.html",
-        "challengeId": "fat-burn-30",
+        "challengeId": "fg-90-fat-loss",
     },
     "strength": {
         "goal": "strength",
@@ -223,7 +223,7 @@ GOAL_MATCHES = {
         "planCategory": "signature",
         "coachCategories": ["fitness"],
         "cta": "book-consultation.html",
-        "challengeId": "strength-30",
+        "challengeId": "fg-90-strength",
     },
     "yoga": {
         "goal": "yoga",
@@ -233,7 +233,7 @@ GOAL_MATCHES = {
         "planCategory": "recovery",
         "coachCategories": ["yoga"],
         "cta": "coaches.html",
-        "challengeId": "mobility-21",
+        "challengeId": "fg-90-mobility",
     },
     "running": {
         "goal": "running",
@@ -243,7 +243,7 @@ GOAL_MATCHES = {
         "planCategory": "endurance",
         "coachCategories": ["fitness", "sports"],
         "cta": "services.html",
-        "challengeId": "run-start-28",
+        "challengeId": "fg-90-running",
     },
     "kids": {
         "goal": "kids",
@@ -253,7 +253,7 @@ GOAL_MATCHES = {
         "planCategory": "training",
         "coachCategories": ["kids", "special"],
         "cta": "coaches.html",
-        "challengeId": "strength-30",
+        "challengeId": "fg-90-strength",
     },
     "rehab": {
         "goal": "rehab",
@@ -263,78 +263,78 @@ GOAL_MATCHES = {
         "planCategory": "training",
         "coachCategories": ["rehab", "fitness"],
         "cta": "book-consultation.html",
-        "challengeId": "mobility-21",
+        "challengeId": "fg-90-mobility",
     },
 }
 
 CHALLENGES = [
     {
-        "id": "fat-burn-30",
-        "name": "30-Day Fat Burn Challenge",
+        "id": "fg-90-fat-loss",
+        "name": "90-Day Fat Loss Track",
         "tag": "Fat loss",
-        "days": 30,
+        "days": 90,
         "level": "All levels",
         "sessionsPerWeek": 4,
         "focus": ["HIIT finishers", "Strength circuits", "Indian nutrition check-ins"],
-        "outcome": "Drop stubborn fat while keeping energy for work and family.",
-        "image": "https://images.unsplash.com/photo-1549476464-37392f717541?w=1400&q=80&auto=format&fit=crop",
-        "milestones": ["Week 1: habit lock-in", "Week 2: pace up", "Week 3: body recomposition", "Week 4: finish strong"],
+        "outcome": "Drop stubborn fat across 90 days with app check-ins and coach accountability.",
+        "image": "assets/transforms/neha-hero.webp",
+        "milestones": ["Days 1–30: habit lock-in", "Days 31–60: pace up", "Days 61–90: finish strong"],
         "planCategory": "prime",
         "goal": "weight-loss",
     },
     {
-        "id": "strength-30",
-        "name": "30-Day Strength Challenge",
+        "id": "fg-90-strength",
+        "name": "90-Day Strength Track",
         "tag": "Strength",
-        "days": 30,
+        "days": 90,
         "level": "Beginner to intermediate",
-        "sessionsPerWeek": 3,
+        "sessionsPerWeek": 4,
         "focus": ["Compound lifts", "Progressive overload", "Form coaching"],
-        "outcome": "Build measurable strength with safe weekly progressions.",
-        "image": "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1400&q=80&auto=format&fit=crop",
-        "milestones": ["Week 1: movement quality", "Week 2: load up", "Week 3: volume push", "Week 4: PR week"],
+        "outcome": "Build measurable strength with safe weekly progressions for the full 90 days.",
+        "image": "assets/transforms/deepak-hero.webp",
+        "milestones": ["Days 1–30: movement quality", "Days 31–60: load up", "Days 61–90: PR finish"],
         "planCategory": "signature",
         "goal": "strength",
     },
     {
-        "id": "mobility-21",
-        "name": "21-Day Mobility Reset",
+        "id": "fg-90-mobility",
+        "name": "90-Day Mobility Track",
         "tag": "Yoga & recovery",
-        "days": 21,
+        "days": 90,
         "level": "All levels",
         "sessionsPerWeek": 5,
         "focus": ["Breathwork", "Hip & spine mobility", "Stress reset"],
-        "outcome": "Move freer, sleep better, and reduce desk-day stiffness.",
-        "image": "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=1400&q=80&auto=format&fit=crop",
-        "milestones": ["Week 1: breath baseline", "Week 2: joint freedom", "Week 3: calm strength"],
+        "outcome": "Move freer, sleep better, and reduce desk-day stiffness over 90 days.",
+        "image": "assets/transforms/xf-page-hero.webp",
+        "milestones": ["Days 1–30: breath baseline", "Days 31–60: joint freedom", "Days 61–90: calm strength"],
         "planCategory": "recovery",
         "goal": "yoga",
     },
     {
-        "id": "run-start-28",
-        "name": "28-Day Run Starter",
+        "id": "fg-90-running",
+        "name": "90-Day Run Builder",
         "tag": "Endurance",
-        "days": 28,
-        "level": "Beginner",
+        "days": 90,
+        "level": "Beginner to intermediate",
         "sessionsPerWeek": 3,
         "focus": ["Walk-run intervals", "Easy aerobic base", "Runner strength"],
-        "outcome": "Go from couch to consistent 5K-ready pacing.",
-        "image": "https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=1400&q=80&auto=format&fit=crop",
-        "milestones": ["Week 1: start easy", "Week 2: longer intervals", "Week 3: steady runs", "Week 4: 5K prep"],
+        "outcome": "Build from inconsistent miles to a durable endurance base in 90 days.",
+        "image": "assets/transforms/udit-hero.webp",
+        "milestones": ["Days 1–30: start easy", "Days 31–60: longer intervals", "Days 61–90: race-ready base"],
         "planCategory": "endurance",
         "goal": "running",
     },
     {
-        "id": "hyrox-21",
-        "name": "21-Day Hyrox Spark",
+        "id": "fg-90-functional",
+        "name": "90-Day Functional Track",
         "tag": "Functional racing",
-        "days": 21,
+        "days": 90,
         "level": "Intermediate",
         "sessionsPerWeek": 4,
         "focus": ["Compromised running", "Grip & engine", "Station skills"],
-        "outcome": "Build race-day stamina for Hyrox-style efforts.",
-        "image": "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=1400&q=80&auto=format&fit=crop",
-        "milestones": ["Week 1: engine base", "Week 2: station power", "Week 3: race simulation"],
+        "outcome": "Build race-day stamina for Hyrox-style and functional efforts across 90 days.",
+        "image": "assets/transforms/ramakrishna-hero.webp",
+        "milestones": ["Days 1–30: engine base", "Days 31–60: station power", "Days 61–90: race simulation"],
         "planCategory": "forge",
         "goal": "strength",
     },
@@ -412,7 +412,7 @@ def live_payload():
         "Macro calculator used for Indian meal planning",
         "Doorstep training inquiry from Gachibowli",
         "Running plan comparison opened on Services",
-        "Someone just joined the 30-Day Fat Burn Challenge",
+        "Someone just joined the 90 Day Transformation Challenge",
         "Plan quiz completed — Signature coaching recommended",
     ]
     # Rotate pulse by minute so the site feels alive without fake realtime sockets.
@@ -496,17 +496,18 @@ def quiz_recommend(payload):
     })
     challenge = base.get("challenge") or CHALLENGES[0]
 
-    # Prefer shorter challenges when the quiz says time is tight.
-    if time_budget in {"busy", "15", "21", "short"}:
-        short = next((c for c in CHALLENGES if c.get("days", 30) <= 21 and c.get("goal") == challenge.get("goal")), None)
-        if short:
-            challenge = short
-            plan = next((p for p in PLANS if p.get("category") == short.get("planCategory")), base.get("plan"))
-            base["plan"] = plan
-    elif time_budget in {"race", "hyrox", "functional"}:
-        hyrox = find_challenge("hyrox-21")
-        if hyrox:
-            challenge = hyrox
+    # Consistency preference inside the 90 Day Transformation Challenge.
+    if time_budget in {"community", "ugc", "live"}:
+        reasons_extra = "Community lives, spotlights, and UGC keep you accountable"
+    elif time_budget in {"coach-led", "coach", "in-person"}:
+        reasons_extra = "Coach-led sessions most weeks for form and progression"
+    else:
+        reasons_extra = "Daily app check-ins and reminders for the full 90 days"
+
+    if goal in {"hyrox", "functional"} or time_budget in {"race", "hyrox", "functional"}:
+        functional = find_challenge("fg-90-functional")
+        if functional:
+            challenge = functional
             plan = next((p for p in PLANS if p.get("category") == "forge"), base.get("plan"))
             base["plan"] = plan
 
@@ -514,6 +515,7 @@ def quiz_recommend(payload):
         f"Goal focus: {base['match'].get('title', goal)}",
         f"Training mode: {'in-person / doorstep' if preference in {'in-person', 'doorstep', 'home', 'studio'} else 'virtual'}",
         f"Challenge length: {challenge.get('days')} days · {challenge.get('sessionsPerWeek')} sessions/week",
+        reasons_extra,
     ]
     return {
         "ok": True,

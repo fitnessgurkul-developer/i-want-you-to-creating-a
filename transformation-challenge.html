@@ -3,31 +3,29 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Transformation Challenge | Fitness Gurukul</title>
-  <meta name="description" content="Join Fitness Gurukul transformation challenges in Hyderabad. Take a quick quiz for a plan recommendation, pick a challenge, and start with coach support." />
+  <title>90 Day Transformation Challenge | Fitness Gurukul</title>
+  <meta name="description" content="Join the Fitness Gurukul 90 Day Transformation Challenge. Train with coaches, track progress in the app, earn prizes, and build lasting habits in Hyderabad." />
   <link rel="canonical" href="https://www.fitnessgurukul.co.in/transformation-challenge.html" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Fitness Gurukul" />
   <meta property="og:url" content="https://www.fitnessgurukul.co.in/transformation-challenge.html" />
-  <meta property="og:title" content="Transformation Challenge | Fitness Gurukul" />
-  <meta property="og:description" content="Join Fitness Gurukul transformation challenges in Hyderabad. Take a quick quiz for a plan recommendation, pick a challenge, and start with coach support." />
-  <meta property="og:image" content="https://www.fitnessgurukul.co.in/assets/fitness-gurukul-logo.png" />
+  <meta property="og:title" content="90 Day Transformation Challenge | Fitness Gurukul" />
+  <meta property="og:description" content="90 days. Coach support. App check-ins. Real transformations. Join Fitness Gurukul’s flagship challenge." />
+  <meta property="og:image" content="https://www.fitnessgurukul.co.in/assets/transforms/xf-page-hero.webp" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Transformation Challenge | Fitness Gurukul" />
-  <meta name="twitter:description" content="Join Fitness Gurukul transformation challenges in Hyderabad. Take a quick quiz for a plan recommendation, pick a challenge, and start with coach support." />
-  <meta name="twitter:image" content="https://www.fitnessgurukul.co.in/assets/fitness-gurukul-logo.png" />
+  <meta name="twitter:title" content="90 Day Transformation Challenge | Fitness Gurukul" />
+  <meta name="twitter:description" content="90 days. Coach support. App check-ins. Real transformations. Join Fitness Gurukul’s flagship challenge." />
+  <meta name="twitter:image" content="https://www.fitnessgurukul.co.in/assets/transforms/xf-page-hero.webp" />
+  <link rel="preload" as="image" href="assets/transforms/xf-page-hero.webp" fetchpriority="high" />
   <link rel="stylesheet" href="styles.css" />
   <style>
     :root {
-      /* Match main site: black / white / soft gray */
       --tc-ink: #ffffff;
       --tc-muted: #999999;
       --tc-line: rgba(255,255,255,0.1);
       --tc-accent: #ffffff;
-      --tc-ember: rgba(255,255,255,0.55);
       --tc-deep: #000000;
       --tc-panel: rgba(17, 17, 17, 0.92);
-      --tc-accent-soft: rgba(255,255,255,0.08);
       --tc-display: "Public Sans", Helvetica, Arial, sans-serif;
       --tc-body: "Public Sans", Helvetica, Arial, sans-serif;
     }
@@ -57,14 +55,17 @@
     .tc-hero-media {
       position: absolute; inset: 0;
       background:
-        linear-gradient(180deg, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.55) 45%, rgba(0,0,0,0.94) 100%),
-        url("https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=1800&q=85&auto=format&fit=crop") center/cover no-repeat;
-      transform: scale(1.05);
-      animation: tcKen 16s ease-in-out infinite alternate;
+        linear-gradient(180deg, rgba(0,0,0,0.28) 0%, rgba(0,0,0,0.52) 42%, rgba(0,0,0,0.94) 100%),
+        url("assets/transforms/xf-page-hero.webp") center/cover no-repeat;
+      transform: scale(1.04);
+      animation: tcKen 18s ease-in-out infinite alternate;
     }
     @keyframes tcKen {
-      from { transform: scale(1.05) translate3d(0,0,0); }
-      to { transform: scale(1.12) translate3d(-1.2%, -1%, 0); }
+      from { transform: scale(1.04) translate3d(0,0,0); }
+      to { transform: scale(1.1) translate3d(-1%, -0.8%, 0); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .tc-hero-media { animation: none; }
     }
     .tc-hero-inner {
       position: relative;
@@ -75,23 +76,22 @@
     }
     .tc-brand {
       margin: 0 0 14px;
-      font-size: clamp(2.6rem, 8vw, 5.6rem);
+      font-size: clamp(2.6rem, 8vw, 5.4rem);
       line-height: 0.9;
       font-weight: 800;
     }
     .tc-brand span { color: rgba(255,255,255,0.72); display: block; }
     .tc-hero h1 {
       margin: 0 0 12px;
-      max-width: 16ch;
+      max-width: 14ch;
       font-size: clamp(1.55rem, 3.5vw, 2.45rem);
       font-weight: 700;
       line-height: 1.05;
-      text-transform: none;
       font-family: var(--tc-body);
       letter-spacing: -0.02em;
     }
     .tc-hero p {
-      max-width: 40ch;
+      max-width: 42ch;
       color: var(--tc-muted);
       margin: 0 0 22px;
       font-size: 1.05rem;
@@ -148,9 +148,11 @@
     }
     .tc-live-stats span { color: var(--tc-muted); font-size: 0.78rem; }
 
-    .tc-section {
-      padding: 72px 0;
-      background: #000;
+    .tc-section { padding: 72px 0; background: #000; }
+    .tc-section.alt {
+      background:
+        radial-gradient(ellipse at 80% 0%, rgba(255,255,255,0.05), transparent 45%),
+        #050505;
     }
     .tc-shell { width: min(1120px, calc(100% - 40px)); margin: 0 auto; }
     .tc-section-head { margin-bottom: 28px; max-width: 640px; }
@@ -160,6 +162,108 @@
       line-height: 0.95;
     }
     .tc-section-head p { color: var(--tc-muted); margin: 10px 0 0; }
+
+    .tc-why {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 14px;
+    }
+    .tc-why article {
+      border-top: 1px solid rgba(255,255,255,0.35);
+      padding-top: 16px;
+    }
+    .tc-why strong {
+      display: block;
+      font-size: 1rem;
+      margin-bottom: 8px;
+      letter-spacing: -0.02em;
+    }
+    .tc-why p {
+      margin: 0;
+      color: var(--tc-muted);
+      font-size: 0.9rem;
+      line-height: 1.45;
+    }
+
+    .tc-phases {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+    .tc-phase {
+      border: 1px solid var(--tc-line);
+      padding: 22px 20px;
+      background: rgba(255,255,255,0.03);
+      min-height: 100%;
+      transition: transform .25s ease, border-color .25s ease;
+    }
+    .tc-phase:hover { transform: translateY(-3px); border-color: rgba(255,255,255,0.28); }
+    .tc-phase em {
+      display: block;
+      font-style: normal;
+      color: rgba(255,255,255,0.5);
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .tc-phase h3 {
+      margin: 0 0 10px;
+      font-size: 1.35rem;
+      line-height: 1;
+    }
+    .tc-phase p { margin: 0; color: var(--tc-muted); font-size: 0.92rem; line-height: 1.5; }
+    .tc-phase ul {
+      margin: 14px 0 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 8px;
+    }
+    .tc-phase li {
+      color: rgba(255,255,255,0.82);
+      font-size: 0.88rem;
+      padding-left: 14px;
+      position: relative;
+    }
+    .tc-phase li::before {
+      content: "";
+      position: absolute;
+      left: 0; top: 0.55em;
+      width: 6px; height: 6px;
+      background: #fff;
+    }
+
+    .tc-week {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 8px;
+    }
+    .tc-week article {
+      border: 1px solid var(--tc-line);
+      padding: 14px 12px;
+      min-height: 118px;
+      background: rgba(255,255,255,0.02);
+      transition: background .2s, transform .2s;
+    }
+    .tc-week article:hover {
+      background: rgba(255,255,255,0.06);
+      transform: translateY(-2px);
+    }
+    .tc-week span {
+      display: block;
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.45);
+      margin-bottom: 8px;
+    }
+    .tc-week strong {
+      display: block;
+      font-size: 0.95rem;
+      line-height: 1.25;
+      letter-spacing: -0.01em;
+    }
 
     .tc-filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 22px; }
     .tc-filters button {
@@ -255,10 +359,7 @@
     }
     .tc-metric span { color: var(--tc-muted); font-size: 0.75rem; }
 
-    .tc-day-scrub {
-      display: grid;
-      gap: 8px;
-    }
+    .tc-day-scrub { display: grid; gap: 8px; }
     .tc-day-scrub label {
       display: flex;
       justify-content: space-between;
@@ -276,10 +377,7 @@
       font-size: 0.95rem;
     }
 
-    .tc-milestones {
-      display: grid;
-      gap: 8px;
-    }
+    .tc-milestones { display: grid; gap: 8px; }
     .tc-milestone {
       display: grid;
       grid-template-columns: 18px 1fr;
@@ -327,7 +425,6 @@
       font-size: 0.82rem;
       margin-bottom: 4px;
       font-family: var(--tc-body);
-      text-transform: none;
       letter-spacing: 0;
     }
     .tc-challenge-list button small { font-size: 0.72rem; }
@@ -337,6 +434,184 @@
       background: rgba(255,255,255,0.08);
       color: #fff;
     }
+
+    .tc-rules-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 28px;
+      align-items: start;
+    }
+    .tc-rules-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 14px;
+    }
+    .tc-rules-list li {
+      display: grid;
+      grid-template-columns: 36px 1fr;
+      gap: 12px;
+      align-items: start;
+      border-bottom: 1px solid var(--tc-line);
+      padding-bottom: 14px;
+    }
+    .tc-rules-list b {
+      display: grid;
+      place-items: center;
+      width: 36px;
+      height: 36px;
+      border: 1px solid rgba(255,255,255,0.3);
+      font-size: 0.8rem;
+    }
+    .tc-rules-list strong { display: block; margin-bottom: 4px; }
+    .tc-rules-list span { color: var(--tc-muted); font-size: 0.9rem; line-height: 1.45; }
+    .tc-prize {
+      border: 1px solid var(--tc-line);
+      padding: 28px 24px;
+      background:
+        linear-gradient(160deg, rgba(255,255,255,0.08), transparent 55%),
+        rgba(17,17,17,0.95);
+    }
+    .tc-prize h3 {
+      margin: 0 0 10px;
+      font-size: 1.8rem;
+      line-height: 0.95;
+    }
+    .tc-prize p { color: var(--tc-muted); margin: 0 0 18px; }
+    .tc-prize ul {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 10px;
+    }
+    .tc-prize li {
+      padding-left: 16px;
+      position: relative;
+      font-size: 0.95rem;
+    }
+    .tc-prize li::before {
+      content: "";
+      position: absolute;
+      left: 0; top: 0.55em;
+      width: 7px; height: 7px;
+      background: #fff;
+    }
+
+    .tc-coaches-row {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+    .tc-coach-card {
+      border: 1px solid var(--tc-line);
+      overflow: hidden;
+      background: #0a0a0a;
+      transition: transform .25s ease, border-color .25s;
+    }
+    .tc-coach-card:hover { transform: translateY(-3px); border-color: rgba(255,255,255,0.28); }
+    .tc-coach-card img,
+    .tc-coach-card .fallback {
+      width: 100%;
+      aspect-ratio: 3/4;
+      object-fit: cover;
+      display: grid;
+      place-items: center;
+      background: #141414;
+      font-weight: 700;
+      font-size: 1.4rem;
+    }
+    .tc-coach-card div { padding: 12px 12px 16px; }
+    .tc-coach-card strong { display: block; font-size: 0.95rem; margin-bottom: 4px; }
+    .tc-coach-card small { color: var(--tc-muted); font-size: 0.78rem; }
+
+    .tc-app {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 36px;
+      align-items: center;
+    }
+    .tc-app-copy h2 {
+      margin: 8px 0 12px;
+      font-size: clamp(1.9rem, 3.4vw, 2.8rem);
+      line-height: 0.95;
+      max-width: 14ch;
+    }
+    .tc-app-copy p { color: var(--tc-muted); max-width: 42ch; margin: 0 0 20px; }
+    .tc-app-visual {
+      border: 1px solid var(--tc-line);
+      min-height: 320px;
+      background:
+        linear-gradient(180deg, rgba(0,0,0,0.15), rgba(0,0,0,0.75)),
+        url("assets/transforms/home-hero.webp") center/cover no-repeat;
+      display: grid;
+      align-content: end;
+      padding: 24px;
+    }
+    .tc-app-visual strong {
+      font-size: 1.4rem;
+      letter-spacing: -0.02em;
+    }
+    .tc-app-visual span { color: var(--tc-muted); display: block; margin-top: 6px; max-width: 32ch; }
+
+    .tc-proof {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+    .tc-proof article {
+      border: 1px solid var(--tc-line);
+      overflow: hidden;
+      background: #0a0a0a;
+    }
+    .tc-proof img {
+      width: 100%;
+      aspect-ratio: 4/5;
+      object-fit: cover;
+      display: block;
+    }
+    .tc-proof div { padding: 14px 14px 18px; }
+    .tc-proof strong { display: block; margin-bottom: 4px; }
+    .tc-proof em {
+      display: block;
+      font-style: normal;
+      color: rgba(255,255,255,0.75);
+      font-size: 0.86rem;
+      margin-bottom: 8px;
+    }
+    .tc-proof p { margin: 0; color: var(--tc-muted); font-size: 0.9rem; line-height: 1.45; }
+
+    .tc-community {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+      align-items: start;
+    }
+    .tc-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+    }
+    .tc-tags span {
+      border: 1px solid var(--tc-line);
+      padding: 7px 11px;
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.8);
+    }
+    .tc-ugc {
+      display: grid;
+      gap: 10px;
+    }
+    .tc-ugc li {
+      list-style: none;
+      border-left: 2px solid #fff;
+      padding: 8px 0 8px 14px;
+      color: var(--tc-muted);
+      font-size: 0.95rem;
+    }
+    .tc-ugc { margin: 0; padding: 0; }
 
     .tc-quiz-section {
       padding: 72px 0;
@@ -371,7 +646,6 @@
     .tc-q {
       margin: 0 0 16px;
       font-size: 1.35rem;
-      text-transform: none;
       font-family: var(--tc-body);
       letter-spacing: -0.02em;
       font-weight: 700;
@@ -483,15 +757,13 @@
       padding: 8px 0 8px 22px;
       border-left: 2px solid #fff;
     }
-    .tc-join-copy .section-kicker {
-      color: rgba(255,255,255,0.5);
-    }
+    .tc-join-copy .section-kicker { color: rgba(255,255,255,0.5); }
     .tc-join-copy h2 {
       margin: 10px 0 14px;
       font-size: clamp(2.1rem, 4vw, 3.2rem);
       line-height: 0.95;
       letter-spacing: -0.035em;
-      max-width: 11ch;
+      max-width: 12ch;
     }
     .tc-join-copy > p {
       color: var(--tc-muted);
@@ -576,14 +848,20 @@
     }
     .tc-reveal.in { opacity: 1; transform: none; }
 
+    @media (max-width: 1100px) {
+      .tc-why { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .tc-week { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      .tc-coaches-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
     @media (max-width: 960px) {
-      .tc-stage, .tc-quiz-layout, .tc-join-grid { grid-template-columns: 1fr; }
+      .tc-stage, .tc-quiz-layout, .tc-join-grid, .tc-rules-grid, .tc-app, .tc-community, .tc-phases { grid-template-columns: 1fr; }
       .tc-challenge-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .tc-spotlight { min-height: 360px; }
+      .tc-proof { grid-template-columns: 1fr; }
     }
     @media (max-width: 640px) {
       .tc-metrics { grid-template-columns: 1fr; }
-      .tc-challenge-list { grid-template-columns: 1fr; }
+      .tc-challenge-list, .tc-why, .tc-week { grid-template-columns: 1fr; }
       .tc-hero-inner { padding-top: 110px; }
     }
   </style>
@@ -643,13 +921,13 @@
       <div class="tc-hero-media" aria-hidden="true"></div>
       <div class="tc-hero-inner">
         <p class="tc-brand">Fitness <span>Gurukul</span></p>
-        <h1>Pick a challenge. Get a plan in 60 seconds.</h1>
-        <p>Interactive transformation challenges with live coach matching — take the quick quiz and lock your next 21–30 days.</p>
+        <h1>90 Day Transformation Challenge</h1>
+        <p>Train with coaches, check in on the app every day, and finish with a body — and habit — that sticks.</p>
         <div class="tc-actions">
-          <a class="primary-button" href="#tcQuiz">Take the quiz</a>
-          <a class="ghost-button" href="#tcChallenges">Browse challenges</a>
+          <a class="primary-button" href="#tcJoin">Join the challenge</a>
+          <a class="ghost-button" href="#tcWhy">Why join</a>
         </div>
-        <div class="tc-scroll-hint">Scrub the days · pick a challenge · join in one tap</div>
+        <div class="tc-scroll-hint">90 days · coach support · app community</div>
       </div>
     </section>
 
@@ -657,7 +935,7 @@
       <div class="tc-live-inner">
         <div class="tc-live-pulse">
           <span class="tc-dot" aria-hidden="true"></span>
-          <span id="tcPulse">Loading live activity…</span>
+          <span id="tcPulse">Loading challenge activity…</span>
         </div>
         <div class="tc-live-stats">
           <div><strong id="tcJoined" data-live="challengeJoins">—</strong><span>Challenge joins</span></div>
@@ -667,12 +945,108 @@
       </div>
     </section>
 
-    <section class="tc-section" id="tcChallenges">
+    <section class="tc-section" id="tcWhy">
       <div class="tc-shell">
         <div class="tc-section-head tc-reveal">
-          <span class="section-kicker">Interactive challenges</span>
-          <h2>Choose your next push</h2>
-          <p>Tap a challenge, scrub the timeline, and see how the weeks unfold before you commit.</p>
+          <span class="section-kicker">Why this challenge</span>
+          <h2>Built to grow the app, the community, and your results</h2>
+          <p>Every week is designed to push daily activity, real testimonials, and a stronger Fitness Gurukul community.</p>
+        </div>
+        <div class="tc-why tc-reveal">
+          <article>
+            <strong>More app users</strong>
+            <p>Workouts, check-ins, and progress live inside the Fitness Gurukul app.</p>
+          </article>
+          <article>
+            <strong>Daily activity</strong>
+            <p>Stories, reminders, and weekly live sessions keep you showing up.</p>
+          </article>
+          <article>
+            <strong>Real testimonials</strong>
+            <p>Weekly weigh-ins and spotlights turn progress into proof.</p>
+          </article>
+          <article>
+            <strong>Social energy</strong>
+            <p>Reels, polls, and community challenges keep the feed moving.</p>
+          </article>
+          <article>
+            <strong>Stronger community</strong>
+            <p>Train with coaches and members who finish the full 90 days together.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="tc-section alt" id="tcRoadmap">
+      <div class="tc-shell">
+        <div class="tc-section-head tc-reveal">
+          <span class="section-kicker">90-day roadmap</span>
+          <h2>Three phases. One transformation.</h2>
+          <p>From launch buzz to finish-line proof — every block has a clear job.</p>
+        </div>
+        <div class="tc-phases tc-reveal">
+          <article class="tc-phase">
+            <em>Days 1–30</em>
+            <h3>Foundation</h3>
+            <p>Lock habits, learn the app, and set your baseline with your coach.</p>
+            <ul>
+              <li>Launch kickoff + rules</li>
+              <li>Meet your coach</li>
+              <li>Nutrition + workout rhythm</li>
+              <li>First progress check-in</li>
+            </ul>
+          </article>
+          <article class="tc-phase">
+            <em>Days 31–60</em>
+            <h3>Acceleration</h3>
+            <p>Intensity climbs. Spotlights, leaderboards, and weekly lives keep momentum.</p>
+            <ul>
+              <li>Participant spotlights</li>
+              <li>Workout demos + nutrition tips</li>
+              <li>Mini-challenges + badges</li>
+              <li>Community reels</li>
+            </ul>
+          </article>
+          <article class="tc-phase">
+            <em>Days 61–90</em>
+            <h3>Peak &amp; proof</h3>
+            <p>Finish strong, capture testimonials, and celebrate the prize winners.</p>
+            <ul>
+              <li>Final progress pushes</li>
+              <li>Transformation stories</li>
+              <li>Prize reveal winners</li>
+              <li>Referral + next-plan handoff</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="tc-section" id="tcWeek">
+      <div class="tc-shell">
+        <div class="tc-section-head tc-reveal">
+          <span class="section-kicker">During the challenge</span>
+          <h2>Your week, every week</h2>
+          <p>A fixed content rhythm so you always know what lands next.</p>
+        </div>
+        <div class="tc-week tc-reveal">
+          <article><span>Monday</span><strong>Motivation</strong></article>
+          <article><span>Tuesday</span><strong>Nutrition tip</strong></article>
+          <article><span>Wednesday</span><strong>Workout demo</strong></article>
+          <article><span>Thursday</span><strong>Participant spotlight</strong></article>
+          <article><span>Friday</span><strong>Coach advice</strong></article>
+          <article><span>Saturday</span><strong>Community reel</strong></article>
+          <article><span>Sunday</span><strong>Weekly progress</strong></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="tc-section alt" id="tcChallenges">
+      <div class="tc-shell">
+        <div class="tc-section-head tc-reveal">
+          <span class="section-kicker">Pick your 90-day track</span>
+          <h2>Same challenge. Your focus.</h2>
+          <p>Tap a track, scrub the timeline, and see how the 90 days unfold before you commit.</p>
         </div>
 
         <div class="tc-filters tc-reveal" id="tcFilters">
@@ -690,9 +1064,9 @@
             <div class="tc-spotlight-img" id="tcImage"></div>
             <div class="tc-spotlight-shade"></div>
             <div class="tc-spotlight-copy">
-              <span class="tag" id="tcTag">Challenge</span>
+              <span class="tag" id="tcTag">90-day track</span>
               <h3 id="tcName">Loading…</h3>
-              <p id="tcOutcome">Loading challenges — tap one below to preview the timeline.</p>
+              <p id="tcOutcome">Loading tracks — tap one below to preview the timeline.</p>
             </div>
           </div>
 
@@ -708,15 +1082,15 @@
                 <span>Day scrubber</span>
                 <span id="tcDayLabel">Day 1</span>
               </label>
-              <input type="range" id="tcDayRange" min="1" max="30" value="1" />
-              <div class="tc-day-note" id="tcDayNote">Move the slider to preview the challenge timeline.</div>
+              <input type="range" id="tcDayRange" min="1" max="90" value="1" />
+              <div class="tc-day-note" id="tcDayNote">Move the slider to preview the 90-day timeline.</div>
             </div>
 
             <div class="tc-milestones" id="tcMilestones"></div>
             <div class="tc-focus" id="tcFocus"></div>
 
             <div class="tc-actions">
-              <a class="primary-button" id="tcJoinSelected" href="#tcJoin">Join this challenge</a>
+              <a class="primary-button" id="tcJoinSelected" href="#tcJoin">Join this track</a>
               <a class="ghost-button" href="#tcQuiz">Not sure? Take quiz</a>
             </div>
           </div>
@@ -724,12 +1098,169 @@
       </div>
     </section>
 
+    <section class="tc-section" id="tcRules">
+      <div class="tc-shell">
+        <div class="tc-section-head tc-reveal">
+          <span class="section-kicker">Rules &amp; prizes</span>
+          <h2>Simple rules. Real rewards.</h2>
+          <p>Show up in the app, stay consistent, and you stay in the running.</p>
+        </div>
+        <div class="tc-rules-grid tc-reveal">
+          <ol class="tc-rules-list">
+            <li>
+              <b>01</b>
+              <div>
+                <strong>Register + download the app</strong>
+                <span>Join the challenge and complete daily check-ins inside the Fitness Gurukul app.</span>
+              </div>
+            </li>
+            <li>
+              <b>02</b>
+              <div>
+                <strong>Train 4+ sessions a week</strong>
+                <span>Follow your track plan — strength, fat loss, mobility, running, or functional.</span>
+              </div>
+            </li>
+            <li>
+              <b>03</b>
+              <div>
+                <strong>Log weekly progress</strong>
+                <span>Weigh-ins, photos, or run/cycle clips count. Best UGC gets featured.</span>
+              </div>
+            </li>
+            <li>
+              <b>04</b>
+              <div>
+                <strong>Stay for the full 90 days</strong>
+                <span>Finishers unlock prizes, badges, and a transformation story spotlight.</span>
+              </div>
+            </li>
+          </ol>
+          <aside class="tc-prize">
+            <h3>Prize reveal</h3>
+            <p>Top finishers and most consistent members earn recognition across the campaign.</p>
+            <ul>
+              <li>Transformation showcase on Fitness Gurukul channels</li>
+              <li>Achievement badges inside the app</li>
+              <li>Coach shout-outs + participant spotlights</li>
+              <li>Referral bonuses for friends who join mid-challenge</li>
+              <li>Corporate challenge options for teams</li>
+            </ul>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="tc-section alt" id="tcCoaches">
+      <div class="tc-shell">
+        <div class="tc-section-head tc-reveal">
+          <span class="section-kicker">Meet the coaches</span>
+          <h2>Guided by people who finish with you</h2>
+          <p>Weekly coach advice, workout demos, and live sessions keep the 90 days personal.</p>
+        </div>
+        <div class="tc-coaches-row tc-reveal" id="tcCoachGrid"></div>
+        <div class="tc-actions tc-reveal" style="margin-top:22px">
+          <a class="ghost-button" href="coaches.html">See all coaches</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="tc-section" id="tcApp">
+      <div class="tc-shell">
+        <div class="tc-app tc-reveal">
+          <div class="tc-app-copy">
+            <span class="section-kicker">App demo</span>
+            <h2>The challenge lives in the app</h2>
+            <p>Workouts, nutrition tips, weekly progress, and coach check-ins — download Fitness Gurukul and stay daily-active for the full 90 days.</p>
+            <div class="tc-actions">
+              <a class="primary-button" href="https://play.google.com/store/apps/details?id=com.fitnessgurukul.app" target="_blank" rel="noopener">Android — Google Play</a>
+              <a class="ghost-button" href="https://apps.apple.com/us/app/fitness-gurukul/id6771451272" target="_blank" rel="noopener">iOS — App Store</a>
+            </div>
+          </div>
+          <div class="tc-app-visual" aria-hidden="true">
+            <strong>Daily check-ins. Weekly wins.</strong>
+            <span>Stories, hydration reminders, polls, and live sessions keep the community moving.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="tc-section alt" id="tcProof">
+      <div class="tc-shell">
+        <div class="tc-section-head tc-reveal">
+          <span class="section-kicker">Testimonials</span>
+          <h2>Transformations that started with consistency</h2>
+          <p>These are the stories we want more of — from the 90 Day Challenge cohort.</p>
+        </div>
+        <div class="tc-proof tc-reveal">
+          <article>
+            <img src="assets/transforms/udit.webp" alt="Udit Narayan transformation" loading="lazy" />
+            <div>
+              <strong>Udit Narayan</strong>
+              <em>88 → 74 kg · Body recomposition</em>
+              <p>The coaching at Fitness Gurukul gave me the discipline and structure I never had.</p>
+            </div>
+          </article>
+          <article>
+            <img src="assets/transforms/neha.webp" alt="Neha Chopra transformation" loading="lazy" />
+            <div>
+              <strong>Neha Chopra</strong>
+              <em>82 → 65 kg · Weight loss</em>
+              <p>Personalized training and nutrition coaching changed everything.</p>
+            </div>
+          </article>
+          <article>
+            <img src="assets/transforms/ramakrishna.webp" alt="Ramakrishna transformation" loading="lazy" />
+            <div>
+              <strong>Ramakrishna</strong>
+              <em>88 → 74 kg · Strength return</em>
+              <p>The training was tough but always safe — and the nutrition plan was practical.</p>
+            </div>
+          </article>
+        </div>
+        <div class="tc-actions tc-reveal" style="margin-top:22px">
+          <a class="ghost-button" href="testimonials.html">More transformations</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="tc-section" id="tcCommunity">
+      <div class="tc-shell">
+        <div class="tc-community tc-reveal">
+          <div>
+            <span class="section-kicker">Community &amp; UGC</span>
+            <h2>Post it. We feature it.</h2>
+            <p>Share workout selfies, meal photos, progress updates, weekly weigh-ins, and running or cycling clips. The best submissions get spotlighted every Thursday.</p>
+            <div class="tc-tags" aria-label="Challenge hashtags">
+              <span>#FGTransformationChallenge</span>
+              <span>#FitnessGurukul</span>
+              <span>#90DayChallenge</span>
+              <span>#TransformYourself</span>
+              <span>#FitnessJourney</span>
+              <span>#ConsistencyWins</span>
+              <span>#HealthyLifestyle</span>
+              <span>#WorkoutMotivation</span>
+              <span>#FitIndia</span>
+              <span>#TransformationStartsToday</span>
+            </div>
+          </div>
+          <ul class="tc-ugc">
+            <li>Daily stories: polls, countdowns, hydration reminders</li>
+            <li>Reels: participant journeys, coach workouts, meal ideas, myths vs facts</li>
+            <li>Weekly live sessions with coaches</li>
+            <li>WhatsApp engagement + referral mini-challenges</li>
+            <li>Corporate challenges for teams who want to join together</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
     <section class="tc-quiz-section" id="tcQuiz">
       <div class="tc-shell">
         <div class="tc-section-head tc-reveal">
-          <span class="section-kicker">Quick plan quiz</span>
-          <h2>Easy plan recommendation</h2>
-          <p>Four quick answers. We’ll match you to a challenge and a coaching plan that fits.</p>
+          <span class="section-kicker">Quick track quiz</span>
+          <h2>Find your 90-day focus</h2>
+          <p>Four quick answers. We’ll match you to a track, coaching plan, and coach.</p>
         </div>
 
         <div class="tc-quiz-layout tc-reveal">
@@ -746,8 +1277,8 @@
           <div class="tc-result-panel" id="tcQuizResult" aria-live="polite">
             <div class="tc-result-empty">
               <div class="tc-score">?</div>
-              <strong>Your plan shows up here</strong>
-              <span>Answer four quick questions and we’ll match you to a challenge, coaching plan, and coach.</span>
+              <strong>Your track shows up here</strong>
+              <span>Answer four quick questions and we’ll match you to a 90-day track, plan, and coach.</span>
             </div>
           </div>
         </div>
@@ -758,25 +1289,25 @@
       <div class="tc-shell tc-join-grid">
         <div class="tc-join-copy tc-reveal">
           <span class="section-kicker">Fitness Gurukul</span>
-          <h2>Start your challenge</h2>
-          <p>Tell us who you are and which challenge you want. A coach follows up — no payment on this step.</p>
+          <h2>Start your 90 days</h2>
+          <p>Reserve your seat, download the app, and meet your coach. No payment on this step.</p>
           <ol class="tc-join-points">
             <li>
               <b>1</b>
-              <div>Pick your challenge<span>21 or 30 days with a clear weekly focus</span></div>
+              <div>Pick your track<span>Fat loss, strength, mobility, running, or functional</span></div>
             </li>
             <li>
               <b>2</b>
-              <div>Share your contact<span>Name and phone so we can reach you</span></div>
+              <div>Share your contact<span>Name and phone so we can onboard you</span></div>
             </li>
             <li>
               <b>3</b>
-              <div>Get coached<span>We match you and confirm your start plan</span></div>
+              <div>Get the app + coach<span>Daily check-ins start when your seat is confirmed</span></div>
             </li>
           </ol>
         </div>
         <form class="tc-join-form tc-reveal" id="tcJoinForm">
-          <p class="tc-form-title">Join this challenge</p>
+          <p class="tc-form-title">Join the 90 Day Challenge</p>
           <p class="tc-form-note">Takes under a minute. Free to reserve your seat.</p>
           <label>Your name
             <input name="name" autocomplete="name" required placeholder="e.g. Rahul Sharma" />
@@ -787,7 +1318,7 @@
           <label>Email <span style="opacity:.6">(optional)</span>
             <input name="email" type="email" autocomplete="email" placeholder="you@example.com" />
           </label>
-          <label>Challenge
+          <label>Track
             <select name="challengeId" id="tcJoinSelect" required></select>
           </label>
           <button class="primary-button" type="submit">Reserve my seat</button>
@@ -805,10 +1336,83 @@
       var answers = {};
       var step = 0;
 
+      var FALLBACK_CHALLENGES = [
+        {
+          id: "fg-90-fat-loss",
+          name: "90-Day Fat Loss Track",
+          tag: "Fat loss",
+          days: 90,
+          sessionsPerWeek: 4,
+          level: "All levels",
+          focus: ["HIIT finishers", "Strength circuits", "Indian nutrition check-ins"],
+          outcome: "Drop stubborn fat across 90 days with app check-ins and coach accountability.",
+          image: "assets/transforms/neha-hero.webp",
+          milestones: ["Days 1–30: habit lock-in", "Days 31–60: pace up", "Days 61–90: finish strong"],
+          joined: 64,
+          goal: "weight-loss"
+        },
+        {
+          id: "fg-90-strength",
+          name: "90-Day Strength Track",
+          tag: "Strength",
+          days: 90,
+          sessionsPerWeek: 4,
+          level: "Beginner to intermediate",
+          focus: ["Compound lifts", "Progressive overload", "Form coaching"],
+          outcome: "Build measurable strength with safe weekly progressions for the full 90 days.",
+          image: "assets/transforms/deepak-hero.webp",
+          milestones: ["Days 1–30: movement quality", "Days 31–60: load up", "Days 61–90: PR finish"],
+          joined: 58,
+          goal: "strength"
+        },
+        {
+          id: "fg-90-mobility",
+          name: "90-Day Mobility Track",
+          tag: "Yoga & recovery",
+          days: 90,
+          sessionsPerWeek: 5,
+          level: "All levels",
+          focus: ["Breathwork", "Hip & spine mobility", "Stress reset"],
+          outcome: "Move freer, sleep better, and reduce desk-day stiffness over 90 days.",
+          image: "assets/transforms/xf-page-hero.webp",
+          milestones: ["Days 1–30: breath baseline", "Days 31–60: joint freedom", "Days 61–90: calm strength"],
+          joined: 51,
+          goal: "yoga"
+        },
+        {
+          id: "fg-90-running",
+          name: "90-Day Run Builder",
+          tag: "Endurance",
+          days: 90,
+          sessionsPerWeek: 3,
+          level: "Beginner to intermediate",
+          focus: ["Walk-run intervals", "Easy aerobic base", "Runner strength"],
+          outcome: "Build from inconsistent miles to a durable endurance base in 90 days.",
+          image: "assets/transforms/udit-hero.webp",
+          milestones: ["Days 1–30: start easy", "Days 31–60: longer intervals", "Days 61–90: race-ready base"],
+          joined: 47,
+          goal: "running"
+        },
+        {
+          id: "fg-90-functional",
+          name: "90-Day Functional Track",
+          tag: "Functional racing",
+          days: 90,
+          sessionsPerWeek: 4,
+          level: "Intermediate",
+          focus: ["Compromised running", "Grip & engine", "Station skills"],
+          outcome: "Build race-day stamina for Hyrox-style and functional efforts across 90 days.",
+          image: "assets/transforms/ramakrishna-hero.webp",
+          milestones: ["Days 1–30: engine base", "Days 31–60: station power", "Days 61–90: race simulation"],
+          joined: 42,
+          goal: "strength"
+        }
+      ];
+
       var quizSteps = [
         {
           key: "goal",
-          q: "What do you want most from the next 30 days?",
+          q: "What do you want most from the next 90 days?",
           options: [
             { value: "weight-loss", label: "Lose fat / reshape" },
             { value: "strength", label: "Build strength & muscle" },
@@ -836,11 +1440,11 @@
         },
         {
           key: "time",
-          q: "How much runway do you have?",
+          q: "How will you stay consistent for 90 days?",
           options: [
-            { value: "short", label: "Keep it short (about 21 days)" },
-            { value: "30", label: "Full 28–30 day push" },
-            { value: "hyrox", label: "Race-style functional block" }
+            { value: "app-daily", label: "Daily app check-ins + reminders" },
+            { value: "coach-led", label: "Coach-led sessions most weeks" },
+            { value: "community", label: "Community lives, spotlights & UGC" }
           ]
         }
       ];
@@ -886,26 +1490,37 @@
         } catch (e) {
           challenges = [];
         }
-        if (!challenges.length) {
-          challenges = [{
-            id: "fat-burn-30",
-            name: "30-Day Fat Burn Challenge",
-            tag: "Fat loss",
-            days: 30,
-            sessionsPerWeek: 4,
-            level: "All levels",
-            focus: ["HIIT", "Nutrition"],
-            outcome: "Drop fat with coach accountability.",
-            image: "https://images.unsplash.com/photo-1549476464-37392f717541?w=1400&q=80&auto=format&fit=crop",
-            milestones: ["Week 1", "Week 2", "Week 3", "Week 4"],
-            joined: 48,
-            goal: "weight-loss"
-          }];
-        }
+        if (!challenges.length) challenges = FALLBACK_CHALLENGES.slice();
         selectedId = challenges[0].id;
         renderFiltersList();
         renderSelected();
         fillJoinSelect();
+      }
+
+      async function loadCoaches() {
+        var grid = $("tcCoachGrid");
+        if (!grid) return;
+        var coaches = [];
+        try {
+          var res = await fetch((window.fgApiUrl ? window.fgApiUrl("/api/content") : "/api/content"));
+          var data = await res.json();
+          coaches = (data && data.coaches) || [];
+        } catch (e) {}
+        if (!coaches.length) {
+          coaches = [
+            { name: "Deepesh Kumar", role: "Fitness Trainer", image: "assets/coaches/deepesh-kumar.jpg" },
+            { name: "Aditya Gururani", role: "Yoga & Breathwork", image: "assets/coaches/aditya-gururani.jpg" },
+            { name: "Ankit Singh Chauhan", role: "Calisthenics", image: "assets/coaches/ankit-singh-chauhan.jpg" },
+            { name: "Vinay Ojha", role: "Fitness Trainer", image: "assets/coaches/vinay-ojha.jpg" }
+          ];
+        }
+        grid.innerHTML = coaches.slice(0, 4).map(function (c) {
+          var img = c.image
+            ? '<img src="' + safe(c.image) + '" alt="" loading="lazy" />'
+            : '<div class="fallback">' + safe((c.name || "?").slice(0, 2).toUpperCase()) + "</div>";
+          return '<article class="tc-coach-card">' + img +
+            "<div><strong>" + safe(c.name) + "</strong><small>" + safe(c.role || c.highlight || "Coach") + "</small></div></article>";
+        }).join("");
       }
 
       function currentList() {
@@ -924,7 +1539,7 @@
           return '<button type="button" data-id="' + safe(c.id) + '" class="' + (c.id === selectedId ? "active" : "") + '">' +
             "<strong>" + safe(c.name) + "</strong>" +
             "<small>" + safe(c.days) + " days · " + safe(c.level) + "</small></button>";
-        }).join("") || "<p style='color:var(--tc-muted)'>No challenges in this filter.</p>";
+        }).join("") || "<p style='color:var(--tc-muted)'>No tracks in this filter.</p>";
       }
 
       function fillJoinSelect(preferredId) {
@@ -940,7 +1555,7 @@
         var c = selectedChallenge();
         if (!c) return;
         $("tcImage").style.backgroundImage = 'url("' + String(c.image || "").replace(/"/g, "") + '")';
-        $("tcTag").textContent = c.tag || "Challenge";
+        $("tcTag").textContent = c.tag || "90-day track";
         $("tcName").textContent = c.name || "";
         $("tcOutcome").textContent = c.outcome || "";
         $("tcDays").textContent = c.days || "—";
@@ -953,7 +1568,7 @@
           return '<div class="tc-milestone" data-i="' + i + '"><i></i><span>' + safe(m) + "</span></div>";
         }).join("");
         var range = $("tcDayRange");
-        range.max = String(c.days || 30);
+        range.max = String(c.days || 90);
         range.value = "1";
         updateDayNote();
         $("tcJoinSelected").href = "#tcJoin";
@@ -965,14 +1580,20 @@
         var c = selectedChallenge();
         if (!c) return;
         var day = Number($("tcDayRange").value) || 1;
-        var total = Number(c.days) || 30;
+        var total = Number(c.days) || 90;
         $("tcDayLabel").textContent = "Day " + day;
-        var week = Math.min((c.milestones || []).length, Math.ceil(day / Math.max(1, Math.floor(total / Math.max(1, (c.milestones || []).length)))));
-        var milestone = (c.milestones || [])[Math.max(0, week - 1)] || "Stay consistent today.";
-        var intensity = day < total * 0.35 ? "Foundation focus" : day < total * 0.7 ? "Progressive push" : "Peak & finish";
+        var phaseIndex = day <= 30 ? 0 : day <= 60 ? 1 : 2;
+        if ((c.milestones || []).length && total !== 90) {
+          phaseIndex = Math.min(
+            (c.milestones || []).length - 1,
+            Math.max(0, Math.ceil(day / Math.max(1, Math.floor(total / Math.max(1, (c.milestones || []).length)))) - 1)
+          );
+        }
+        var milestone = (c.milestones || [])[phaseIndex] || "Stay consistent today.";
+        var intensity = day <= 30 ? "Foundation focus" : day <= 60 ? "Acceleration push" : "Peak & finish";
         $("tcDayNote").textContent = intensity + " · " + milestone;
         Array.prototype.forEach.call(document.querySelectorAll(".tc-milestone"), function (node, i) {
-          node.classList.toggle("active", i === Math.max(0, week - 1));
+          node.classList.toggle("active", i === phaseIndex);
         });
       }
 
@@ -986,12 +1607,12 @@
         }).join("");
         $("tcQuizBack").disabled = step === 0;
         $("tcQuizNext").disabled = !answers[s.key];
-        $("tcQuizNext").textContent = step === quizSteps.length - 1 ? "Get my plan" : "Next";
+        $("tcQuizNext").textContent = step === quizSteps.length - 1 ? "Get my track" : "Next";
       }
 
       async function runQuiz() {
         var panel = $("tcQuizResult");
-        panel.innerHTML = '<div class="tc-result-empty"><strong>Finding your match…</strong><span>Matching you to a challenge, plan, and coach.</span></div>';
+        panel.innerHTML = '<div class="tc-result-empty"><strong>Finding your match…</strong><span>Matching you to a 90-day track, plan, and coach.</span></div>';
         try {
           var res = await fetch((window.fgApiUrl ? window.fgApiUrl("/api/quiz") : "/api/quiz"), {
             method: "POST",
@@ -1025,7 +1646,7 @@
             "<ul class='tc-reasons'>" + (data.reasons || []).map(function (r) { return "<li>" + safe(r) + "</li>"; }).join("") + "</ul>" +
             '<div class="tc-coaches">' + (coachHtml || "<p class='lead'>Browse coaches to pick your fit.</p>") + "</div>" +
             '<div class="tc-actions">' +
-              '<a class="primary-button" href="#tcJoin">Join ' + safe((challenge.name || "challenge").split(" ").slice(0, 2).join(" ")) + "</a>" +
+              '<a class="primary-button" href="#tcJoin">Join the 90 Day Challenge</a>' +
               '<a class="ghost-button" href="book-consultation.html">Book a consultation</a>' +
             "</div>";
         } catch (e) {
@@ -1086,7 +1707,7 @@
         $("tcJoinForm").addEventListener("submit", async function (e) {
           e.preventDefault();
           var status = $("tcJoinStatus");
-          status.textContent = "Saving to database…";
+          status.textContent = "Saving your seat…";
           var payload = Object.fromEntries(new FormData($("tcJoinForm")).entries());
           var candidates = (window.fgApiCandidates
             ? window.fgApiCandidates("/api/challenge-join")
@@ -1101,7 +1722,7 @@
               });
               var data = await res.json().catch(function () { return {}; });
               if (!res.ok || !data.ok) continue;
-              status.textContent = data.message || "You are in.";
+              status.textContent = data.message || "You’re in the 90 Day Challenge.";
               if (data.stats && data.stats.totalJoined != null) {
                 animateCount($("tcJoined"), data.stats.totalJoined);
               }
@@ -1117,12 +1738,12 @@
               name: payload.name,
               phone: payload.phone,
               email: payload.email,
-              program: payload.challengeId || "Transformation Challenge",
+              program: payload.challengeId || "90 Day Transformation Challenge",
               goal: "transformation",
-              message: "Challenge join request"
+              message: "90 Day Challenge join request"
             };
             var wa = window.fgWhatsAppLeadUrl ? window.fgWhatsAppLeadUrl(waPayload) : "https://wa.me/917207113310";
-            status.innerHTML = 'Could not save online. <a href="' + wa + '" target="_blank" rel="noopener" style="color:#4ade80;text-decoration:underline">Send join request on WhatsApp</a>';
+            status.innerHTML = 'Could not save online. <a href="' + wa + '" target="_blank" rel="noopener" style="color:#fff;text-decoration:underline">Send join request on WhatsApp</a>';
             try { window.open(wa, "_blank", "noopener"); } catch (err2) {}
           }
         });
@@ -1145,6 +1766,7 @@
       wire();
       renderQuiz();
       loadChallenges();
+      loadCoaches();
       loadLive();
       setInterval(loadLive, 45000);
     })();
