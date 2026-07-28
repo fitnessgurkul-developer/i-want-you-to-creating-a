@@ -1,0 +1,3 @@
+# Fitness Gurukul API — stdlib only (server.py).
+# No pip packages required. This file exists so Render's default
+# `pip install -r requirements.txt` build succeeds.
