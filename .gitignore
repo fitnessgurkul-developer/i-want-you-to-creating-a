@@ -14,3 +14,11 @@ api/data/*.json
 .DS_Store
 dist/
 .vercel/
+
+# Heavy media (host on CDN/Hostinger; Git LFS budget blocks Render)
+GALLERY/
+INDEX/
+screens/
+TESTIMONIALS/
+insta posts/
+coaches content/

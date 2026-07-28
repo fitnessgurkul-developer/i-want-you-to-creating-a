@@ -1,12 +1,12 @@
-GALLERY/** filter=lfs diff=lfs merge=lfs -text
-*.mp4 filter=lfs diff=lfs merge=lfs -text
-*.jpg filter=lfs diff=lfs merge=lfs -text
-*.png filter=lfs diff=lfs merge=lfs -text
+# Large media is NOT stored in Git LFS (budget exceeded breaks Render/Netlify clones).
+# Keep binaries as normal git objects only when small; heavy folders are gitignored.
 
-# Transformation composites — regular blobs (avoid LFS budget failures)
-udit.png !filter !diff !merge -text
-neha.png !filter !diff !merge -text
-deepak.png !filter !diff !merge -text
-ramakrishna.png !filter !diff !merge -text
-assets/fitness-gurukul-logo.png !filter !diff !merge -text
-assets/transforms/** !filter !diff !merge -text
+# Explicitly disable LFS filters for common media (overrides older LFS history patterns)
+*.png !filter !diff !merge -text
+*.jpg !filter !diff !merge -text
+*.jpeg !filter !diff !merge -text
+*.JPG !filter !diff !merge -text
+*.JPEG !filter !diff !merge -text
+*.mp4 !filter !diff !merge -text
+*.MP4 !filter !diff !merge -text
+GALLERY/** !filter !diff !merge -text

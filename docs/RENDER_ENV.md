@@ -63,3 +63,10 @@ Do this:
 3. The API does **not** need `GALLERY/**` images — skipping LFS is safe for `fitness-gurukul-api`.
 
 Repo also ships `.lfsconfig` so cloud clones skip LFS fetches by default.
+
+## Fix applied in repo (LFS removed from deploy tree)
+
+Heavy `GALLERY/`, `INDEX/`, `screens/`, `TESTIMONIALS/`, `insta posts/`, and `coaches content/` media were **removed from git** so Render no longer needs Git LFS during clone. Keep those folders on Hostinger/CDN if you still need the photos.
+
+After pulling this commit on Render: **Manual Deploy → Clear build cache & deploy**.
+
