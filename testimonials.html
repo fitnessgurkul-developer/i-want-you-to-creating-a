@@ -777,19 +777,19 @@
           <p>Member voices — tap a name to play. No event photos here.</p>
         </div>
         <div class="xf-video-rail xf-reveal" id="xfVideoRail">
-          <button class="xf-video-item" type="button" data-video="TESTIMONIALS/NEHA%20.mp4" aria-label="Play Neha Chopra testimonial video">
+          <button class="xf-video-item" type="button" data-video="assets/transforms/neha-video.webp" aria-label="Play Neha Chopra testimonial video">
             <div class="xf-video-copy"><strong>Neha Chopra</strong><span>Weight loss · her story on camera</span></div>
             <div class="xf-play" aria-hidden="true">▶</div>
           </button>
-          <button class="xf-video-item" type="button" data-video="TESTIMONIALS/TESTIMONAL%20FINAL.mp4" aria-label="Play Udit Narayan testimonial video">
+          <button class="xf-video-item" type="button" data-video="assets/transforms/udit-video.webp" aria-label="Play Udit Narayan testimonial video">
             <div class="xf-video-copy"><strong>Udit Narayan</strong><span>Body recomposition · on camera</span></div>
             <div class="xf-play" aria-hidden="true">▶</div>
           </button>
-          <button class="xf-video-item" type="button" data-video="TESTIMONIALS/FINAL%20TESTIMONIAL.mp4" aria-label="Play Ramakrishna testimonial video">
+          <button class="xf-video-item" type="button" data-video="assets/transforms/ramakrishna-video.webp" aria-label="Play Ramakrishna testimonial video">
             <div class="xf-video-copy"><strong>Ramakrishna</strong><span>Strength return · member voice</span></div>
             <div class="xf-play" aria-hidden="true">▶</div>
           </button>
-          <button class="xf-video-item" type="button" data-video="TESTIMONIALS/TESTOMONIAL%20VID%201.mp4" aria-label="Play Deepak testimonial video">
+          <button class="xf-video-item" type="button" data-video="assets/transforms/deepak-video.webp" aria-label="Play Deepak testimonial video">
             <div class="xf-video-copy"><strong>Deepak</strong><span>Energy rebuild · member voice</span></div>
             <div class="xf-play" aria-hidden="true">▶</div>
           </button>
@@ -909,7 +909,7 @@
           category: "Weight loss",
           image: "assets/transforms/neha.webp",
           thumb: "assets/transforms/neha-thumb.webp",
-          video: "TESTIMONIALS/NEHA%20.mp4",
+          video: "assets/transforms/neha-video.webp",
           story: "Years of stalled attempts ended when training and nutrition finally worked together — steady loss, more energy, and fitness she could enjoy.",
           quote: "I struggled with my weight for years. Nothing worked until I joined Fitness Gurukul. The combination of personalized training and nutrition coaching changed everything.",
           before: 82,
@@ -1135,7 +1135,11 @@
         o.setAttribute("aria-modal", "true");
         o.setAttribute("aria-label", "Transformation video");
         o.style.cssText = "position:fixed;inset:0;z-index:999999;background:rgba(0,0,0,0.92);display:flex;align-items:center;justify-content:center;padding:24px;";
-        o.innerHTML = '<div style="position:relative;width:min(900px,92vw)"><button type="button" aria-label="Close video" style="position:absolute;top:-42px;right:0;background:none;border:none;color:#fff;font-size:1.6rem;cursor:pointer">×</button><video controls autoplay playsinline preload="metadata" style="width:100%;border-radius:10px;background:#000;max-height:80vh"><source src="' + escapeHtml(src) + '" type="video/mp4"></video></div>';
+        var isVideo = /\.(mp4|webm|ogg)(\?|$)/i.test(src);
+        var media = isVideo
+          ? '<video controls autoplay playsinline preload="metadata" style="width:100%;border-radius:10px;background:#000;max-height:80vh"><source src="' + escapeHtml(src) + '" type="video/mp4"></video>'
+          : '<img src="' + escapeHtml(src) + '" alt="Transformation story" style="width:100%;border-radius:10px;background:#000;max-height:80vh;object-fit:contain" />';
+        o.innerHTML = '<div style="position:relative;width:min(900px,92vw)"><button type="button" aria-label="Close" style="position:absolute;top:-42px;right:0;background:none;border:none;color:#fff;font-size:1.6rem;cursor:pointer">×</button>' + media + '</div>';
         document.body.appendChild(o);
         document.body.style.overflow = "hidden";
         function close() {
