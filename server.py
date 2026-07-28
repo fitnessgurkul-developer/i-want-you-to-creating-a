@@ -89,7 +89,9 @@ DEFAULT_CORS_ORIGINS = (
     "https://fitnessgurukul.co.in,"
     "https://www.fitnessgurukul.co.in,"
     "https://fitnessgurukul.in,"
-    "https://www.fitnessgurukul.in"
+    "https://www.fitnessgurukul.in,"
+    "https://fitnessgurukul.app,"
+    "https://www.fitnessgurukul.app"
 )
 
 
