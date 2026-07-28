@@ -1,15 +1,13 @@
 /**
  * Fitness Gurukul — API endpoint config (keep simple)
  *
- * Default (recommended): FG_API_BASE = ""
- *   → Same-origin /api/* (Vercel Node functions OR Hostinger PHP)
- *   → On Vercel: /api/submit.js emails + optional Blob store
- *   → On Hostinger: /api/submit.php → submissions.json
+ * Production default: Render Python API for SQLite + lead email.
+ * Fallbacks (automatic): same-origin Vercel /api/* Node functions, then Hostinger PHP.
  *
- * Optional: set FG_API_BASE to a cloud Python URL (Render/Railway/Fly)
- * for SQLite + AI chat. Local: leave empty and run python3 server.py.
+ * Override anytime before this file loads, or edit the default below.
  */
-window.FG_API_BASE = window.FG_API_BASE || "";
+window.FG_API_BASE =
+  window.FG_API_BASE || "https://fitness-gurukul-api.onrender.com";
 
 (function (w) {
   var PHP_MAP = {
@@ -37,10 +35,10 @@ window.FG_API_BASE = window.FG_API_BASE || "";
     var primary = w.fgApiUrl(clean);
     if (primary) list.push(primary);
 
-    // Same-origin Python path (local server.py / same-host API).
+    // Same-origin (Vercel Node / local server.py / Hostinger).
     if (list.indexOf(clean) === -1) list.push(clean);
 
-    // Hostinger PHP fallback — always available if cloud/local API is down.
+    // Hostinger PHP fallback.
     if (PHP_MAP[clean] && list.indexOf(PHP_MAP[clean]) === -1) {
       list.push(PHP_MAP[clean]);
     }

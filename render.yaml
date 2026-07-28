@@ -10,8 +10,9 @@ services:
     envVars:
       - key: HOST
         value: "0.0.0.0"
+      # Keep the token already set in the Render dashboard (do not regenerate).
       - key: ADMIN_TOKEN
-        generateValue: true
+        sync: false
       - key: CORS_ORIGINS
         value: "*"
       - key: PYTHON_VERSION
@@ -20,3 +21,7 @@ services:
         value: "both"
       - key: LEAD_NOTIFY_EMAIL
         value: "contact@fitnessgurukul.co.in,fitnessgurukul01@gmail.com"
+      # Ephemeral on free tier; email is the durable copy of each lead.
+      # After you attach a disk at /var/data (paid), set DATA_DIR=/var/data in the dashboard.
+      - key: DATA_DIR
+        value: "/opt/render/project/src/data"

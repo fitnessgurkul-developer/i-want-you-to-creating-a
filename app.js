@@ -1930,14 +1930,26 @@ function rememberPendingLead(body) {
 }
 
 async function postJsonCandidate(url, body) {
-  var res = await fetch(url, {
-    method: "POST",
-    headers: { "Content-Type": "application/json", Accept: "application/json" },
-    body: JSON.stringify(body),
-  });
-  var data = {};
-  try { data = await res.json(); } catch (err) { data = {}; }
-  return { res: res, data: data, url: url };
+  var controller = typeof AbortController !== "undefined" ? new AbortController() : null;
+  var timer = null;
+  if (controller) {
+    timer = setTimeout(function () {
+      try { controller.abort(); } catch (e) {}
+    }, 8000);
+  }
+  try {
+    var res = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      body: JSON.stringify(body),
+      signal: controller ? controller.signal : undefined,
+    });
+    var data = {};
+    try { data = await res.json(); } catch (err) { data = {}; }
+    return { res: res, data: data, url: url };
+  } finally {
+    if (timer) clearTimeout(timer);
+  }
 }
 
 async function tryMailLeadFallback(body) {

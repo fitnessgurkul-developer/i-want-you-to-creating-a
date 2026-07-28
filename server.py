@@ -40,8 +40,14 @@ def resolve_db_path():
     data_dir = (os.environ.get("DATA_DIR") or "").strip()
     if data_dir:
         path = Path(data_dir)
-        path.mkdir(parents=True, exist_ok=True)
-        return path / "fitness_gurukul.sqlite3"
+        try:
+            path.mkdir(parents=True, exist_ok=True)
+            probe = path / ".write_test"
+            probe.write_text("ok", encoding="utf-8")
+            probe.unlink(missing_ok=True)
+            return path / "fitness_gurukul.sqlite3"
+        except Exception as exc:
+            print(f"DATA_DIR not writable ({data_dir}): {exc} — using repo folder")
     return ROOT / "fitness_gurukul.sqlite3"
 
 
