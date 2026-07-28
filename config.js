@@ -14,6 +14,8 @@ window.FG_API_BASE = window.FG_API_BASE || "";
   var PHP_MAP = {
     "/api/submit": "/api/submit.php",
     "/api/leads": "/api/submit.php",
+    "/api/lead-mail": "/api/lead-mail.php",
+    "/api/lead-digest": "/api/lead-digest.php",
     "/api/admin-data": "/api/admin-data.php",
     "/api/backend-info": "/api/backend-info.php",
     "/api/challenge-join": "/api/challenge-join.php",

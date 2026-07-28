@@ -13847,3 +13847,331 @@ from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:transl
 .coach-scroll-track .cc-card[data-coach-jump]:hover {
   outline: 1px solid rgba(255,255,255,0.45);
 }
+
+/* =========================================================
+   Mobile polish — full-site responsive hardening
+   ========================================================= */
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  padding-left: env(safe-area-inset-left, 0);
+  padding-right: env(safe-area-inset-right, 0);
+}
+
+img, video, iframe, svg {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Prevent iOS zoom on focus; keep comfortable touch targets */
+input,
+select,
+textarea,
+button,
+.primary-button,
+.secondary-button {
+  font-size: 16px;
+  max-width: 100%;
+}
+
+button,
+.primary-button,
+.secondary-button,
+.menu-button,
+.mobile-nav a,
+.header-cta,
+a.fg-wa-float {
+  min-height: 44px;
+}
+
+@media (max-width: 1020px) {
+  .site-header {
+    padding-top: env(safe-area-inset-top, 0);
+  }
+
+  .mobile-nav {
+    padding-top: max(16px, env(safe-area-inset-top, 0px));
+    padding-bottom: max(24px, env(safe-area-inset-bottom, 0px));
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .section-shell,
+  .hero-fittr-content,
+  .journey-section,
+  .plans-showcase-section,
+  .mg-hero,
+  .ev-hero,
+  .contact-hero,
+  .consult-page,
+  .footer-inner {
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+  }
+
+  h1 { font-size: clamp(2rem, 8vw, 2.75rem); line-height: 1.12; }
+  h2 { font-size: clamp(1.45rem, 6vw, 2rem); line-height: 1.2; }
+
+  .hero-fittr,
+  .hero-fittr--home {
+    min-height: min(100svh, 720px);
+  }
+
+  .feature-card {
+    flex: 0 0 min(78vw, 300px);
+  }
+
+  .footer-inner {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  .footer-brand-col { grid-column: auto; }
+
+  .fg-chatbot-panel,
+  #waWidget,
+  .fg-wa-float {
+    bottom: max(16px, env(safe-area-inset-bottom, 0px));
+    right: max(14px, env(safe-area-inset-right, 0px));
+  }
+}
+
+@media (max-width: 860px) {
+  .community-events,
+  .guide-layout,
+  .program-grid,
+  .detail-grid,
+  .coach-grid,
+  .testimonial-grid,
+  .contact-details,
+  .updates-list,
+  .footer-gallery-grid,
+  .ev-hsc-stats,
+  .mg-gallery-grid,
+  .ev-corp-mini,
+  .tour-grid,
+  .svc-how-grid,
+  .bw-testi-grid,
+  .footer-news-links,
+  .about-team-grid,
+  .services-api-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .home-proof-stage { min-height: 300px; }
+
+  .plans-grid,
+  .plan-modal-tiers,
+  .hp-pricing-grid {
+    grid-template-columns: 1fr;
+    max-width: 420px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .book-modal,
+  .coach-modal,
+  .plan-modal,
+  .auth-modal,
+  .consult-modal-card {
+    width: min(100%, calc(100vw - 24px)) !important;
+    max-width: 100% !important;
+    max-height: min(90svh, 900px);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .book-frm-row,
+  .cpf-row,
+  .cf-row,
+  .mg-corp-row,
+  .tc-join-form,
+  .contact-page-form,
+  .contact-form {
+    grid-template-columns: 1fr;
+  }
+
+  .cpf-row,
+  .cf-row {
+    display: grid;
+    gap: 12px;
+  }
+
+  table.compare-table,
+  table.admin-table,
+  .svc-compare-table {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .wk-carousel,
+  .fg-carousel-track,
+  .lives-scroll-track,
+  .coach-scroll-track,
+  .born-stars-track {
+    scroll-padding-inline: 16px;
+    padding-inline: 4px;
+  }
+
+  .cta-strip,
+  .booking-band,
+  .split-section {
+    grid-template-columns: 1fr;
+    text-align: left;
+  }
+
+  .cta-strip .primary-button,
+  .booking-band .primary-button,
+  .contact-page-form .primary-button,
+  .book-frm-row + .primary-button,
+  .cpf-submit,
+  .cf-submit {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 640px) {
+  body { font-size: 16px; }
+
+  .header-inner {
+    height: 56px;
+    padding-inline: 12px;
+  }
+
+  .brand-lockup span,
+  .brand-text {
+    font-size: 0.92rem;
+  }
+
+  .hero-fittr-content,
+  .ev-hero,
+  .mg-hero,
+  .contact-hero {
+    padding-top: 96px;
+    padding-bottom: 40px;
+  }
+
+  .hero-fittr-counters {
+    flex-wrap: wrap;
+    gap: 16px;
+    justify-content: flex-start;
+  }
+
+  .counter-num { font-size: 1.35rem; }
+
+  .section-shell { padding-block: 48px; }
+
+  .feature-card {
+    flex: 0 0 min(86vw, 280px);
+    min-height: 240px;
+    padding: 28px 22px;
+  }
+
+  .plan-card,
+  .svc-card-body,
+  .contact-form,
+  .contact-page-form,
+  .mg-corp-form-card,
+  .tc-join-form {
+    padding: 18px 14px;
+  }
+
+  .contact-page-form input,
+  .contact-page-form select,
+  .contact-page-form textarea,
+  .contact-form input,
+  .contact-form select,
+  .contact-form textarea,
+  .book-frm-row input,
+  .book-frm-row select,
+  .book-frm-row textarea,
+  .mg-corp-form-card input,
+  .mg-corp-form-card select,
+  .mg-corp-form-card textarea,
+  .tc-join-form input,
+  .tc-join-form select,
+  .cl-calc-form input,
+  .cl-calc-form select {
+    font-size: 16px;
+    padding: 12px;
+  }
+
+  .fg-chatbot-panel {
+    width: min(100vw - 20px, 380px);
+    right: 10px;
+    left: auto;
+    bottom: max(72px, calc(env(safe-area-inset-bottom, 0px) + 64px));
+    height: min(70svh, 520px);
+  }
+
+  .lives-card,
+  .fg-carousel-card,
+  .born-stars-slide {
+    flex: 0 0 min(78vw, 260px);
+  }
+
+  .program-logo-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+  .footer-refresh-grid,
+  .footer-topline {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+  }
+
+  .footer-cta { width: 100%; justify-content: center; }
+}
+
+@media (max-width: 480px) {
+  h1 { font-size: 1.85rem; }
+  h2 { font-size: 1.35rem; }
+
+  .primary-button,
+  .secondary-button {
+    padding: 12px 16px;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .plan-modal-cta-row .primary-button,
+  .cp-actions .primary-button {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .hp-trust-strip,
+  .events-fittr-counters,
+  .born-stars-stats {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .svc-hz-overlay-meta,
+  .svc-hz-overlay-table {
+    font-size: 0.78rem;
+  }
+
+  .svc-hz-overlay-table th,
+  .svc-hz-overlay-table td {
+    padding: 6px;
+  }
+
+  .coach-profile-layout,
+  .coach-hero,
+  .ix-split {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 380px) {
+  .header-inner { padding-inline: 10px; }
+  .brand-lockup img,
+  .brand-mark { width: 28px; height: 28px; }
+  .feature-card { flex: 0 0 88vw; padding: 22px 16px; }
+}

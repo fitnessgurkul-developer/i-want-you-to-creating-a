@@ -100,8 +100,32 @@ Do **not** deploy `server.py` as a Vercel/Netlify serverless function.
 
 - `POST /api/submit.php`
 - `POST /api/challenge-join.php`
+- `POST /api/lead-mail.php` — email/storage fallback (visitor never sees a failure)
+- `GET|POST /api/lead-digest.php?token=…` — combined lead email for the last 12 hours
 - `GET /api/admin-data.php` (owner password)
 - `POST /api/submission-status.php` / `submission-delete.php`
+
+### Lead email + 12-hour digest
+
+Configure in `api/config.php` (or env vars):
+
+| Setting | Values | Default |
+|---------|--------|---------|
+| `lead_notify_mode` | `instant`, `digest_12h`, `both`, `off` | `both` |
+| `lead_notify_email` | inbox for lead mail | `contact@fitnessgurukul.co.in` |
+| `lead_digest_hours` | window size | `12` |
+
+- **instant / both** — each new lead emails the inbox as it arrives
+- **digest_12h / both** — cron sends one combined email of all undigested leads in the window
+- If the database write fails, the API still emails the lead and returns success to the visitor
+
+Hostinger cron (every 12 hours):
+
+```bash
+0 */12 * * * curl -fsS "https://YOUR-DOMAIN/api/lead-digest.php?token=YOUR_ADMIN_OR_CRON_TOKEN"
+```
+
+Python cloud API uses the same paths (`/api/lead-mail`, `/api/lead-digest`) with optional `SMTP_*` env vars.
 
 Optional local/cloud Python (`server.py`) adds SQLite, chat, match/quiz, and the same lead APIs under `/api/*`.
 

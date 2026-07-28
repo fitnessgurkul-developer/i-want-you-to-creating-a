@@ -81,82 +81,203 @@ function fg_require_admin($config) {
   }
 }
 
-function fg_save_submission($storeFile, $payload) {
+function fg_normalize_lead($payload) {
   $formType = fg_clip($payload["form_type"] ?? "consultation", 64) ?: "consultation";
-  $name = fg_clip($payload["name"] ?? ($payload["contact_name"] ?? ""), 120);
-  $phone = fg_clip($payload["phone"] ?? "", 40);
-  $email = fg_clip($payload["email"] ?? "", 160);
-  $program = fg_clip($payload["program"] ?? "", 120);
-  $goal = fg_clip($payload["goal"] ?? "", 200);
-  $message = fg_clip($payload["message"] ?? "", 2000);
-  $coach = fg_clip($payload["coach"] ?? "", 120);
-  $company = fg_clip($payload["company"] ?? "", 160);
-  $eventType = fg_clip($payload["event_type"] ?? "", 120);
-  $attendees = fg_clip($payload["attendees"] ?? "", 80);
-  $preferredDate = fg_clip($payload["preferred_date"] ?? "", 80);
-  $budget = fg_clip($payload["budget"] ?? "", 80);
-  $location = fg_clip($payload["location"] ?? "", 160);
+  return [
+    "form_type" => $formType,
+    "name" => fg_clip($payload["name"] ?? ($payload["contact_name"] ?? ""), 120),
+    "phone" => fg_clip($payload["phone"] ?? "", 40),
+    "email" => fg_clip($payload["email"] ?? "", 160),
+    "program" => fg_clip($payload["program"] ?? "", 120),
+    "goal" => fg_clip($payload["goal"] ?? "", 200),
+    "message" => fg_clip($payload["message"] ?? "", 2000),
+    "coach" => fg_clip($payload["coach"] ?? "", 120),
+    "company" => fg_clip($payload["company"] ?? "", 160),
+    "event_type" => fg_clip($payload["event_type"] ?? "", 120),
+    "attendees" => fg_clip($payload["attendees"] ?? "", 80),
+    "preferred_date" => fg_clip($payload["preferred_date"] ?? "", 80),
+    "budget" => fg_clip($payload["budget"] ?? "", 80),
+    "location" => fg_clip($payload["location"] ?? "", 160),
+  ];
+}
 
+function fg_validate_lead($lead) {
+  $formType = $lead["form_type"] ?? "consultation";
   if ($formType === "corporate_event") {
     $missing = [];
     foreach ([
-      "company" => $company,
-      "contact_name" => $name,
-      "email" => $email,
-      "phone" => $phone,
-      "event_type" => $eventType,
-      "attendees" => $attendees,
+      "company" => $lead["company"] ?? "",
+      "contact_name" => $lead["name"] ?? "",
+      "email" => $lead["email"] ?? "",
+      "phone" => $lead["phone"] ?? "",
+      "event_type" => $lead["event_type"] ?? "",
+      "attendees" => $lead["attendees"] ?? "",
     ] as $field => $value) {
       if ($value === "") {
         $missing[] = $field;
       }
     }
-    if ($missing) {
-      return [null, $missing];
+    return $missing;
+  }
+  $missing = [];
+  foreach ([
+    "name" => $lead["name"] ?? "",
+    "phone" => $lead["phone"] ?? "",
+    "program" => $lead["program"] ?? "",
+    "goal" => $lead["goal"] ?? "",
+  ] as $field => $value) {
+    if ($value === "") {
+      $missing[] = $field;
     }
-  } else {
-    $missing = [];
-    foreach ([
-      "name" => $name,
-      "phone" => $phone,
-      "program" => $program,
-      "goal" => $goal,
-    ] as $field => $value) {
-      if ($value === "") {
-        $missing[] = $field;
-      }
+  }
+  return $missing;
+}
+
+function fg_format_lead_lines($lead) {
+  $lines = [];
+  $map = [
+    "Type" => $lead["form_type"] ?? "",
+    "Name" => $lead["name"] ?? "",
+    "Phone" => $lead["phone"] ?? "",
+    "Email" => $lead["email"] ?? "",
+    "Program" => $lead["program"] ?? "",
+    "Goal" => $lead["goal"] ?? "",
+    "Coach" => $lead["coach"] ?? "",
+    "Company" => $lead["company"] ?? "",
+    "Event" => $lead["event_type"] ?? "",
+    "Attendees" => $lead["attendees"] ?? "",
+    "Preferred date" => $lead["preferred_date"] ?? "",
+    "Budget" => $lead["budget"] ?? "",
+    "Location" => $lead["location"] ?? "",
+    "Notes" => $lead["message"] ?? "",
+  ];
+  foreach ($map as $label => $value) {
+    if ($value !== "" && $value !== null) {
+      $lines[] = $label . ": " . $value;
     }
-    if ($missing) {
-      return [null, $missing];
+  }
+  if (!empty($lead["created_at"])) {
+    $lines[] = "Received: " . gmdate("Y-m-d H:i:s", (int) $lead["created_at"]) . " UTC";
+  }
+  if (!empty($lead["id"])) {
+    $lines[] = "ID: " . $lead["id"];
+  }
+  return $lines;
+}
+
+function fg_send_mail($config, $subject, $body) {
+  $to = trim((string) ($config["lead_notify_email"] ?? $config["contact_email"] ?? ""));
+  if ($to === "") {
+    return false;
+  }
+  $from = trim((string) ($config["mail_from"] ?? "noreply@fitnessgurukul.co.in"));
+  $fromName = trim((string) ($config["mail_from_name"] ?? "Fitness Gurukul Leads"));
+  $headers = [
+    "MIME-Version: 1.0",
+    "Content-Type: text/plain; charset=UTF-8",
+    "From: " . sprintf('%s <%s>', $fromName, $from),
+    "Reply-To: " . ($config["contact_email"] ?? $from),
+    "X-Mailer: FitnessGurukul-PHP",
+  ];
+  $encodedSubject = "=?UTF-8?B?" . base64_encode($subject) . "?=";
+  return @mail($to, $encodedSubject, $body, implode("\r\n", $headers));
+}
+
+function fg_mail_single_lead($config, $lead, $reason = "new") {
+  $mode = strtolower((string) ($config["lead_notify_mode"] ?? "both"));
+  if ($mode === "off" && $reason !== "fallback") {
+    return false;
+  }
+  // Instant mail for: instant/both modes, or any storage/API fallback.
+  if ($reason !== "fallback" && $mode === "digest_12h") {
+    return false;
+  }
+  $name = $lead["name"] ?? "Lead";
+  $type = $lead["form_type"] ?? "consultation";
+  $prefix = $reason === "fallback" ? "[FG Lead · fallback] " : "[FG Lead] ";
+  $subject = $prefix . $type . " — " . $name;
+  $lines = fg_format_lead_lines($lead);
+  array_unshift($lines, "New Fitness Gurukul website lead (" . $reason . ").", "");
+  $lines[] = "";
+  $lines[] = "Open backend.html on the website to manage leads.";
+  return fg_send_mail($config, $subject, implode("\n", $lines));
+}
+
+function fg_mail_digest($config, $leads, $hours = 12) {
+  $count = count($leads);
+  if ($count === 0) {
+    return true;
+  }
+  $subject = "[FG Digest] " . $count . " lead" . ($count === 1 ? "" : "s") . " in last " . $hours . "h";
+  $chunks = [
+    "Fitness Gurukul combined lead digest",
+    "Window: last " . $hours . " hours",
+    "Total: " . $count,
+    str_repeat("-", 40),
+    "",
+  ];
+  $i = 1;
+  foreach ($leads as $lead) {
+    $chunks[] = "#" . $i;
+    foreach (fg_format_lead_lines($lead) as $line) {
+      $chunks[] = "  " . $line;
     }
+    $chunks[] = "";
+    $i++;
+  }
+  $chunks[] = "Open backend.html to update statuses.";
+  return fg_send_mail($config, $subject, implode("\n", $chunks));
+}
+
+function fg_require_cron_or_admin($config) {
+  $provided = fg_admin_token_from_request();
+  $cron = (string) ($config["cron_token"] ?? "");
+  $admin = (string) ($config["admin_token"] ?? "");
+  if ($provided !== "" && (
+    ($cron !== "" && hash_equals($cron, $provided)) ||
+    ($admin !== "" && hash_equals($admin, $provided))
+  )) {
+    return;
+  }
+  fg_json_out(["error" => "Unauthorized"], 401);
+}
+
+function fg_save_submission($storeFile, $payload) {
+  global $config;
+  $lead = fg_normalize_lead($payload);
+  $missing = fg_validate_lead($lead);
+  if ($missing) {
+    return [null, $missing, null];
   }
 
   $id = bin2hex(random_bytes(16));
-  $row = [
+  $row = array_merge($lead, [
     "id" => $id,
-    "form_type" => $formType,
-    "name" => $name,
-    "phone" => $phone,
-    "email" => $email,
-    "program" => $program,
-    "goal" => $goal,
-    "message" => $message,
-    "coach" => $coach,
-    "company" => $company,
-    "event_type" => $eventType,
-    "attendees" => $attendees,
-    "preferred_date" => $preferredDate,
-    "budget" => $budget,
-    "location" => $location,
     "status" => "new",
     "created_at" => time(),
     "source" => "hostinger-php",
-  ];
+    "emailed_at" => null,
+    "digested_at" => null,
+  ]);
 
   $rows = fg_load_submissions($storeFile);
   array_unshift($rows, $row);
-  if (!fg_save_submissions($storeFile, $rows)) {
-    return [null, ["storage"]];
+  $saved = fg_save_submissions($storeFile, $rows);
+  if (!$saved) {
+    // Storage failed — still try to email so the lead is not lost.
+    $mailed = fg_mail_single_lead($config, $row, "fallback");
+    return [null, ["storage"], ["mailed" => $mailed, "lead" => $row]];
   }
-  return [$id, null];
+
+  $mode = strtolower((string) ($config["lead_notify_mode"] ?? "both"));
+  $mailed = false;
+  if ($mode === "instant" || $mode === "both") {
+    $mailed = fg_mail_single_lead($config, $row, "new");
+    if ($mailed) {
+      $row["emailed_at"] = time();
+      $rows[0] = $row;
+      fg_save_submissions($storeFile, $rows);
+    }
+  }
+  return [$id, null, ["mailed" => $mailed, "lead" => $row]];
 }

@@ -1,17 +1,19 @@
 from http.server import ThreadingHTTPServer, SimpleHTTPRequestHandler
 from pathlib import Path
-from urllib.parse import urlparse, unquote
+from urllib.parse import urlparse, unquote, parse_qs
 from urllib import request as urlrequest
 import hmac
 import json
 import os
 import re
 import secrets
+import smtplib
 import socket
 import sqlite3
 import threading
 import time
 import uuid
+from email.message import EmailMessage
 
 ROOT = Path(__file__).parent.resolve()
 PUBLIC = ROOT
@@ -22,10 +24,12 @@ RATE_LIMITS = {
     "/api/chat": 20,
     "/api/submit": 30,
     "/api/leads": 30,
+    "/api/lead-mail": 40,
     "/api/calculations": 40,
     "/api/match": 40,
     "/api/quiz": 40,
     "/api/challenge-join": 20,
+    "/api/lead-digest": 10,
 }
 _rate_lock = threading.Lock()
 _rate_buckets = {}
@@ -595,8 +599,217 @@ def init_db():
         cols = {row["name"] for row in conn.execute("PRAGMA table_info(submissions)").fetchall()}
         if "status" not in cols:
             conn.execute("ALTER TABLE submissions ADD COLUMN status TEXT NOT NULL DEFAULT 'new'")
+        if "emailed_at" not in cols:
+            conn.execute("ALTER TABLE submissions ADD COLUMN emailed_at INTEGER")
+        if "digested_at" not in cols:
+            conn.execute("ALTER TABLE submissions ADD COLUMN digested_at INTEGER")
         conn.commit()
     DB_SCHEMA_READY = True
+
+
+def lead_notify_email():
+    return (
+        os.environ.get("FG_LEAD_EMAIL", "").strip()
+        or os.environ.get("LEAD_NOTIFY_EMAIL", "").strip()
+        or CONTACT.get("email")
+        or "contact@fitnessgurukul.co.in"
+    )
+
+
+def lead_notify_mode():
+    return (
+        os.environ.get("FG_LEAD_NOTIFY_MODE", "").strip()
+        or os.environ.get("LEAD_NOTIFY_MODE", "").strip()
+        or "both"
+    ).lower()
+
+
+def lead_digest_hours():
+    try:
+        hours = int(os.environ.get("FG_LEAD_DIGEST_HOURS") or os.environ.get("LEAD_DIGEST_HOURS") or "12")
+    except ValueError:
+        hours = 12
+    return max(1, hours)
+
+
+def cron_token():
+    return (
+        os.environ.get("FG_CRON_TOKEN", "").strip()
+        or os.environ.get("CRON_TOKEN", "").strip()
+        or admin_token()
+    )
+
+
+def format_lead_lines(lead):
+    mapping = [
+        ("Type", lead.get("form_type")),
+        ("Name", lead.get("name")),
+        ("Phone", lead.get("phone")),
+        ("Email", lead.get("email")),
+        ("Program", lead.get("program")),
+        ("Goal", lead.get("goal")),
+        ("Coach", lead.get("coach")),
+        ("Company", lead.get("company")),
+        ("Event", lead.get("event_type")),
+        ("Attendees", lead.get("attendees")),
+        ("Preferred date", lead.get("preferred_date")),
+        ("Budget", lead.get("budget")),
+        ("Location", lead.get("location")),
+        ("Notes", lead.get("message")),
+        ("ID", lead.get("id")),
+    ]
+    lines = [f"{label}: {value}" for label, value in mapping if value]
+    created = lead.get("created_at")
+    if created:
+        lines.append("Received: " + time.strftime("%Y-%m-%d %H:%M:%S UTC", time.gmtime(int(created))))
+    return lines
+
+
+def send_lead_email(subject, body):
+    """Send via SMTP when configured; otherwise best-effort localhost sendmail-style SMTP."""
+    to_addr = lead_notify_email()
+    if not to_addr:
+        return False
+    from_addr = (
+        os.environ.get("FG_MAIL_FROM", "").strip()
+        or os.environ.get("MAIL_FROM", "").strip()
+        or "noreply@fitnessgurukul.co.in"
+    )
+    msg = EmailMessage()
+    msg["Subject"] = subject
+    msg["From"] = from_addr
+    msg["To"] = to_addr
+    msg["Reply-To"] = CONTACT.get("email") or to_addr
+    msg.set_content(body)
+
+    host = os.environ.get("SMTP_HOST", "").strip()
+    user = os.environ.get("SMTP_USER", "").strip()
+    password = os.environ.get("SMTP_PASS", "").strip() or os.environ.get("SMTP_PASSWORD", "").strip()
+    try:
+        port = int(os.environ.get("SMTP_PORT", "587" if host else "25"))
+    except ValueError:
+        port = 587
+
+    try:
+        if host:
+            if port == 465:
+                with smtplib.SMTP_SSL(host, port, timeout=12) as smtp:
+                    if user:
+                        smtp.login(user, password)
+                    smtp.send_message(msg)
+            else:
+                with smtplib.SMTP(host, port, timeout=12) as smtp:
+                    smtp.ehlo()
+                    try:
+                        smtp.starttls()
+                        smtp.ehlo()
+                    except smtplib.SMTPException:
+                        pass
+                    if user:
+                        smtp.login(user, password)
+                    smtp.send_message(msg)
+            return True
+        # Local / Hostinger-style relay without explicit SMTP_* — try localhost.
+        with smtplib.SMTP("127.0.0.1", 25, timeout=8) as smtp:
+            smtp.send_message(msg)
+        return True
+    except Exception as exc:
+        print(f"lead email failed: {exc}")
+        return False
+
+
+def mail_single_lead(lead, reason="new"):
+    mode = lead_notify_mode()
+    if mode == "off" and reason != "fallback":
+        return False
+    if reason != "fallback" and mode == "digest_12h":
+        return False
+    name = lead.get("name") or "Lead"
+    form_type = lead.get("form_type") or "consultation"
+    prefix = "[FG Lead · fallback] " if reason == "fallback" else "[FG Lead] "
+    subject = f"{prefix}{form_type} — {name}"
+    lines = ["New Fitness Gurukul website lead (%s)." % reason, ""]
+    lines.extend(format_lead_lines(lead))
+    lines.extend(["", "Open /backend.html to manage leads."])
+    return send_lead_email(subject, "\n".join(lines))
+
+
+def mail_lead_digest(leads, hours=12):
+    count = len(leads)
+    if count == 0:
+        return True
+    subject = f"[FG Digest] {count} lead{'s' if count != 1 else ''} in last {hours}h"
+    chunks = [
+        "Fitness Gurukul combined lead digest",
+        f"Window: last {hours} hours",
+        f"Total: {count}",
+        "-" * 40,
+        "",
+    ]
+    for i, lead in enumerate(leads, 1):
+        chunks.append(f"#{i}")
+        for line in format_lead_lines(lead):
+            chunks.append("  " + line)
+        chunks.append("")
+    chunks.append("Open /backend.html to update statuses.")
+    return send_lead_email(subject, "\n".join(chunks))
+
+
+def require_cron_or_admin(handler):
+    token = cron_token()
+    if not token:
+        handler.send_json({"error": "Cron/admin token not configured"}, 503)
+        return False
+    query = parse_qs(urlparse(handler.path).query)
+    provided = (
+        handler.headers.get("X-Admin-Token")
+        or handler.headers.get("X-Admin-Password")
+        or (query.get("token") or [""])[0]
+        or ""
+    ).strip()
+    auth = (handler.headers.get("Authorization") or "").strip()
+    if not provided and auth.lower().startswith("bearer "):
+        provided = auth[7:].strip()
+    if not provided or not hmac.compare_digest(provided, token):
+        # Also accept ADMIN_TOKEN when CRON_TOKEN differs.
+        admin = admin_token()
+        if admin and provided and hmac.compare_digest(provided, admin):
+            return True
+        handler.send_json({"error": "Unauthorized"}, 401)
+        return False
+    return True
+
+
+def run_lead_digest():
+    hours = lead_digest_hours()
+    since = int(time.time()) - hours * 3600
+    mode = lead_notify_mode()
+    if mode in {"off", "instant"}:
+        return {
+            "ok": True,
+            "sent": False,
+            "reason": "lead_notify_mode=off" if mode == "off" else "lead_notify_mode=instant (digest disabled)",
+            "hours": hours,
+        }
+    with get_connection() as conn:
+        rows = conn.execute(
+            """SELECT * FROM submissions
+               WHERE created_at >= ?
+                 AND (digested_at IS NULL OR digested_at = 0)
+               ORDER BY created_at ASC""",
+            (since,),
+        ).fetchall()
+        pending = [row_to_submission(r) for r in rows]
+        if not pending:
+            return {"ok": True, "sent": False, "reason": "no_new_leads", "count": 0, "hours": hours}
+        sent = mail_lead_digest(pending, hours)
+        if not sent:
+            return {"ok": False, "sent": False, "error": "email send failed", "count": len(pending), "hours": hours}
+        now = int(time.time())
+        for lead in pending:
+            conn.execute("UPDATE submissions SET digested_at = ? WHERE id = ?", (now, lead["id"]))
+        conn.commit()
+    return {"ok": True, "sent": True, "count": len(pending), "hours": hours, "mode": mode, "engine": "python"}
 
 
 LOCAL_DEFAULT_PASSWORD = "Rr6OrZTsbxJNfWcqFzyBQehb"
@@ -707,46 +920,85 @@ def save_submission(payload):
     budget = clip(payload.get("budget"), 80)
     location = clip(payload.get("location"), 160)
 
+    lead = {
+        "form_type": form_type,
+        "name": name,
+        "phone": phone,
+        "email": email,
+        "program": program,
+        "goal": goal,
+        "message": message,
+        "coach": coach,
+        "company": company,
+        "event_type": event_type,
+        "attendees": attendees,
+        "preferred_date": preferred_date,
+        "budget": budget,
+        "location": location,
+    }
+
     if form_type == "corporate_event":
         missing = [field for field, value in [
             ("company", company), ("contact_name", name), ("email", email),
             ("phone", phone), ("event_type", event_type), ("attendees", attendees),
         ] if not value]
         if missing:
-            return None, missing
+            return None, missing, None
     else:
         missing = [field for field, value in [
             ("name", name), ("phone", phone), ("program", program), ("goal", goal),
         ] if not value]
         if missing:
-            return None, missing
+            return None, missing, None
 
     submission_id = uuid.uuid4().hex
     created_at = int(time.time())
-    with get_connection() as conn:
-        conn.execute(
-            """INSERT INTO submissions (
-                id, form_type, name, phone, email, program, goal, message, coach,
-                company, event_type, attendees, preferred_date, budget, location, status, created_at
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
-            (
-                submission_id, form_type, name, phone, email, program, goal, message, coach,
-                company, event_type, attendees, preferred_date, budget, location, "new", created_at,
-            ),
-        )
-        # Keep legacy leads table in sync for the owner-data viewer.
-        if form_type != "corporate_event":
+    lead["id"] = submission_id
+    lead["created_at"] = created_at
+    try:
+        with get_connection() as conn:
             conn.execute(
-                "INSERT INTO leads (name, phone, goal, program, message, created_at) VALUES (?, ?, ?, ?, ?, ?)",
-                (name, phone, goal or event_type or "consultation", program or event_type or "general", message, created_at),
+                """INSERT INTO submissions (
+                    id, form_type, name, phone, email, program, goal, message, coach,
+                    company, event_type, attendees, preferred_date, budget, location, status, created_at
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+                (
+                    submission_id, form_type, name, phone, email, program, goal, message, coach,
+                    company, event_type, attendees, preferred_date, budget, location, "new", created_at,
+                ),
             )
-        else:
-            conn.execute(
-                "INSERT INTO leads (name, phone, goal, program, message, created_at) VALUES (?, ?, ?, ?, ?, ?)",
-                (name, phone, event_type or "corporate_event", company or "corporate", message or f"{attendees} attendees", created_at),
-            )
-        conn.commit()
-    return submission_id, None
+            # Keep legacy leads table in sync for the owner-data viewer.
+            if form_type != "corporate_event":
+                conn.execute(
+                    "INSERT INTO leads (name, phone, goal, program, message, created_at) VALUES (?, ?, ?, ?, ?, ?)",
+                    (name, phone, goal or event_type or "consultation", program or event_type or "general", message, created_at),
+                )
+            else:
+                conn.execute(
+                    "INSERT INTO leads (name, phone, goal, program, message, created_at) VALUES (?, ?, ?, ?, ?, ?)",
+                    (name, phone, event_type or "corporate_event", company or "corporate", message or f"{attendees} attendees", created_at),
+                )
+            conn.commit()
+    except Exception as exc:
+        print(f"save_submission storage failed: {exc}")
+        mailed = mail_single_lead(lead, "fallback")
+        return None, ["storage"], {"mailed": mailed, "lead": lead}
+
+    mailed = False
+    mode = lead_notify_mode()
+    if mode in {"instant", "both"}:
+        mailed = mail_single_lead(lead, "new")
+        if mailed:
+            try:
+                with get_connection() as conn:
+                    conn.execute(
+                        "UPDATE submissions SET emailed_at = ? WHERE id = ?",
+                        (int(time.time()), submission_id),
+                    )
+                    conn.commit()
+            except Exception:
+                pass
+    return submission_id, None, {"mailed": mailed, "lead": lead}
 
 def build_chat_system_prompt():
     plan_lines = []
@@ -1175,6 +1427,10 @@ class handler(SimpleHTTPRequestHandler):
                     "model": os.environ.get("OPENAI_MODEL", "gpt-5.6").strip() or "gpt-5.6",
                     "suggestions": CHAT_SUGGESTIONS,
                 })
+            if path == "/api/lead-digest":
+                if not require_cron_or_admin(self):
+                    return
+                return self.send_json(run_lead_digest())
             if path == "/api/admin-data":
                 if not require_admin(self):
                     return
@@ -1307,10 +1563,67 @@ class handler(SimpleHTTPRequestHandler):
                     "email": payload.get("email"),
                     "coach": payload.get("coach"),
                 }
-            submission_id, missing = save_submission(payload)
+            submission_id, missing, meta = save_submission(payload)
             if missing:
+                if missing == ["storage"]:
+                    return self.send_json({
+                        "ok": True,
+                        "id": None,
+                        "savedToBackend": False,
+                        "mailed": bool(meta and meta.get("mailed")),
+                        "message": "Received. We'll be in touch shortly.",
+                        "fallback": "mail",
+                    }, 200)
                 return self.send_json({"ok": False, "error": "Missing required fields", "fields": missing}, 400)
-            return self.send_json({"ok": True, "id": submission_id, "message": "Saved."}, 201)
+            return self.send_json({
+                "ok": True,
+                "id": submission_id,
+                "savedToBackend": True,
+                "mailed": bool(meta and meta.get("mailed")),
+                "message": "Saved.",
+            }, 201)
+
+        if path == "/api/lead-mail":
+            # Soft email/storage fallback — never surface failure to the visitor.
+            submission_id, missing, meta = save_submission(payload if payload else {})
+            if missing and missing != ["storage"]:
+                # Still accept and try mailing whatever we got.
+                lead = {
+                    "form_type": clip(payload.get("form_type") or "consultation", 64),
+                    "name": clip(payload.get("name") or payload.get("contact_name"), 120),
+                    "phone": clip(payload.get("phone"), 40),
+                    "email": clip(payload.get("email"), 160),
+                    "program": clip(payload.get("program"), 120),
+                    "goal": clip(payload.get("goal"), 200),
+                    "message": clip(payload.get("message"), 2000),
+                    "coach": clip(payload.get("coach"), 120),
+                    "company": clip(payload.get("company"), 160),
+                    "event_type": clip(payload.get("event_type"), 120),
+                    "attendees": clip(payload.get("attendees"), 80),
+                    "id": "mail-" + uuid.uuid4().hex[:16],
+                    "created_at": int(time.time()),
+                }
+                mailed = False
+                if lead.get("name") or lead.get("phone"):
+                    mailed = mail_single_lead(lead, "fallback")
+                return self.send_json({
+                    "ok": True,
+                    "savedToBackend": False,
+                    "mailed": mailed,
+                    "message": "Thank you! We'll be in touch shortly.",
+                }, 200)
+            return self.send_json({
+                "ok": True,
+                "id": submission_id,
+                "savedToBackend": bool(submission_id),
+                "mailed": bool(meta and meta.get("mailed")),
+                "message": "Thank you! We'll be in touch shortly.",
+            }, 200)
+
+        if path == "/api/lead-digest":
+            if not require_cron_or_admin(self):
+                return
+            return self.send_json(run_lead_digest())
 
         if path == "/api/calculations":
             required = ["calculator", "title", "result"]
@@ -1353,14 +1666,26 @@ class handler(SimpleHTTPRequestHandler):
                 "message": clip(payload.get("message", "Joined from transformation-challenge page"), 500),
                 "coach": "",
             }
-            submission_id, missing = save_submission(join_payload)
+            submission_id, missing, meta = save_submission(join_payload)
             if missing:
+                if missing == ["storage"]:
+                    return self.send_json({
+                        "ok": True,
+                        "message": "You are in. A coach will reach out soon.",
+                        "challenge": challenge,
+                        "id": None,
+                        "savedToBackend": False,
+                        "mailed": bool(meta and meta.get("mailed")),
+                        "stats": challenges_payload(),
+                        "fallback": "mail",
+                    }, 200)
                 return self.send_json({"ok": False, "error": "Missing fields", "missing": missing}, 400)
             return self.send_json({
                 "ok": True,
                 "message": "You are in. A coach will reach out soon.",
                 "challenge": challenge,
                 "id": submission_id,
+                "mailed": bool(meta and meta.get("mailed")),
                 "stats": challenges_payload(),
             }, 201)
 

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Transformation Challenge | Fitness Gurukul</title>
   <meta name="description" content="Join Fitness Gurukul transformation challenges in Hyderabad. Take a quick quiz for a plan recommendation, pick a challenge, and start with coach support." />
   <link rel="canonical" href="https://www.fitnessgurukul.co.in/transformation-challenge.html" />
@@ -1086,7 +1086,7 @@
         $("tcJoinForm").addEventListener("submit", async function (e) {
           e.preventDefault();
           var status = $("tcJoinStatus");
-          status.textContent = "Saving to database…";
+          status.textContent = "Sending…";
           var payload = Object.fromEntries(new FormData($("tcJoinForm")).entries());
           var candidates = (window.fgApiCandidates
             ? window.fgApiCandidates("/api/challenge-join")
@@ -1101,7 +1101,8 @@
               });
               var data = await res.json().catch(function () { return {}; });
               if (!res.ok || !data.ok) continue;
-              status.textContent = data.message || "You are in.";
+              status.textContent = data.message || "You are in. We'll be in touch shortly.";
+              status.style.color = "#4ade80";
               if (data.stats && data.stats.totalJoined != null) {
                 animateCount($("tcJoined"), data.stats.totalJoined);
               }
@@ -1112,7 +1113,7 @@
             } catch (err) {}
           }
           if (!saved) {
-            var waPayload = {
+            var mailPayload = {
               form_type: "challenge-join",
               name: payload.name,
               phone: payload.phone,
@@ -1121,9 +1122,30 @@
               goal: "transformation",
               message: "Challenge join request"
             };
-            var wa = window.fgWhatsAppLeadUrl ? window.fgWhatsAppLeadUrl(waPayload) : "https://wa.me/917207113310";
-            status.innerHTML = 'Could not save online. <a href="' + wa + '" target="_blank" rel="noopener" style="color:#4ade80;text-decoration:underline">Send join request on WhatsApp</a>';
-            try { window.open(wa, "_blank", "noopener"); } catch (err2) {}
+            try {
+              var mailCandidates = window.fgApiCandidates
+                ? window.fgApiCandidates("/api/lead-mail")
+                : ["/api/lead-mail", "/api/lead-mail.php"];
+              for (var m = 0; m < mailCandidates.length; m++) {
+                try {
+                  var mres = await fetch(mailCandidates[m], {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json", Accept: "application/json" },
+                    body: JSON.stringify(mailPayload)
+                  });
+                  if (mres.ok) break;
+                } catch (mailErr) {}
+              }
+            } catch (mailOuter) {}
+            try {
+              var key = "fg_pending_leads";
+              var pending = JSON.parse(localStorage.getItem(key) || "[]");
+              if (!Array.isArray(pending)) pending = [];
+              pending.unshift(Object.assign({ savedAt: Date.now() }, mailPayload));
+              localStorage.setItem(key, JSON.stringify(pending.slice(0, 40)));
+            } catch (lsErr) {}
+            status.textContent = "You are in. We'll be in touch shortly.";
+            status.style.color = "#4ade80";
           }
         });
 

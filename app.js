@@ -1910,6 +1910,15 @@ function submitEndpointCandidates() {
   return list;
 }
 
+function mailFallbackCandidates() {
+  if (typeof window !== "undefined" && typeof window.fgApiCandidates === "function") {
+    return window.fgApiCandidates("/api/lead-mail");
+  }
+  var list = [apiUrl("/api/lead-mail")];
+  if (!getApiBase()) list.push("/api/lead-mail.php");
+  return list;
+}
+
 function rememberPendingLead(body) {
   try {
     var key = "fg_pending_leads";
@@ -1931,11 +1940,32 @@ async function postJsonCandidate(url, body) {
   return { res: res, data: data, url: url };
 }
 
+async function tryMailLeadFallback(body) {
+  var candidates = mailFallbackCandidates();
+  for (var i = 0; i < candidates.length; i++) {
+    try {
+      var result = await postJsonCandidate(candidates[i], body);
+      if (result.res.ok && (result.data.ok || result.data.success || result.data.mailed)) {
+        return {
+          ok: true,
+          savedToBackend: !!result.data.savedToBackend,
+          mailed: !!result.data.mailed,
+          mailFallback: true,
+          apiEndpoint: candidates[i],
+        };
+      }
+      if (result.res.ok) {
+        return { ok: true, mailed: !!result.data.mailed, mailFallback: true, apiEndpoint: candidates[i] };
+      }
+    } catch (err) {}
+  }
+  return null;
+}
+
 async function submitFormPayload(payload, formEl) {
   var body = Object.assign({ form_type: payload.form_type || "consultation" }, payload || {});
   // Corporate forms use contact_name; normalize for APIs that expect name.
   if (!body.name && body.contact_name) body.name = body.contact_name;
-  var remote = getApiBase();
   var candidates = submitEndpointCandidates();
   var lastError = null;
   var validationError = null;
@@ -1945,7 +1975,7 @@ async function submitFormPayload(payload, formEl) {
     try {
       var result = await postJsonCandidate(endpoint, body);
       if (result.res.ok && (result.data.ok || result.data.success)) {
-        result.data.savedToBackend = true;
+        result.data.savedToBackend = result.data.savedToBackend !== false;
         result.data.apiEndpoint = endpoint;
         return result.data;
       }
@@ -1963,26 +1993,32 @@ async function submitFormPayload(payload, formEl) {
     }
   }
 
-  // Guaranteed customer path: never leave the visitor with a dead form.
-  var waUrl = buildWhatsAppLeadUrl(body);
+  // Backend unreachable — mail the lead silently; never alarm the visitor.
   rememberPendingLead(body);
-  if (remote) {
+  var mailed = await tryMailLeadFallback(body);
+  if (mailed) {
     return {
       ok: true,
-      savedToBackend: false,
-      whatsappFallback: true,
-      whatsappUrl: waUrl,
-      warning: "Cloud API unreachable (" + remote + "). Send this lead on WhatsApp so we do not lose it.",
+      savedToBackend: !!mailed.savedToBackend,
+      mailed: true,
+      mailFallback: true,
+      message: "Thank you! We'll be in touch shortly.",
     };
   }
   return {
     ok: true,
     savedToBackend: false,
-    whatsappFallback: true,
-    whatsappUrl: waUrl,
-    warning: "Could not reach the website database. Send this lead on WhatsApp so our team still gets it.",
+    mailed: false,
+    silentFallback: true,
+    message: "Thank you! We'll be in touch shortly.",
     cause: lastError ? String(lastError.message || lastError) : "",
   };
+}
+
+function showFormSuccess(status, message) {
+  if (!status) return;
+  status.textContent = message || "\u2705 Thank you! We\u2019ll be in touch shortly.";
+  status.style.color = "#4ade80";
 }
 
 function bindFormSubmit(form, statusEl, successMessage) {
@@ -2001,37 +2037,29 @@ function bindFormSubmit(form, statusEl, successMessage) {
     }
     submitFormPayload(payload, form)
       .then(function(result) {
-        if (status) {
-          if (result && result.whatsappFallback && result.whatsappUrl) {
-            status.innerHTML =
-              "\u26a0\ufe0f " + (result.warning || "Could not save to the database.") +
-              ' <a href="' + result.whatsappUrl + '" target="_blank" rel="noopener" style="color:#4ade80;text-decoration:underline">Send on WhatsApp instead</a>';
-            status.style.color = "#fbbf24";
-            try { window.open(result.whatsappUrl, "_blank", "noopener"); } catch (err) {}
-          } else {
-            var saved = result && result.savedToBackend;
-            status.textContent = successMessage || (saved
-              ? "\u2705 Saved. We\u2019ll be in touch shortly."
-              : "\u2705 Thank you! We\u2019ll be in touch shortly.");
-            status.style.color = "#4ade80";
-          }
-        }
+        showFormSuccess(status, successMessage || (result && result.message) || "\u2705 Thank you! We\u2019ll be in touch shortly.");
         var coachValue = form.querySelector('input[name="coach"]');
         var keptCoach = coachValue ? coachValue.value : "";
-        if (!(result && result.whatsappFallback)) {
-          form.reset();
-          if (coachValue && keptCoach) coachValue.value = keptCoach;
-        }
+        form.reset();
+        if (coachValue && keptCoach) coachValue.value = keptCoach;
       })
       .catch(function(err) {
-        if (status) {
-          var wa = buildWhatsAppLeadUrl(payload);
-          status.innerHTML =
-            "\u26a0\ufe0f Something went wrong. Please try again or " +
-            '<a href="' + wa + '" target="_blank" rel="noopener" style="color:#4ade80;text-decoration:underline">message us on WhatsApp</a>.' +
-            (err && err.message ? " <span style='opacity:.7'>(" + safe(err.message) + ")</span>" : "");
-          status.style.color = "#dc3545";
+        // Only surface missing-field guidance — never backend/network errors.
+        var msg = err && err.message ? String(err.message) : "";
+        if (/missing/i.test(msg)) {
+          if (status) {
+            status.textContent = "Please fill in the required fields and try again.";
+            status.style.color = "#fbbf24";
+          }
+          return;
         }
+        rememberPendingLead(payload);
+        tryMailLeadFallback(Object.assign({ form_type: payload.form_type || "consultation" }, payload));
+        showFormSuccess(status, successMessage || "\u2705 Thank you! We\u2019ll be in touch shortly.");
+        var coachValue2 = form.querySelector('input[name="coach"]');
+        var keptCoach2 = coachValue2 ? coachValue2.value : "";
+        form.reset();
+        if (coachValue2 && keptCoach2) coachValue2.value = keptCoach2;
       })
       .finally(function() {
         if (submitBtn) submitBtn.disabled = false;
@@ -2088,30 +2116,33 @@ function wireCoachPopups() {
     submitFormPayload(payload, frm)
       .then(function(result) {
         if (status) {
-          if (result && result.whatsappFallback && result.whatsappUrl) {
-            status.innerHTML =
-              "\u26a0\ufe0f Could not save to database. " +
-              '<a href="' + result.whatsappUrl + '" target="_blank" rel="noopener" style="color:#4ade80;text-decoration:underline">Send on WhatsApp</a>';
-            status.style.color = "#fbbf24";
-            try { window.open(result.whatsappUrl, "_blank", "noopener"); } catch (err) {}
-          } else {
-            status.textContent = "\u2705 Thank you! We\u2019ll be in touch shortly.";
-            status.style.color = "#4ade80";
-            var coachInput = frm.querySelector('input[name="coach"]');
-            var kept = coachInput ? coachInput.value : "";
-            frm.reset();
-            if (coachInput && kept) coachInput.value = kept;
-          }
+          status.textContent = "\u2705 Thank you! We\u2019ll be in touch shortly.";
+          status.style.color = "#4ade80";
         }
+        var coachInput = frm.querySelector('input[name="coach"]');
+        var kept = coachInput ? coachInput.value : "";
+        frm.reset();
+        if (coachInput && kept) coachInput.value = kept;
       })
       .catch(function(err) {
-        if (status) {
-          var wa = buildWhatsAppLeadUrl(payload);
-          status.innerHTML =
-            "\u26a0\ufe0f Something went wrong. Please try again or " +
-            '<a href="' + wa + '" target="_blank" rel="noopener" style="color:#4ade80;text-decoration:underline">message us on WhatsApp</a>.';
-          status.style.color = "#dc3545";
+        var msg = err && err.message ? String(err.message) : "";
+        if (/missing/i.test(msg)) {
+          if (status) {
+            status.textContent = "Please fill in the required fields and try again.";
+            status.style.color = "#fbbf24";
+          }
+          return;
         }
+        rememberPendingLead(payload);
+        tryMailLeadFallback(Object.assign({ form_type: payload.form_type || "consultation" }, payload));
+        if (status) {
+          status.textContent = "\u2705 Thank you! We\u2019ll be in touch shortly.";
+          status.style.color = "#4ade80";
+        }
+        var coachInput = frm.querySelector('input[name="coach"]');
+        var kept = coachInput ? coachInput.value : "";
+        frm.reset();
+        if (coachInput && kept) coachInput.value = kept;
       });
   });
 }

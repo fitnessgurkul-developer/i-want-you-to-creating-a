@@ -20,8 +20,28 @@ $join = [
   "coach" => "",
 ];
 
-list($id, $missing) = fg_save_submission($storeFile, $join);
+list($id, $missing, $meta) = fg_save_submission($storeFile, $join);
 if ($missing) {
+  if ($missing === ["storage"]) {
+    $rows = fg_load_submissions($storeFile);
+    $joined = 0;
+    foreach ($rows as $row) {
+      if (($row["form_type"] ?? "") === "challenge-join") {
+        $joined++;
+      }
+    }
+    fg_json_out([
+      "ok" => true,
+      "message" => "You are in. A coach will reach out soon.",
+      "id" => null,
+      "savedToBackend" => false,
+      "mailed" => !empty($meta["mailed"]),
+      "challenge" => ["id" => $challengeId, "name" => $challengeName],
+      "stats" => ["totalJoined" => $joined + 1],
+      "engine" => "hostinger-php",
+      "fallback" => "mail",
+    ], 200);
+  }
   fg_json_out(["ok" => false, "error" => "Missing fields", "missing" => $missing], 400);
 }
 
@@ -37,6 +57,7 @@ fg_json_out([
   "ok" => true,
   "message" => "You are in. A coach will reach out soon.",
   "id" => $id,
+  "mailed" => !empty($meta["mailed"]),
   "challenge" => ["id" => $challengeId, "name" => $challengeName],
   "stats" => ["totalJoined" => $joined],
   "engine" => "hostinger-php",

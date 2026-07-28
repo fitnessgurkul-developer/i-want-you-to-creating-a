@@ -14,12 +14,29 @@ if (!is_array($payload) || !$payload) {
   fg_json_out(["error" => "Invalid JSON"], 400);
 }
 
-list($id, $missing) = fg_save_submission($storeFile, $payload);
+list($id, $missing, $meta) = fg_save_submission($storeFile, $payload);
 if ($missing) {
   if ($missing === ["storage"]) {
-    fg_json_out(["ok" => false, "error" => "Could not write database file. Check api/data permissions."], 500);
+    // Never fail the visitor — lead was emailed as fallback when possible.
+    $mailed = !empty($meta["mailed"]);
+    fg_json_out([
+      "ok" => true,
+      "id" => null,
+      "savedToBackend" => false,
+      "mailed" => $mailed,
+      "message" => "Received. We'll be in touch shortly.",
+      "engine" => "hostinger-php",
+      "fallback" => "mail",
+    ], 200);
   }
   fg_json_out(["ok" => false, "error" => "Missing required fields", "fields" => $missing], 400);
 }
 
-fg_json_out(["ok" => true, "id" => $id, "message" => "Saved.", "engine" => "hostinger-php"], 201);
+fg_json_out([
+  "ok" => true,
+  "id" => $id,
+  "savedToBackend" => true,
+  "mailed" => !empty($meta["mailed"]),
+  "message" => "Saved.",
+  "engine" => "hostinger-php",
+], 201);
