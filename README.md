@@ -68,11 +68,28 @@ window.FG_API_BASE = "";
 | Host | How |
 |------|-----|
 | **Hostinger** | Upload site files + `/api/*.php`. Forms → `submit.php`. Owner → `backend.html`. |
-| **Vercel** | Connect GitHub. Uses `vercel.json` → builds `dist/` (static only). |
+| **Vercel** | Connect GitHub. `vercel.json` builds static site **plus** `/api/*` Node functions for leads + email. |
 | **Netlify** | Connect GitHub. Uses `netlify.toml` → publishes `dist/`. |
 | **Any static host** | Run `bash scripts/prepare-netlify-dist.sh` and upload the `dist/` folder. |
 
-Leads on Hostinger: `/api/submit.php` → `api/data/submissions.json`. Password in `api/config.php`. If PHP is down, forms fall back to WhatsApp.
+### Vercel forms + email (required for production on Vercel)
+
+Forms POST to same-origin `/api/submit` (Node). Each lead is emailed and optionally stored in Vercel Blob.
+
+Set these in the Vercel project → **Settings → Environment Variables**:
+
+| Variable | Purpose |
+|----------|---------|
+| `RESEND_API_KEY` | Reliable email (recommended) |
+| `LEAD_NOTIFY_EMAIL` | Inbox(es), comma-separated |
+| `LEAD_FROM_EMAIL` | Verified Resend from-address |
+| `BLOB_READ_WRITE_TOKEN` | Durable lead list for `backend.html` |
+| `ADMIN_TOKEN` | Owner portal + digest cron auth |
+| `CRON_SECRET` | Optional; Vercel cron Authorization bearer |
+
+Without `RESEND_API_KEY`, the function falls back to **FormSubmit.co** (confirm the first activation email). A 12-hour digest cron is defined in `vercel.json`.
+
+Leads on Hostinger: `/api/submit.php` → `api/data/submissions.json`. Password in `api/config.php`. On Vercel, PHP is not used — Node `/api/submit` handles forms.
 
 ## Optional: cloud Python API
 

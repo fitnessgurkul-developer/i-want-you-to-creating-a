@@ -511,13 +511,20 @@
           hint.style.background = "rgba(74,222,128,0.08)";
           hint.style.borderColor = "rgba(74,222,128,0.28)";
           hint.style.color = "#bbf7d0";
-          hint.innerHTML = "Hostinger mode: forms save via <code>/api/submit.php</code> into <code>api/data/submissions.json</code>. Unlock with the password in <code>api/config.php</code>.";
+          hint.innerHTML = "Production mode: forms POST to <code>/api/submit</code> (Vercel Node email+store, or Hostinger PHP). Unlock with <code>ADMIN_TOKEN</code> / <code>api/config.php</code>.";
         }
         var info = null;
         try {
           var infoResult = await fetchFirstOk(apiCandidates("/api/backend-info"));
           info = infoResult.json;
         } catch (e) {}
+        if (info && info.engine === "vercel-function") {
+          hint.classList.remove("hidden");
+          hint.style.background = "rgba(74,222,128,0.08)";
+          hint.style.borderColor = "rgba(74,222,128,0.28)";
+          hint.style.color = "#bbf7d0";
+          hint.innerHTML = "Vercel mode: leads are emailed (+ Blob store when <code>BLOB_READ_WRITE_TOKEN</code> is set). Unlock with Vercel env <code>ADMIN_TOKEN</code>.";
+        }
         if (info && info.mode === "local-default") {
           hint.classList.remove("hidden");
           hint.innerHTML = info.hint || "Local owner backend ready. Enter the password from <code>.env</code> / <code>ADMIN_TOKEN</code>.";

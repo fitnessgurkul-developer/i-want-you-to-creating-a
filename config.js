@@ -2,8 +2,9 @@
  * Fitness Gurukul — API endpoint config (keep simple)
  *
  * Default (recommended): FG_API_BASE = ""
- *   → Hostinger /api/*.php + backend.html owner portal
- *   → WhatsApp fallback if PHP is down
+ *   → Same-origin /api/* (Vercel Node functions OR Hostinger PHP)
+ *   → On Vercel: /api/submit.js emails + optional Blob store
+ *   → On Hostinger: /api/submit.php → submissions.json
  *
  * Optional: set FG_API_BASE to a cloud Python URL (Render/Railway/Fly)
  * for SQLite + AI chat. Local: leave empty and run python3 server.py.

@@ -13,3 +13,4 @@ api/data/*.json
 *.bak
 .DS_Store
 dist/
+.vercel/

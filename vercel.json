@@ -2,12 +2,11 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": null,
   "installCommand": "echo skip-install",
-  "buildCommand": "bash scripts/prepare-netlify-dist.sh",
-  "outputDirectory": "dist",
-  "rewrites": [
-    { "source": "/backend", "destination": "/backend.html" },
-    { "source": "/office", "destination": "/backend.html" },
-    { "source": "/owner", "destination": "/backend.html" },
-    { "source": "/admin", "destination": "/backend.html" }
+  "buildCommand": "bash scripts/prepare-vercel.sh",
+  "crons": [
+    {
+      "path": "/api/lead-digest",
+      "schedule": "0 */12 * * *"
+    }
   ]
 }
