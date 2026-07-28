@@ -24,3 +24,9 @@ data
 GALLERY
 INDEX
 screens
+# PHP endpoints are Hostinger-only; Vercel uses api/submit.js instead.
+api/*.php
+api/bootstrap.php
+api/config.php
+api/data
+netlify

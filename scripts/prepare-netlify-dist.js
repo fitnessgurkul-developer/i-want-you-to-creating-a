@@ -47,14 +47,22 @@ function copyFile(src, dest) {
   fs.copyFileSync(src, dest);
 }
 
-function copyDir(src, dest) {
+function copyDir(src, dest, opts) {
   if (!fs.existsSync(src)) return;
+  const skipExt = (opts && opts.skipExt) || [];
   fs.mkdirSync(dest, { recursive: true });
   for (const entry of fs.readdirSync(src, { withFileTypes: true })) {
     const from = path.join(src, entry.name);
     const to = path.join(dest, entry.name);
-    if (entry.isDirectory()) copyDir(from, to);
-    else copyFile(from, to);
+    if (entry.isDirectory()) {
+      // Skip Node/serverless source folders inside api/
+      if (entry.name === "node_modules" || entry.name.startsWith(".")) continue;
+      copyDir(from, to, opts);
+    } else {
+      const ext = path.extname(entry.name).toLowerCase();
+      if (skipExt.includes(ext)) continue;
+      copyFile(from, to);
+    }
   }
 }
 
@@ -73,7 +81,11 @@ for (const file of files) {
 for (const dir of dirs) {
   const src = path.join(root, dir);
   if (fs.existsSync(src)) {
-    try { copyDir(src, path.join(dist, dir)); } catch (err) {
+    try {
+      // Keep PHP for Hostinger uploads; do not copy Vercel/Netlify JS into static dist.
+      const opts = dir === "api" ? { skipExt: [".js", ".mjs", ".cjs", ".ts", ".mts"] } : undefined;
+      copyDir(src, path.join(dist, dir), opts);
+    } catch (err) {
       console.warn("skip dir", dir, err.message);
     }
   }

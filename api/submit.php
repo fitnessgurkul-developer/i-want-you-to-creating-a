@@ -22,4 +22,7 @@ if ($missing) {
   fg_json_out(["ok" => false, "error" => "Missing required fields", "fields" => $missing], 400);
 }
 
+// Send email notification to both addresses
+fg_send_lead_email($payload, $config);
+
 fg_json_out(["ok" => true, "id" => $id, "message" => "Saved.", "engine" => "hostinger-php"], 201);
