@@ -3,7 +3,7 @@
  * Combined email of undigested leads (cron every 12h).
  *
  * vercel.json cron example:
- *   { "path": "/api/lead-digest?token=YOUR_TOKEN", "schedule": "0 */12 * * *" }
+ *   path /api/lead-digest , schedule 0 every-12-hours
  */
 const {
   applyCors,
