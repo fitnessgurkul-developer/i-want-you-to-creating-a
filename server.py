@@ -608,12 +608,19 @@ def init_db():
 
 
 def lead_notify_email():
-    return (
+    """Primary inbox (first address if comma-separated)."""
+    emails = lead_notify_emails()
+    return emails[0] if emails else "contact@fitnessgurukul.co.in"
+
+
+def lead_notify_emails():
+    raw = (
         os.environ.get("FG_LEAD_EMAIL", "").strip()
         or os.environ.get("LEAD_NOTIFY_EMAIL", "").strip()
         or CONTACT.get("email")
         or "contact@fitnessgurukul.co.in"
     )
+    return [part.strip() for part in raw.split(",") if part.strip()]
 
 
 def lead_notify_mode():
@@ -668,10 +675,57 @@ def format_lead_lines(lead):
     return lines
 
 
-def send_lead_email(subject, body):
-    """Send via SMTP when configured; otherwise best-effort localhost sendmail-style SMTP."""
+def send_via_formsubmit(subject, body, lead=None):
+    """Keyless email fallback for Render/cloud when SMTP is not configured."""
+    if (os.environ.get("FORMSUBMIT_DISABLE") or "").strip() == "1":
+        return False
     to_addr = lead_notify_email()
     if not to_addr:
+        return False
+    lead = lead or {}
+    payload = {
+        "_subject": subject,
+        "_template": "table",
+        "_captcha": "false",
+        "name": lead.get("name") or "Lead",
+        "phone": lead.get("phone") or "",
+        "email": lead.get("email") or "noreply@fitnessgurukul.co.in",
+        "_replyto": lead.get("email") or to_addr,
+        "form_type": lead.get("form_type") or "consultation",
+        "program": lead.get("program") or "",
+        "goal": lead.get("goal") or "",
+        "coach": lead.get("coach") or "",
+        "company": lead.get("company") or "",
+        "event_type": lead.get("event_type") or "",
+        "attendees": lead.get("attendees") or "",
+        "message": body,
+        "lead_id": lead.get("id") or "",
+    }
+    data = json.dumps(payload).encode("utf-8")
+    req = urlrequest.Request(
+        f"https://formsubmit.co/ajax/{to_addr}",
+        data=data,
+        headers={
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "User-Agent": "FitnessGurukul-Render/1.0",
+        },
+        method="POST",
+    )
+    try:
+        with urlrequest.urlopen(req, timeout=15) as resp:
+            ok = 200 <= getattr(resp, "status", 200) < 300
+            if ok:
+                print(f"lead email sent via FormSubmit → {to_addr}")
+            return ok
+    except Exception as exc:
+        print(f"FormSubmit email failed: {exc}")
+        return False
+
+
+def send_via_smtp(subject, body):
+    to_addrs = lead_notify_emails()
+    if not to_addrs:
         return False
     from_addr = (
         os.environ.get("FG_MAIL_FROM", "").strip()
@@ -681,8 +735,8 @@ def send_lead_email(subject, body):
     msg = EmailMessage()
     msg["Subject"] = subject
     msg["From"] = from_addr
-    msg["To"] = to_addr
-    msg["Reply-To"] = CONTACT.get("email") or to_addr
+    msg["To"] = ", ".join(to_addrs)
+    msg["Reply-To"] = CONTACT.get("email") or to_addrs[0]
     msg.set_content(body)
 
     host = os.environ.get("SMTP_HOST", "").strip()
@@ -693,32 +747,43 @@ def send_lead_email(subject, body):
     except ValueError:
         port = 587
 
+    if not host:
+        # Render/cloud has no local MTA — skip localhost:25 (always fails there).
+        if os.environ.get("RENDER") or os.environ.get("RAILWAY_ENVIRONMENT") or os.environ.get("FLY_APP_NAME"):
+            return False
+        host = "127.0.0.1"
+        port = 25
+
     try:
-        if host:
-            if port == 465:
-                with smtplib.SMTP_SSL(host, port, timeout=12) as smtp:
-                    if user:
-                        smtp.login(user, password)
-                    smtp.send_message(msg)
-            else:
-                with smtplib.SMTP(host, port, timeout=12) as smtp:
-                    smtp.ehlo()
+        if port == 465:
+            with smtplib.SMTP_SSL(host, port, timeout=12) as smtp:
+                if user:
+                    smtp.login(user, password)
+                smtp.send_message(msg)
+        else:
+            with smtplib.SMTP(host, port, timeout=12) as smtp:
+                smtp.ehlo()
+                if host not in {"127.0.0.1", "localhost"}:
                     try:
                         smtp.starttls()
                         smtp.ehlo()
                     except smtplib.SMTPException:
                         pass
-                    if user:
-                        smtp.login(user, password)
-                    smtp.send_message(msg)
-            return True
-        # Local / Hostinger-style relay without explicit SMTP_* — try localhost.
-        with smtplib.SMTP("127.0.0.1", 25, timeout=8) as smtp:
-            smtp.send_message(msg)
+                if user:
+                    smtp.login(user, password)
+                smtp.send_message(msg)
+        print(f"lead email sent via SMTP → {', '.join(to_addrs)}")
         return True
     except Exception as exc:
-        print(f"lead email failed: {exc}")
+        print(f"SMTP email failed: {exc}")
         return False
+
+
+def send_lead_email(subject, body, lead=None):
+    """SMTP first (if configured), then FormSubmit so Render never depends on localhost mail."""
+    if send_via_smtp(subject, body):
+        return True
+    return send_via_formsubmit(subject, body, lead)
 
 
 def mail_single_lead(lead, reason="new"):
@@ -745,8 +810,7 @@ def mail_single_lead(lead, reason="new"):
     ]
     lines.extend(format_lead_lines(lead))
     lines.extend(["", "Open /backend.html to manage leads."])
-    return send_lead_email(subject, "\n".join(lines))
-
+    return send_lead_email(subject, "\n".join(lines), lead)
 
 def mail_lead_digest(leads, hours=12):
     count = len(leads)

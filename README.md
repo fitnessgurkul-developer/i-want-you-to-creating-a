@@ -109,7 +109,11 @@ If Hostinger, SMTP, or a firewall needs to allow Render egress, use:
 74.220.56.0/24
 ```
 
-Lead emails from Render include full lead details in the subject + body (name, phone, program, goal, etc.). Set `SMTP_*` + `LEAD_NOTIFY_EMAIL` on the Render service so mail actually sends.
+Lead emails from Render include full lead details in the subject + body (name, phone, program, goal, etc.).
+
+**Without SMTP on Render:** the API automatically emails via FormSubmit (no failure). See `docs/RENDER_ENV.md` for the exact env vars to add next to your existing `ADMIN_TOKEN` / `CORS_ORIGINS` / `HOST` / `PYTHON_VERSION`.
+
+For reliable mail, also set `SMTP_*` + `LEAD_NOTIFY_EMAIL` on the Render service.
 
 ## Pages
 
