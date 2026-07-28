@@ -1,14 +1,18 @@
 /**
- * Fitness Gurukul — API endpoint config (keep simple)
+ * Fitness Gurukul — API endpoint config
  *
- * Default (recommended): FG_API_BASE = ""
- *   → Hostinger /api/*.php + backend.html owner portal
- *   → WhatsApp fallback if PHP is down
+ * Production: Render Python API (SQLite + lead email).
+ * Automatic fallbacks: same-origin paths, then Hostinger PHP (/api/*.php).
+ * If every API fails, forms still offer WhatsApp + silent FormSubmit email.
  *
- * Optional: set FG_API_BASE to a cloud Python URL (Render/Railway/Fly)
- * for SQLite + AI chat. Local: leave empty and run python3 server.py.
+ * Override before this file loads, or change the default below.
  */
-window.FG_API_BASE = window.FG_API_BASE || "";
+window.FG_API_BASE =
+  window.FG_API_BASE || "https://fitness-gurukul-api.onrender.com";
+
+/** Inbox for FormSubmit fallback when cloud/PHP APIs are down. */
+window.FG_LEAD_EMAIL =
+  window.FG_LEAD_EMAIL || "contact@fitnessgurukul.co.in";
 
 (function (w) {
   var PHP_MAP = {
@@ -37,7 +41,7 @@ window.FG_API_BASE = window.FG_API_BASE || "";
     // Same-origin Python path (local server.py / same-host API).
     if (list.indexOf(clean) === -1) list.push(clean);
 
-    // Hostinger PHP fallback — always available if cloud/local API is down.
+    // Hostinger PHP fallback — available if cloud API is down and PHP is synced.
     if (PHP_MAP[clean] && list.indexOf(PHP_MAP[clean]) === -1) {
       list.push(PHP_MAP[clean]);
     }
@@ -59,5 +63,44 @@ window.FG_API_BASE = window.FG_API_BASE || "";
     if (p.form_type) lines.push("Type: " + p.form_type);
     if (p.message) lines.push("Notes: " + p.message);
     return "https://wa.me/917207113310?text=" + encodeURIComponent(lines.join("\n"));
+  };
+
+  /** Silent email via FormSubmit when every API endpoint fails. */
+  w.fgFormSubmitLead = function (payload) {
+    var to = String(w.FG_LEAD_EMAIL || "contact@fitnessgurukul.co.in").trim();
+    if (!to || typeof fetch !== "function") {
+      return Promise.resolve(false);
+    }
+    var p = payload || {};
+    var body = {
+      _subject: "Fitness Gurukul website lead",
+      _template: "table",
+      _captcha: "false",
+      name: p.name || p.contact_name || "Lead",
+      phone: p.phone || "",
+      email: p.email || "noreply@fitnessgurukul.co.in",
+      _replyto: p.email || to,
+      form_type: p.form_type || "consultation",
+      program: p.program || "",
+      goal: p.goal || "",
+      coach: p.coach || "",
+      company: p.company || "",
+      event_type: p.event_type || "",
+      message: p.message || "",
+    };
+    return fetch("https://formsubmit.co/ajax/" + encodeURIComponent(to), {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify(body),
+    })
+      .then(function (res) {
+        return res.ok;
+      })
+      .catch(function () {
+        return false;
+      });
   };
 })(window);

@@ -2,4 +2,10 @@
 Options -Indexes
 <IfModule mod_headers.c>
   Header set X-Content-Type-Options "nosniff"
+  Header always set Access-Control-Allow-Origin "*"
+  Header always set Access-Control-Allow-Methods "GET, POST, OPTIONS"
+  Header always set Access-Control-Allow-Headers "Content-Type, Accept, X-Admin-Token, Authorization"
 </IfModule>
+
+# If SafeLine / WAF blocks /api/*.php with 403, whitelist these paths in the
+# Hostinger / WAF dashboard (POST JSON lead forms are not attacks).

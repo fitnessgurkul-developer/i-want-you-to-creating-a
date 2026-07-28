@@ -1964,8 +1964,25 @@ async function submitFormPayload(payload, formEl) {
   }
 
   // Guaranteed customer path: never leave the visitor with a dead form.
-  var waUrl = buildWhatsAppLeadUrl(body);
   rememberPendingLead(body);
+  var emailed = false;
+  if (typeof window !== "undefined" && typeof window.fgFormSubmitLead === "function") {
+    try {
+      emailed = await window.fgFormSubmitLead(body);
+    } catch (mailErr) {
+      emailed = false;
+    }
+  }
+  var waUrl = buildWhatsAppLeadUrl(body);
+  if (emailed) {
+    return {
+      ok: true,
+      savedToBackend: false,
+      emailedFallback: true,
+      whatsappUrl: waUrl,
+      message: "Thanks — we received your details by email. A coach will contact you soon.",
+    };
+  }
   if (remote) {
     return {
       ok: true,
@@ -2008,6 +2025,9 @@ function bindFormSubmit(form, statusEl, successMessage) {
               ' <a href="' + result.whatsappUrl + '" target="_blank" rel="noopener" style="color:#4ade80;text-decoration:underline">Send on WhatsApp instead</a>';
             status.style.color = "#fbbf24";
             try { window.open(result.whatsappUrl, "_blank", "noopener"); } catch (err) {}
+          } else if (result && result.emailedFallback) {
+            status.textContent = result.message || "\u2705 Thanks — we received your details by email.";
+            status.style.color = "#4ade80";
           } else {
             var saved = result && result.savedToBackend;
             status.textContent = successMessage || (saved

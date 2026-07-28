@@ -2,11 +2,13 @@ from http.server import ThreadingHTTPServer, SimpleHTTPRequestHandler
 from pathlib import Path
 from urllib.parse import urlparse, unquote
 from urllib import request as urlrequest
+from email.message import EmailMessage
 import hmac
 import json
 import os
 import re
 import secrets
+import smtplib
 import socket
 import sqlite3
 import threading
@@ -599,6 +601,179 @@ def init_db():
     DB_SCHEMA_READY = True
 
 
+def lead_notify_emails():
+    raw = (
+        os.environ.get("FG_LEAD_EMAIL", "").strip()
+        or os.environ.get("LEAD_NOTIFY_EMAIL", "").strip()
+        or CONTACT.get("email")
+        or "contact@fitnessgurukul.co.in"
+    )
+    return [part.strip() for part in raw.split(",") if part.strip()]
+
+
+def lead_notify_email():
+    emails = lead_notify_emails()
+    return emails[0] if emails else "contact@fitnessgurukul.co.in"
+
+
+def format_lead_lines(lead):
+    mapping = [
+        ("Type", lead.get("form_type")),
+        ("Name", lead.get("name")),
+        ("Phone", lead.get("phone")),
+        ("Email", lead.get("email")),
+        ("Program", lead.get("program")),
+        ("Goal", lead.get("goal")),
+        ("Coach", lead.get("coach")),
+        ("Company", lead.get("company")),
+        ("Event", lead.get("event_type")),
+        ("Attendees", lead.get("attendees")),
+        ("Preferred date", lead.get("preferred_date")),
+        ("Budget", lead.get("budget")),
+        ("Location", lead.get("location")),
+        ("Message", lead.get("message")),
+        ("Lead ID", lead.get("id")),
+    ]
+    lines = [f"{label}: {value if value else '—'}" for label, value in mapping]
+    created = lead.get("created_at")
+    if created:
+        lines.append("Received: " + time.strftime("%Y-%m-%d %H:%M:%S UTC", time.gmtime(int(created))))
+    return lines
+
+
+def send_via_formsubmit(subject, body, lead=None):
+    """Keyless email fallback when SMTP is not configured (works on Render)."""
+    if (os.environ.get("FORMSUBMIT_DISABLE") or "").strip() == "1":
+        return False
+    to_addr = lead_notify_email()
+    if not to_addr:
+        return False
+    lead = lead or {}
+    payload = {
+        "_subject": subject,
+        "_template": "table",
+        "_captcha": "false",
+        "name": lead.get("name") or "Lead",
+        "phone": lead.get("phone") or "",
+        "email": lead.get("email") or "noreply@fitnessgurukul.co.in",
+        "_replyto": lead.get("email") or to_addr,
+        "form_type": lead.get("form_type") or "consultation",
+        "program": lead.get("program") or "",
+        "goal": lead.get("goal") or "",
+        "coach": lead.get("coach") or "",
+        "company": lead.get("company") or "",
+        "event_type": lead.get("event_type") or "",
+        "message": body,
+        "lead_id": lead.get("id") or "",
+    }
+    data = json.dumps(payload).encode("utf-8")
+    req = urlrequest.Request(
+        f"https://formsubmit.co/ajax/{to_addr}",
+        data=data,
+        headers={
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "User-Agent": "FitnessGurukul-API/1.0",
+        },
+        method="POST",
+    )
+    try:
+        with urlrequest.urlopen(req, timeout=15) as resp:
+            ok = 200 <= getattr(resp, "status", 200) < 300
+            if ok:
+                print(f"lead email sent via FormSubmit → {to_addr}")
+            return ok
+    except Exception as exc:
+        print(f"FormSubmit email failed: {exc}")
+        return False
+
+
+def send_via_smtp(subject, body):
+    to_addrs = lead_notify_emails()
+    if not to_addrs:
+        return False
+    from_addr = (
+        os.environ.get("FG_MAIL_FROM", "").strip()
+        or os.environ.get("MAIL_FROM", "").strip()
+        or "noreply@fitnessgurukul.co.in"
+    )
+    msg = EmailMessage()
+    msg["Subject"] = subject
+    msg["From"] = from_addr
+    msg["To"] = ", ".join(to_addrs)
+    msg["Reply-To"] = CONTACT.get("email") or to_addrs[0]
+    msg.set_content(body)
+
+    host = os.environ.get("SMTP_HOST", "").strip()
+    user = os.environ.get("SMTP_USER", "").strip()
+    password = os.environ.get("SMTP_PASS", "").strip() or os.environ.get("SMTP_PASSWORD", "").strip()
+    try:
+        port = int(os.environ.get("SMTP_PORT", "587" if host else "25"))
+    except ValueError:
+        port = 587
+
+    if not host:
+        # Cloud hosts have no local MTA.
+        if os.environ.get("RENDER") or os.environ.get("RAILWAY_ENVIRONMENT") or os.environ.get("FLY_APP_NAME"):
+            return False
+        host = "127.0.0.1"
+        port = 25
+
+    try:
+        if port == 465:
+            with smtplib.SMTP_SSL(host, port, timeout=12) as smtp:
+                if user:
+                    smtp.login(user, password)
+                smtp.send_message(msg)
+        else:
+            with smtplib.SMTP(host, port, timeout=12) as smtp:
+                smtp.ehlo()
+                if host not in {"127.0.0.1", "localhost"}:
+                    try:
+                        smtp.starttls()
+                        smtp.ehlo()
+                    except smtplib.SMTPException:
+                        pass
+                if user:
+                    smtp.login(user, password)
+                smtp.send_message(msg)
+        print(f"lead email sent via SMTP → {', '.join(to_addrs)}")
+        return True
+    except Exception as exc:
+        print(f"SMTP email failed: {exc}")
+        return False
+
+
+def send_lead_email(subject, body, lead=None):
+    if send_via_smtp(subject, body):
+        return True
+    return send_via_formsubmit(subject, body, lead)
+
+
+def mail_single_lead(lead):
+    """Best-effort email alert for a saved lead (never blocks the HTTP response)."""
+    name = lead.get("name") or "Lead"
+    phone = lead.get("phone") or ""
+    program = lead.get("program") or lead.get("event_type") or ""
+    parts = ["New FG lead", name]
+    if phone:
+        parts.append(phone)
+    if program:
+        parts.append(program)
+    subject = " · ".join(parts)
+    lines = ["Fitness Gurukul — new website lead", "================================", ""]
+    lines.extend(format_lead_lines(lead))
+    lines.extend(["", "Open /backend.html to manage leads."])
+    return send_lead_email(subject, "\n".join(lines), lead)
+
+
+def notify_lead_async(lead):
+    mode = (os.environ.get("LEAD_NOTIFY_MODE") or os.environ.get("FG_LEAD_NOTIFY_MODE") or "both").strip().lower()
+    if mode in {"off", "0", "false", "no"}:
+        return
+    threading.Thread(target=mail_single_lead, args=(lead,), daemon=True).start()
+
+
 LOCAL_DEFAULT_PASSWORD = "Rr6OrZTsbxJNfWcqFzyBQehb"
 ADMIN_CRED_MODE = "unconfigured"  # configured | local-default | generated
 
@@ -746,6 +921,25 @@ def save_submission(payload):
                 (name, phone, event_type or "corporate_event", company or "corporate", message or f"{attendees} attendees", created_at),
             )
         conn.commit()
+    lead = {
+        "id": submission_id,
+        "form_type": form_type,
+        "name": name,
+        "phone": phone,
+        "email": email,
+        "program": program,
+        "goal": goal,
+        "message": message,
+        "coach": coach,
+        "company": company,
+        "event_type": event_type,
+        "attendees": attendees,
+        "preferred_date": preferred_date,
+        "budget": budget,
+        "location": location,
+        "created_at": created_at,
+    }
+    notify_lead_async(lead)
     return submission_id, None
 
 def build_chat_system_prompt():

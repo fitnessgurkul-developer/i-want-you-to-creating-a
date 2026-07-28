@@ -4,21 +4,28 @@ services:
     runtime: python
     plan: free
     # No requirements.txt — server.py is stdlib only.
+    # Skip LFS during build helpers; clone also needs GIT_LFS_SKIP_SMUDGE env below.
     buildCommand: "python -c \"print('stdlib api ready')\""
     startCommand: python server.py
     healthCheckPath: /api/health
     envVars:
-      # Skip Git LFS downloads during clone/checkout. The GitHub LFS budget
-      # is exceeded; the API does not need gallery/media binaries.
+      # Critical: GitHub LFS budget is exhausted. Without this, Render checkout
+      # fails on gallery media the API never needs.
       - key: GIT_LFS_SKIP_SMUDGE
         value: "1"
       - key: GIT_LFS_ENABLED
         value: "false"
       - key: HOST
         value: "0.0.0.0"
+      # Keep whatever ADMIN_TOKEN is already set in the Render dashboard.
       - key: ADMIN_TOKEN
-        generateValue: true
+        sync: false
       - key: CORS_ORIGINS
         value: "https://fitnessgurukul.app,https://www.fitnessgurukul.app,https://fitnessgurukul.co.in,https://www.fitnessgurukul.co.in,https://fitnessgurukul.in,https://www.fitnessgurukul.in"
       - key: PYTHON_VERSION
         value: "3.12.8"
+      # FormSubmit email inbox (first-time activation email required once).
+      - key: LEAD_NOTIFY_EMAIL
+        value: "contact@fitnessgurukul.co.in,fitnessgurukul01@gmail.com"
+      - key: LEAD_NOTIFY_MODE
+        value: "both"

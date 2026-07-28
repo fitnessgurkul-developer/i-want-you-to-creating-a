@@ -4,10 +4,11 @@ Static multi-page site with a **simple** owner backend.
 
 ## Stack (keep it simple)
 
-- **Website:** HTML / CSS / JS at the repo root
-- **Production leads API:** Hostinger PHP in `/api/` → `api/data/submissions.json`
-- **Owner portal:** one page — `backend.html` (password in `api/config.php`)
-- **Local optional:** `python3 server.py` for full site + SQLite on port **8000**
+- **Website:** HTML / CSS / JS at the repo root (Hostinger / any static host)
+- **Production leads API:** Render Python (`server.py` + SQLite) — always-on cloud
+- **Owner portal:** `backend.html` (password = Render `ADMIN_TOKEN`)
+- **Fallbacks:** Hostinger PHP in `/api/` → silent FormSubmit email → WhatsApp
+- **Local optional:** `python3 server.py` on port **8000**
 
 `office.html`, `owner-data.html`, `admin.html`, and `dashboard.html` all redirect to `backend.html`.
 
@@ -37,76 +38,44 @@ OPENAI_MODEL=gpt-5.6
 ADMIN_TOKEN=fitnessgurukul
 HOST=127.0.0.1
 PORT=8000
+LEAD_NOTIFY_EMAIL=contact@fitnessgurukul.co.in,fitnessgurukul01@gmail.com
 ```
 
 - Without `OPENAI_API_KEY`, the chat widget answers from local website facts.
-- Change `ADMIN_TOKEN` (or `ADMIN_PASSWORD`) before sharing the server beyond your machine.
+- Change `ADMIN_TOKEN` before sharing the server beyond your machine.
+
+## After merge — 3 clicks to make production work
+
+Code alone cannot finish the deploy. Do these once:
+
+1. **Merge this PR into `main`**, then on [Render](https://dashboard.render.com) open `fitness-gurukul-api` → **Manual Deploy → Clear build cache & deploy**.  
+   (Fixes the Git LFS budget clone failure.)
+2. Confirm health: open `https://fitness-gurukul-api.onrender.com/api/health` — should return `{"ok": true, ...}`.  
+   Copy the Render **ADMIN_TOKEN** (Environment) — that is the `/backend.html` password when using the cloud API.
+3. **Activate FormSubmit** — check `contact@fitnessgurukul.co.in` (and `fitnessgurukul01@gmail.com` if listed) for a one-time FormSubmit confirmation email and click Activate.  
+   Optional but important: in Hostinger/SafeLine WAF, **whitelist** `/api/*.php` so the PHP fallback is not 403-blocked.
+
+Site `config.js` already points `FG_API_BASE` at the Render URL. After Hostinger picks up that file, forms hit Render first.
 
 ## One-click cloud API (Render)
-
-Deploy the Python API from this repo (free tier, no credit card):
 
 [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/saikrishnacoder/i-want-you-to-creating-a)
 
 After deploy:
-1. Copy the service URL (`https://….onrender.com`)
-2. Set it in `config.js`: `window.FG_API_BASE = "https://….onrender.com";`
-3. Push/redeploy Hostinger
-4. Run `./scripts/verify-api.sh https://….onrender.com`
-5. Open `/backend.html` with password `fitnessgurukul` (or your `ADMIN_TOKEN`)
 
-## Deploy the website (no errors)
+```bash
+./scripts/verify-api.sh https://fitness-gurukul-api.onrender.com
+```
+
+## Deploy the website (static)
 
 The repo root is a **static site**. There is no `requirements.txt` / `package.json`, so Vercel, Netlify, and Hostinger will not try to install Python or Node deps.
 
-Keep `config.js` as:
-
-```js
-window.FG_API_BASE = "";
-```
-
 | Host | How |
 |------|-----|
-| **Hostinger** | Upload site files + `/api/*.php`. Forms → `submit.php`. Owner → `backend.html`. |
+| **Hostinger** | Upload site files + `/api/*.php`. Owner → `backend.html`. |
 | **Vercel** | Connect GitHub. Uses `vercel.json` → builds `dist/` (static only). |
 | **Netlify** | Connect GitHub. Uses `netlify.toml` → publishes `dist/`. |
 | **Any static host** | Run `bash scripts/prepare-netlify-dist.sh` and upload the `dist/` folder. |
 
-Leads on Hostinger: `/api/submit.php` → `api/data/submissions.json`. Password in `api/config.php`. If PHP is down, forms fall back to WhatsApp.
-
-## Optional: cloud Python API
-
-Only if you want SQLite + AI chat on a separate service. Site stays static; set `FG_API_BASE` to the API URL after deploy.
-
-- **Render:** blueprint `render.yaml` · start `python server.py`
-- **Railway / Fly:** `Dockerfile` · start `python server.py`
-
-Do **not** deploy `server.py` as a Vercel/Netlify serverless function.
-
-## Pages
-
-- `index.html` — home
-- `about.html` — brand story
-- `services.html` — plans and services
-- `coaches.html` — coach directory
-- `events.html` — corporate and community events
-- `testimonials.html` — client stories
-- `tools.html` — fitness calculators
-- `contact.html` / `book-consultation.html` — lead forms
-- `backend.html` — **only** owner portal (leads table)
-- `admin.html` / `dashboard.html` / `office.html` / `owner-data.html` — redirects to `backend.html`
-
-## Simple Hostinger API
-
-- `POST /api/submit.php`
-- `POST /api/challenge-join.php`
-- `GET /api/admin-data.php` (owner password)
-- `POST /api/submission-status.php` / `submission-delete.php`
-
-Optional local/cloud Python (`server.py`) adds SQLite, chat, match/quiz, and the same lead APIs under `/api/*`.
-
-## Security notes
-
-- Do not commit `.env`, `*.sqlite3`, or `api/data/*.json`
-- Do not share `backend.html` without the owner password
-- Change the password in `api/config.php` after first Hostinger deploy
+Leads prefer Render (`FG_API_BASE`). If Render sleeps or fails: PHP → FormSubmit email → WhatsApp.
