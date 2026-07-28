@@ -3,13 +3,18 @@ services:
     name: fitness-gurukul-api
     runtime: python
     plan: free
-    # No requirements.txt — server.py is stdlib only.
-    buildCommand: "python -c \"print('stdlib api ready')\""
+    # API does not need Git LFS gallery binaries — skip smudge or clone fails when LFS budget is exceeded.
+    buildCommand: "GIT_LFS_SKIP_SMUDGE=1 git lfs install --skip-smudge || true; python -c \"print('stdlib api ready')\""
     startCommand: python server.py
     healthCheckPath: /api/health
     envVars:
       - key: HOST
         value: "0.0.0.0"
+      # Critical: Render clone runs with these env vars. Without SKIP_SMUDGE, LFS budget errors abort deploy.
+      - key: GIT_LFS_SKIP_SMUDGE
+        value: "1"
+      - key: GIT_LFS_ENABLED
+        value: "false"
       # Keep the token already set in the Render dashboard (do not regenerate).
       - key: ADMIN_TOKEN
         sync: false

@@ -1,0 +1,8 @@
+# Skip downloading Git LFS objects on CI/cloud clones (Render/Netlify/Vercel).
+# Gallery media is not required for the Python API or static dist builds.
+[lfs]
+	fetchexclude = *
+[filter "lfs"]
+	required = false
+	smudge = git-lfs smudge --skip -- %f
+	process = git-lfs filter-process --skip

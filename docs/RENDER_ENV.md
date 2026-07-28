@@ -42,3 +42,24 @@ On free tier, each lead is still emailed (durable), SQLite may reset on redeploy
 
 ## Owner portal
 Unlock `/backend.html` with the same `ADMIN_TOKEN` shown in Render.
+
+## Fix: LFS budget / clone failed (`RAVI MISKA.png` smudge error)
+
+If Render logs show:
+
+```text
+This repository exceeded its LFS budget
+fatal: ... smudge filter lfs failed
+destination path '/opt/render/project/src' already exists
+```
+
+Do this:
+
+1. In Render → **Environment**, confirm:
+   - `GIT_LFS_SKIP_SMUDGE` = `1`
+   - `GIT_LFS_ENABLED` = `false`
+2. Click **Manual Deploy → Clear build cache & deploy**  
+   (needed once after a failed clone left `/opt/render/project/src` dirty)
+3. The API does **not** need `GALLERY/**` images — skipping LFS is safe for `fitness-gurukul-api`.
+
+Repo also ships `.lfsconfig` so cloud clones skip LFS fetches by default.
