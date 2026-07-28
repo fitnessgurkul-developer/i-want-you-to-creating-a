@@ -75,47 +75,52 @@ function missingFields(lead) {
 
 function emailBodies(lead) {
   const name = lead.name || "Unknown";
-  const subject = `[FG Lead] ${lead.form_type}: ${name}`;
-  const lines = [
-    "New lead from the Fitness Gurukul website",
-    "",
-    `Name: ${name}`,
-    `Phone: ${lead.phone || "—"}`,
-    `Email: ${lead.email || "—"}`,
-    `Program: ${lead.program || "—"}`,
-    `Goal: ${lead.goal || "—"}`,
-    `Coach: ${lead.coach || "—"}`,
-    `Form: ${lead.form_type}`,
-  ];
-  if (lead.company) lines.push(`Company: ${lead.company}`);
-  if (lead.event_type) lines.push(`Event: ${lead.event_type}`);
-  if (lead.attendees) lines.push(`Attendees: ${lead.attendees}`);
-  if (lead.preferred_date) lines.push(`Preferred date: ${lead.preferred_date}`);
-  if (lead.budget) lines.push(`Budget: ${lead.budget}`);
-  if (lead.location) lines.push(`Location: ${lead.location}`);
-  if (lead.id) lines.push(`ID: ${lead.id}`);
-  if (lead.message) {
-    lines.push("", "Message:", lead.message);
-  }
-  lines.push("", "— Fitness Gurukul Website (Vercel)");
-  const text = lines.join("\n");
+  const phone = lead.phone || "";
+  const program = lead.program || lead.event_type || "";
+  const type = lead.form_type || "consultation";
 
-  const rows = [
+  // Subject designed to read clearly in inbox list view.
+  const subjectParts = ["New FG lead", name];
+  if (phone) subjectParts.push(phone);
+  if (program) subjectParts.push(program);
+  const subject = subjectParts.join(" · ");
+
+  // Always include every field so the email lands with complete lead details.
+  const detailRows = [
+    ["Type", type],
     ["Name", name],
-    ["Phone", lead.phone || "—"],
+    ["Phone", phone || "—"],
     ["Email", lead.email || "—"],
     ["Program", lead.program || "—"],
     ["Goal", lead.goal || "—"],
     ["Coach", lead.coach || "—"],
-    ["Form type", lead.form_type],
-    lead.company ? ["Company", lead.company] : null,
-    lead.event_type ? ["Event type", lead.event_type] : null,
-    lead.attendees ? ["Attendees", lead.attendees] : null,
-    lead.preferred_date ? ["Preferred date", lead.preferred_date] : null,
-    lead.budget ? ["Budget", lead.budget] : null,
-    lead.location ? ["Location", lead.location] : null,
-    lead.id ? ["ID", lead.id] : null,
-  ].filter(Boolean);
+    ["Company", lead.company || "—"],
+    ["Event", lead.event_type || "—"],
+    ["Attendees", lead.attendees || "—"],
+    ["Preferred date", lead.preferred_date || "—"],
+    ["Budget", lead.budget || "—"],
+    ["Location", lead.location || "—"],
+    ["Message", lead.message || "—"],
+    ["Lead ID", lead.id || "—"],
+    [
+      "Received",
+      lead.created_at
+        ? new Date(Number(lead.created_at) * 1000).toISOString()
+        : new Date().toISOString(),
+    ],
+  ];
+
+  const lines = [
+    "Fitness Gurukul — new website lead",
+    "================================",
+    "",
+  ];
+  detailRows.forEach(([label, val]) => {
+    lines.push(label + ": " + val);
+  });
+  lines.push("", "Call/WhatsApp: " + (phone || "—"));
+  lines.push("— Sent automatically from the website");
+  const text = lines.join("\n");
 
   const esc = (v) =>
     String(v)
@@ -124,29 +129,31 @@ function emailBodies(lead) {
       .replace(/>/g, "&gt;");
 
   const html =
-    `<div style="font-family:system-ui,sans-serif;max-width:600px;margin:0 auto">` +
-    `<h2 style="color:#111;margin:0 0 16px">New ${esc(lead.form_type)} lead</h2>` +
-    `<table style="border-collapse:collapse;width:100%">` +
-    rows
+    `<div style="font-family:system-ui,-apple-system,sans-serif;max-width:640px;margin:0 auto;color:#111">` +
+    `<h1 style="font-size:20px;margin:0 0 8px">New website lead</h1>` +
+    `<p style="margin:0 0 16px;color:#555">Fitness Gurukul · ${esc(type)}</p>` +
+    (phone
+      ? `<p style="margin:0 0 16px"><a href="tel:${esc(phone)}" style="display:inline-block;padding:10px 14px;background:#111;color:#fff;text-decoration:none;border-radius:8px">Call ${esc(
+          phone
+        )}</a> &nbsp; <a href="https://wa.me/91${esc(
+          phone.replace(/\D/g, "").replace(/^91/, "")
+        )}" style="display:inline-block;padding:10px 14px;background:#128C7E;color:#fff;text-decoration:none;border-radius:8px">WhatsApp</a></p>`
+      : "") +
+    `<table style="border-collapse:collapse;width:100%;border:1px solid #e5e5e5">` +
+    detailRows
       .map(
-        ([label, val]) =>
-          `<tr><td style="padding:8px 12px;border-bottom:1px solid #eee;font-weight:600;color:#555;width:140px">${esc(
+        ([label, val], i) =>
+          `<tr style="background:${i % 2 ? "#fafafa" : "#fff"}"><td style="padding:10px 12px;border-bottom:1px solid #eee;font-weight:600;color:#555;width:150px">${esc(
             label
-          )}</td>` +
-          `<td style="padding:8px 12px;border-bottom:1px solid #eee;color:#111">${esc(
+          )}</td><td style="padding:10px 12px;border-bottom:1px solid #eee;color:#111;white-space:pre-wrap">${esc(
             val
           )}</td></tr>`
       )
       .join("") +
     `</table>` +
-    (lead.message
-      ? `<div style="margin-top:16px;padding:12px;background:#f9f9f9;border-radius:8px"><strong>Message:</strong><br/>${esc(
-          lead.message
-        ).replace(/\n/g, "<br/>")}</div>`
-      : "") +
-    `<p style="margin-top:24px;color:#888;font-size:13px">— Fitness Gurukul Website</p></div>`;
+    `<p style="margin-top:20px;color:#888;font-size:12px">Sent automatically from the Fitness Gurukul website.</p></div>`;
 
-  return { subject, text, html };
+  return { subject, text, html, detailRows };
 }
 
 async function sendViaResend(lead) {
@@ -218,28 +225,45 @@ async function sendViaFormSubmit(lead) {
   const to = notifyEmails()[0];
   if (!to) return { sent: false, provider: null };
 
-  const { subject, text } = emailBodies(lead);
+  const { subject, text, detailRows } = emailBodies(lead);
+  // Put the FULL lead dump in `message` so the inbox email always contains details.
+  const payload = {
+    _subject: subject,
+    _template: "table",
+    _captcha: "false",
+    _honey: "",
+    name: lead.name || "Lead",
+    phone: lead.phone || "",
+    email: lead.email || "noreply@fitnessgurukul.co.in",
+    _replyto: lead.email || to,
+    form_type: lead.form_type || "consultation",
+    program: lead.program || "",
+    goal: lead.goal || "",
+    coach: lead.coach || "",
+    company: lead.company || "",
+    event_type: lead.event_type || "",
+    attendees: lead.attendees || "",
+    preferred_date: lead.preferred_date || "",
+    budget: lead.budget || "",
+    location: lead.location || "",
+    lead_id: lead.id || "",
+    message: text,
+  };
+  // Also flatten labeled rows as top-level fields for FormSubmit's table template.
+  (detailRows || []).forEach(([label, val]) => {
+    const key = String(label)
+      .toLowerCase()
+      .replace(/\s+/g, "_");
+    if (!(key in payload)) payload[key] = val;
+  });
+
   const res = await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(to)}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       Accept: "application/json",
     },
-    body: JSON.stringify({
-      _subject: subject,
-      _template: "table",
-      _captcha: "false",
-      name: lead.name || "Lead",
-      phone: lead.phone || "",
-      email: lead.email || "noreply@fitnessgurukul.co.in",
-      program: lead.program || "",
-      goal: lead.goal || "",
-      coach: lead.coach || "",
-      form_type: lead.form_type || "",
-      company: lead.company || "",
-      event_type: lead.event_type || "",
-      message: lead.message || text,
-    }),
+    body: JSON.stringify(payload),
   });
 
   if (!res.ok) {
@@ -253,7 +277,6 @@ async function sendViaFormSubmit(lead) {
   } catch (e) {
     data = {};
   }
-  // FormSubmit returns success even when awaiting email confirmation.
   return {
     sent: true,
     provider: "formsubmit",

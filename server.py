@@ -655,13 +655,16 @@ def format_lead_lines(lead):
         ("Preferred date", lead.get("preferred_date")),
         ("Budget", lead.get("budget")),
         ("Location", lead.get("location")),
-        ("Notes", lead.get("message")),
-        ("ID", lead.get("id")),
+        ("Message", lead.get("message")),
+        ("Lead ID", lead.get("id")),
     ]
-    lines = [f"{label}: {value}" for label, value in mapping if value]
+    lines = [f"{label}: {value if value else '—'}" for label, value in mapping]
     created = lead.get("created_at")
     if created:
         lines.append("Received: " + time.strftime("%Y-%m-%d %H:%M:%S UTC", time.gmtime(int(created))))
+    phone = (lead.get("phone") or "").strip()
+    if phone:
+        lines.append(f"Call/WhatsApp: {phone}")
     return lines
 
 
@@ -725,10 +728,21 @@ def mail_single_lead(lead, reason="new"):
     if reason != "fallback" and mode == "digest_12h":
         return False
     name = lead.get("name") or "Lead"
-    form_type = lead.get("form_type") or "consultation"
-    prefix = "[FG Lead · fallback] " if reason == "fallback" else "[FG Lead] "
-    subject = f"{prefix}{form_type} — {name}"
-    lines = ["New Fitness Gurukul website lead (%s)." % reason, ""]
+    phone = lead.get("phone") or ""
+    program = lead.get("program") or lead.get("event_type") or ""
+    parts = ["New FG lead", name]
+    if phone:
+        parts.append(phone)
+    if program:
+        parts.append(program)
+    if reason == "fallback":
+        parts.insert(0, "FALLBACK")
+    subject = " · ".join(parts)
+    lines = [
+        "Fitness Gurukul — new website lead",
+        "================================",
+        "",
+    ]
     lines.extend(format_lead_lines(lead))
     lines.extend(["", "Open /backend.html to manage leads."])
     return send_lead_email(subject, "\n".join(lines))

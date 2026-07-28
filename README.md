@@ -100,6 +100,17 @@ Only if you want SQLite + AI chat on a separate service. Site stays static; set 
 
 Do **not** deploy `server.py` as a Vercel/Netlify serverless function.
 
+### Render outbound IPs (allowlist)
+
+If Hostinger, SMTP, or a firewall needs to allow Render egress, use:
+
+```text
+74.220.48.0/24
+74.220.56.0/24
+```
+
+Lead emails from Render include full lead details in the subject + body (name, phone, program, goal, etc.). Set `SMTP_*` + `LEAD_NOTIFY_EMAIL` on the Render service so mail actually sends.
+
 ## Pages
 
 - `index.html` — home

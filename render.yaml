@@ -16,3 +16,16 @@ services:
         value: "https://fitnessgurukul.app,https://www.fitnessgurukul.app,https://fitnessgurukul.co.in,https://www.fitnessgurukul.co.in,https://fitnessgurukul.in,https://www.fitnessgurukul.in"
       - key: PYTHON_VERSION
         value: "3.12.8"
+      - key: LEAD_NOTIFY_MODE
+        value: "both"
+      - key: LEAD_NOTIFY_EMAIL
+        value: "contact@fitnessgurukul.co.in,fitnessgurukul01@gmail.com"
+      # Render outbound egress (allowlist on Hostinger / SMTP / firewalls):
+      # 74.220.48.0/24
+      # 74.220.56.0/24
+      # Optional SMTP for lead emails from Render:
+      # - key: SMTP_HOST
+      # - key: SMTP_PORT
+      # - key: SMTP_USER
+      # - key: SMTP_PASS
+      # - key: MAIL_FROM

@@ -149,18 +149,20 @@ function fg_format_lead_lines($lead) {
     "Preferred date" => $lead["preferred_date"] ?? "",
     "Budget" => $lead["budget"] ?? "",
     "Location" => $lead["location"] ?? "",
-    "Notes" => $lead["message"] ?? "",
+    "Message" => $lead["message"] ?? "",
   ];
   foreach ($map as $label => $value) {
-    if ($value !== "" && $value !== null) {
-      $lines[] = $label . ": " . $value;
-    }
+    $lines[] = $label . ": " . ($value !== "" && $value !== null ? $value : "—");
   }
   if (!empty($lead["created_at"])) {
     $lines[] = "Received: " . gmdate("Y-m-d H:i:s", (int) $lead["created_at"]) . " UTC";
   }
   if (!empty($lead["id"])) {
-    $lines[] = "ID: " . $lead["id"];
+    $lines[] = "Lead ID: " . $lead["id"];
+  }
+  $phone = trim((string) ($lead["phone"] ?? ""));
+  if ($phone !== "") {
+    $lines[] = "Call/WhatsApp: " . $phone;
   }
   return $lines;
 }
@@ -194,10 +196,27 @@ function fg_mail_single_lead($config, $lead, $reason = "new") {
   }
   $name = $lead["name"] ?? "Lead";
   $type = $lead["form_type"] ?? "consultation";
-  $prefix = $reason === "fallback" ? "[FG Lead · fallback] " : "[FG Lead] ";
-  $subject = $prefix . $type . " — " . $name;
-  $lines = fg_format_lead_lines($lead);
-  array_unshift($lines, "New Fitness Gurukul website lead (" . $reason . ").", "");
+  $phone = $lead["phone"] ?? "";
+  $program = $lead["program"] ?? ($lead["event_type"] ?? "");
+  $parts = ["New FG lead", $name];
+  if ($phone !== "") {
+    $parts[] = $phone;
+  }
+  if ($program !== "") {
+    $parts[] = $program;
+  }
+  if ($reason === "fallback") {
+    array_unshift($parts, "FALLBACK");
+  }
+  $subject = implode(" · ", $parts);
+  $lines = [
+    "Fitness Gurukul — new website lead",
+    "================================",
+    "",
+  ];
+  foreach (fg_format_lead_lines($lead) as $line) {
+    $lines[] = $line;
+  }
   $lines[] = "";
   $lines[] = "Open backend.html on the website to manage leads.";
   return fg_send_mail($config, $subject, implode("\n", $lines));
