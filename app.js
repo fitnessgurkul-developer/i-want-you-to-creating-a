@@ -717,15 +717,50 @@ function initHomeProofCompare() {
   }
 }
 
+function ixMatchPlaceholderHtml() {
+  return (
+    '<div class="goal-match-placeholder">' +
+      "<strong>Your match shows here</strong>" +
+      "<span>Pick a goal, experience, and training style — then tap Match me.</span>" +
+      "<ul>" +
+        "<li>Recommended plan + price band</li>" +
+        "<li>Coach fit for your goal</li>" +
+        "<li>Next step to book</li>" +
+      "</ul>" +
+    "</div>"
+  );
+}
+
 function initGoalMatcher() {
   var form = qs("#goalMatchForm");
   var result = qs("#goalMatchResult");
   if (!form || !result) return;
+
+  var split = form.closest(".ix-split");
+  if (split) {
+    var side = form.parentElement;
+    if (side) {
+      side.classList.add("ix-match-side");
+      if (!side.querySelector(".goal-match-tip-line")) {
+        var tip = document.createElement("p");
+        tip.className = "goal-match-tip-line";
+        tip.innerHTML = "Most people start with <strong>fat loss + doorstep coaching</strong> — then adjust after the first consult.";
+        form.insertAdjacentElement("afterend", tip);
+      }
+      if (!result.dataset.ixPlaceholder) {
+        result.dataset.ixPlaceholder = "1";
+        result.hidden = false;
+        result.classList.add("is-placeholder");
+        result.innerHTML = ixMatchPlaceholderHtml();
+      }
+    }
+  }
+
   form.addEventListener("submit", async function(e) {
     e.preventDefault();
     var payload = Object.fromEntries(new FormData(form).entries());
     result.hidden = false;
-    result.classList.remove("is-ready");
+    result.classList.remove("is-ready", "is-placeholder");
     result.innerHTML = '<div class="goal-match-loading">Matching you with a plan and coach…</div>';
     try {
       var data = await api("/api/match", { method: "POST", body: JSON.stringify(payload) });
