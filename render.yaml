@@ -8,6 +8,12 @@ services:
     startCommand: python server.py
     healthCheckPath: /api/health
     envVars:
+      # Skip Git LFS downloads during clone/checkout. The GitHub LFS budget
+      # is exceeded; the API does not need gallery/media binaries.
+      - key: GIT_LFS_SKIP_SMUDGE
+        value: "1"
+      - key: GIT_LFS_ENABLED
+        value: "false"
       - key: HOST
         value: "0.0.0.0"
       - key: ADMIN_TOKEN
