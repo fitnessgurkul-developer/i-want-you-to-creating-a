@@ -53,10 +53,10 @@
         <p class="eyebrow">Owner data viewer</p>
         <h1>Private working page for submitted website data.</h1>
         <p>
-          This file is intentionally not linked in the client navigation. Use it directly while
-          running the local Python backend to view consultation leads, check-ins, AI scans, and newsletter entries.
+          This file is intentionally not linked in the client navigation. Run <code>npm start</code>
+          and open it (or <a href="admin.html">/admin</a>) to view SQLite form tables.
         </p>
-        <div class="client-hidden-note">Direct owner URL: http://127.0.0.1:8000/owner-data.html</div>
+        <div class="client-hidden-note">Direct owner URL: http://127.0.0.1:3000/admin</div>
       </section>
 
       <section class="guide-section">
@@ -69,9 +69,9 @@
           <p>Use localhost for the real database. This page now expects backend-backed owner data instead of browser fallback storage.</p>
         </div>
         <div class="guide-layout">
-          <article class="guide-card"><span>01</span><h3>Run backend</h3><p>Start the local Python server and open http://127.0.0.1:8000/owner-data.html.</p></article>
-          <article class="guide-card"><span>02</span><h3>Submit form</h3><p>Use the Contact page for leads or Tools page for check-ins and AI posture scans.</p></article>
-          <article class="guide-card"><span>03</span><h3>View records</h3><p>This owner page reads /api/admin-data and fills the table below.</p></article>
+          <article class="guide-card"><span>01</span><h3>Run backend</h3><p>Run <code>npm start</code> and open http://127.0.0.1:3000/admin (or this page).</p></article>
+          <article class="guide-card"><span>02</span><h3>Submit form</h3><p>Use Contact, Book Consultation, Challenge, Corporate Events, or Tools calculators.</p></article>
+          <article class="guide-card"><span>03</span><h3>View records</h3><p>Each form writes to its own SQLite table. Prefer <a href="admin.html">/admin</a> for the full view.</p></article>
         </div>
         </div>
       </section>
@@ -87,10 +87,9 @@
         </div>
         <div class="admin-note" id="adminNote">Loading data source...</div>
         <div class="admin-tabs" id="adminTabs">
-          <button type="button" class="active" data-admin-tab="leads">Consultation leads</button>
-          <button type="button" data-admin-tab="checkins">Progress check-ins</button>
-          <button type="button" data-admin-tab="ai_scans">AI scans</button>
-          <button type="button" data-admin-tab="newsletter">Newsletter</button>
+          <button type="button" class="active" data-admin-tab="leads">Consultations</button>
+          <button type="button" data-admin-tab="challenge">Challenge leads</button>
+          <button type="button" data-admin-tab="corporate">Corporate events</button>
           <button type="button" data-admin-tab="calculations">Calculator history</button>
         </div>
         <div class="admin-table-wrap">
@@ -115,8 +114,8 @@
           <article class="guide-card"><span>01</span><h3>Review fresh leads</h3><p>Start with the latest consultation requests and note the program, goal, phone, and preferred details.</p></article>
           <article class="guide-card"><span>02</span><h3>Call or message</h3><p>Use the submitted phone number to confirm timing, location, goal urgency, and whether the client needs doorstep service.</p></article>
           <article class="guide-card"><span>03</span><h3>Assign the route</h3><p>Match the person to personal training, nutrition, yoga, swimming, online coaching, corporate event, or community challenge.</p></article>
-          <article class="guide-card"><span>04</span><h3>Track check-ins and scans</h3><p>Use check-in entries and AI scan notes to see mood, stamina, weight, and posture route before changing intensity or nutrition targets.</p></article>
-          <article class="guide-card"><span>05</span><h3>Use raw JSON</h3><p>Open /api/admin-data when you need the same records in a raw format for copying into another system.</p></article>
+          <article class="guide-card"><span>04</span><h3>Review challenge &amp; corporate</h3><p>Challenge and corporate event inquiries land in their own SQLite tables — switch tabs or use /admin.</p></article>
+          <article class="guide-card"><span>05</span><h3>Use raw JSON</h3><p>Open <code>/api/submissions</code> for all tables, or <code>/api/submissions?table=consultations</code> for one table.</p></article>
           <article class="guide-card"><span>06</span><h3>Keep client nav clean</h3><p>This owner viewer is intentionally direct-only so visitors stay focused on programs, community, tools, and contact.</p></article>
         </div>
         </div>

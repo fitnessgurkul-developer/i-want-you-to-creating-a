@@ -352,6 +352,40 @@ async function detectBackend() {
   return usesLocalBackend;
 }
 
+/** Map form_type → SQLite table name */
+function formTableFor(formType) {
+  var type = String(formType || "consultation").toLowerCase();
+  if (type === "corporate_event" || type === "corporate_events" || type === "events") return "corporate_events";
+  if (type === "transformation_challenge" || type === "challenge" || type === "challenge_leads") return "challenge_leads";
+  if (type === "calculation" || type === "calculations") return "calculations";
+  return "consultations";
+}
+
+/**
+ * Simple SQLite form submit. Posts JSON to /api/forms/<table>.
+ * Returns a Promise that resolves when saved.
+ */
+function submitToSqlite(payload) {
+  var body = Object.assign({}, payload || {});
+  if (!body.form_type) body.form_type = "consultation";
+  var table = formTableFor(body.form_type);
+  return fetch("/api/forms/" + table, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body)
+  }).then(function(res) {
+    return res.json().then(function(data) {
+      if (!res.ok || !(data.ok || data.success)) {
+        throw new Error((data && data.error) || "Submit failed");
+      }
+      return data;
+    });
+  });
+}
+
+window.fgSubmitForm = submitToSqlite;
+window.fgFormTable = formTableFor;
+
 function setStatus(element, message, isError = false) {
   if (!element) return;
   element.textContent = message;
@@ -979,11 +1013,21 @@ async function refreshAdminData() {
   if (!has("#adminTableBody")) return;
   if (usesLocalBackend) {
     try {
-      adminData = await api("/api/admin-data");
-      qs("#adminNote").textContent = "Showing latest records from the backend.";
+      const json = await api("/api/submissions");
+      const rows = Array.isArray(json.data) ? json.data : [];
+      adminData = {
+        leads: rows.filter(function(r) { return r._table === "consultations"; }),
+        challenge: rows.filter(function(r) { return r._table === "challenge_leads"; }),
+        corporate: rows.filter(function(r) { return r._table === "corporate_events"; }),
+        checkins: [],
+        ai_scans: [],
+        newsletter: [],
+        calculations: rows.filter(function(r) { return r._table === "calculations"; })
+      };
+      qs("#adminNote").textContent = "Showing latest records from SQLite (" + rows.length + " total). Prefer /admin for the full multi-table view.";
     } catch (e) {
-      adminData = { leads: [], checkins: [], ai_scans: [], newsletter: [], calculations: [] };
-      qs("#adminNote").textContent = "Backend not reachable. Start python server.py.";
+      adminData = { leads: [], challenge: [], corporate: [], checkins: [], ai_scans: [], newsletter: [], calculations: [] };
+      qs("#adminNote").textContent = "Backend not reachable. Run npm start, then reload.";
     }
   }
   renderAdminTable();
@@ -997,6 +1041,8 @@ function renderAdminTable() {
   var active = (tabs.find(function(tab) { return tab.classList.contains("active"); }) || tabs[0]);
   var fields = {
     leads: [["name", "Name"], ["phone", "Phone"], ["goal", "Goal"], ["program", "Program"], ["message", "Message"], ["created_at", "Received"]],
+    challenge: [["name", "Name"], ["phone", "Phone"], ["email", "Email"], ["location", "Location"], ["goal", "Goal"], ["created_at", "Received"]],
+    corporate: [["company", "Company"], ["contact_name", "Contact"], ["phone", "Phone"], ["event_type", "Event"], ["attendees", "Attendees"], ["created_at", "Received"]],
     checkins: [["name", "Name"], ["weight", "Weight (kg)"], ["stamina", "Stamina"], ["mood", "Mood"], ["created_at", "Received"]],
     ai_scans: [["name", "Name"], ["focus", "Focus"], ["summary", "Summary"], ["coach_route", "Coach route"], ["camera_used", "Camera"], ["created_at", "Received"]],
     newsletter: [["email", "Email"], ["created_at", "Received"]],
@@ -1359,22 +1405,18 @@ function wireBookModalForm() {
     e.preventDefault();
     var status = qs("#bookFormStatus");
     var payload = Object.fromEntries(new FormData(frm).entries());
+    payload.form_type = "consultation";
+    payload.source = "book_modal";
     status.textContent = "Sending\u2026";
     status.style.color = "rgba(255,255,255,0.6)";
-    var apiBase = "";
-    var fetchOpts = { method: "POST", body: JSON.stringify(payload), headers: { "Content-Type": "application/json" } };
-    fetch(apiBase || "/api/submit", fetchOpts)
-      .then(function(r) { return r.json(); })
-      .then(function(d) {
-        if (d.ok || d.success) {
-          status.textContent = "\u2705 Thank you! We\u2019ll be in touch shortly.";
-          status.style.color = "#4ade80";
-          frm.reset();
-          var coachInput = qs("#bookModalCoachInput");
-          if (coachInput) coachInput.value = coachInput.value;
-        } else {
-          throw new Error(d.error || "Submit failed");
-        }
+    submitToSqlite(payload)
+      .then(function() {
+        status.textContent = "\u2705 Thank you! We\u2019ll be in touch shortly.";
+        status.style.color = "#4ade80";
+        var coach = payload.coach || "";
+        frm.reset();
+        var coachInput = qs("#bookModalCoachInput");
+        if (coachInput) coachInput.value = coach;
       })
       .catch(function() {
         status.textContent = "\u26a0\ufe0f Something went wrong. Please try again.";
@@ -1420,22 +1462,18 @@ function wireCoachPopups() {
     e.preventDefault();
     var status = frm.querySelector(".cp-consult-status, .coach-frm-status");
     var payload = Object.fromEntries(new FormData(frm).entries());
+    payload.form_type = "consultation";
+    payload.source = "coach_popup";
     status.textContent = "Sending\u2026";
     status.style.color = "rgba(255,255,255,0.6)";
-    var apiBase = "";
-    var fetchOpts = { method: "POST", body: JSON.stringify(payload), headers: { "Content-Type": "application/json" } };
-    fetch(apiBase || "/api/submit", fetchOpts)
-      .then(function(r) { return r.json(); })
-      .then(function(d) {
-        if (d.ok || d.success) {
-          status.textContent = "\u2705 Thank you! We\u2019ll be in touch shortly.";
-          status.style.color = "#4ade80";
-          frm.reset();
-          var coachInput = frm.querySelector('input[name="coach"]');
-          if (coachInput) coachInput.value = coachInput.value;
-        } else {
-          throw new Error(d.error || "Submit failed");
-        }
+    var coach = payload.coach || "";
+    submitToSqlite(payload)
+      .then(function() {
+        status.textContent = "\u2705 Thank you! We\u2019ll be in touch shortly.";
+        status.style.color = "#4ade80";
+        frm.reset();
+        var coachInput = frm.querySelector('input[name="coach"]');
+        if (coachInput) coachInput.value = coach;
       })
       .catch(function() {
         status.textContent = "\u26a0\ufe0f Something went wrong. Please try again.";
@@ -1492,25 +1530,21 @@ function injectWhatsApp() {
 
 function wireForms() {
   var leadForm = qs("#leadForm");
-  if (leadForm) {
+  if (leadForm && !leadForm.dataset.sqliteWired) {
+    leadForm.dataset.sqliteWired = "1";
     leadForm.addEventListener("submit", function(e) {
       e.preventDefault();
       var status = qs("#leadStatus");
       var payload = Object.fromEntries(new FormData(leadForm).entries());
+      payload.form_type = payload.form_type || "consultation";
+      payload.source = payload.source || "contact";
       status.textContent = "Sending\u2026";
       status.style.color = "rgba(255,255,255,0.6)";
-    var apiBase = "";
-    var fetchOpts = { method: "POST", body: JSON.stringify(payload), headers: { "Content-Type": "application/json" } };
-    fetch(apiBase || "/api/submit", fetchOpts)
-        .then(function(r) { return r.json(); })
-        .then(function(d) {
-          if (d.ok || d.success) {
-            status.textContent = "\u2705 Thank you! We\u2019ll be in touch shortly.";
-            status.style.color = "#4ade80";
-            leadForm.reset();
-          } else {
-            throw new Error(d.error || "Submit failed");
-          }
+      submitToSqlite(payload)
+        .then(function() {
+          status.textContent = "\u2705 Thank you! We\u2019ll be in touch shortly.";
+          status.style.color = "#4ade80";
+          leadForm.reset();
         })
         .catch(function() {
           status.textContent = "\u26a0\ufe0f Something went wrong. Please try again.";
@@ -3242,7 +3276,7 @@ document.addEventListener("DOMContentLoaded", function() {
   });
 });
 
-/* Corporate event inquiry form */
+/* Corporate event inquiry form → corporate_events SQLite table */
 (function() {
   var frm = document.getElementById("corpEventForm");
   if (!frm) return;
@@ -3253,18 +3287,11 @@ document.addEventListener("DOMContentLoaded", function() {
     payload.form_type = "corporate_event";
     status.textContent = "Sending\u2026";
     status.style.color = "rgba(255,255,255,0.6)";
-    var apiBase = "";
-    var fetchOpts = { method: "POST", body: JSON.stringify(payload), headers: { "Content-Type": "application/json" } };
-    fetch(apiBase || "/api/submit", fetchOpts)
-      .then(function(r) { return r.json(); })
-      .then(function(d) {
-        if (d.ok || d.success) {
-          status.textContent = "\u2705 Thank you! Our events team will contact you within 24 hours.";
-          status.style.color = "#4ade80";
-          frm.reset();
-        } else {
-          throw new Error(d.error || "Submit failed");
-        }
+    submitToSqlite(payload)
+      .then(function() {
+        status.textContent = "\u2705 Thank you! Our events team will contact you within 24 hours.";
+        status.style.color = "#4ade80";
+        frm.reset();
       })
       .catch(function() {
         status.textContent = "\u26a0\ufe0f Something went wrong. Please try again.";

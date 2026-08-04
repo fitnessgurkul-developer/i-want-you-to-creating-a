@@ -649,13 +649,27 @@
             '</a></div>';
           resultDiv.innerHTML = rh;
           resultDiv.style.display = "block";
-          var record = { calculator: calc.slug, title: calc.title, result: String(res.result), unit: res.unit || "", rating: res.rating || "", createdAt: new Date().toISOString() };
+          var record = {
+            form_type: "calculation",
+            calculator: calc.slug,
+            title: calc.title,
+            result: String(res.result),
+            unit: res.unit || "",
+            rating: res.rating || "",
+            details: JSON.stringify(values || {})
+          };
           try {
             var history = JSON.parse(localStorage.getItem("fg_calculator_results") || "[]");
-            history.unshift(record);
+            history.unshift(Object.assign({}, record, { createdAt: new Date().toISOString() }));
             localStorage.setItem("fg_calculator_results", JSON.stringify(history.slice(0, 50)));
-            if (window.fetch) {
-              fetch("/api/calculations", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(record) }).catch(function() {});
+            if (window.fgSubmitForm) {
+              window.fgSubmitForm(record).catch(function() {});
+            } else if (window.fetch) {
+              fetch("/api/forms/calculations", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(record)
+              }).catch(function() {});
             }
           } catch (e) { /* Calculation still works when browser storage is unavailable. */ }
         }

@@ -180,6 +180,8 @@
       <h1>Book a Free Consultation</h1>
       <p>Tell us about yourself and we'll craft a plan for you. No commitment — just a conversation about your goals.</p>
       <form id="consultPageForm">
+        <input type="hidden" name="form_type" value="consultation" />
+        <input type="hidden" name="source" value="book_consultation_page" />
         <div class="consult-row">
           <label>Your name<input name="name" autocomplete="name" required placeholder="e.g. Rahul Sharma" /></label>
           <label>Phone<input name="phone" type="tel" autocomplete="tel" required placeholder="+91 98765 43210" /></label>
@@ -244,24 +246,29 @@
     document.addEventListener("DOMContentLoaded", function() {
       var form = document.getElementById("consultPageForm");
       var status = document.getElementById("consultPageStatus");
-      if (!form) return;
+      if (!form || !status) return;
       form.addEventListener("submit", function(e) {
         e.preventDefault();
         var payload = Object.fromEntries(new FormData(form).entries());
+        payload.form_type = "consultation";
+        payload.source = "book_consultation_page";
         status.textContent = "Sending\u2026";
         status.style.color = "rgba(255,255,255,0.6)";
-        var apiBase = "";
-        var fetchOpts = { method: "POST", body: JSON.stringify(payload), headers: { "Content-Type": "application/json" } };
-        fetch(apiBase || "/api/submit", fetchOpts)
-          .then(function(r) { return r.json(); })
-          .then(function(d) {
-            if (d.ok || d.success) {
-              status.textContent = "\u2705 Thank you! We\u2019ll be in touch shortly.";
-              status.style.color = "#4ade80";
-              form.reset();
-            } else {
-              throw new Error(d.error || "Submit failed");
-            }
+        var submit = window.fgSubmitForm || function(body) {
+          return fetch("/api/forms/consultations", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(body)
+          }).then(function(r) { return r.json().then(function(d) {
+            if (!r.ok || !(d.ok || d.success)) throw new Error((d && d.error) || "Submit failed");
+            return d;
+          }); });
+        };
+        submit(payload)
+          .then(function() {
+            status.textContent = "\u2705 Thank you! We\u2019ll be in touch shortly.";
+            status.style.color = "#4ade80";
+            form.reset();
           })
           .catch(function() {
             status.textContent = "\u26a0\ufe0f Something went wrong. Please try again.";

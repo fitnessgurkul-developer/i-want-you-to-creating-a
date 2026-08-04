@@ -1,7 +1,7 @@
 {
-  "name": "fitness-gurukul-backend",
+  "name": "fitness-gurukul",
   "version": "1.0.0",
-  "description": "Fitness Gurukul form submission backend",
+  "description": "Fitness Gurukul website with simple SQLite form tables",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

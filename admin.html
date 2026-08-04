@@ -7,166 +7,227 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0a0a0a; color: #fff; min-height: 100vh; }
-    .admin-header { padding: 24px 32px; border-bottom: 1px solid rgba(255,255,255,0.06); display: flex; justify-content: space-between; align-items: center; }
+    .admin-header { padding: 24px 32px; border-bottom: 1px solid rgba(255,255,255,0.06); display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
     .admin-header h1 { font-size: 1.3rem; font-weight: 700; }
-    .admin-header .count { font-size: 0.82rem; color: rgba(255,255,255,0.4); }
-    .admin-header .actions { display: flex; gap: 10px; }
-    .admin-header button { padding: 8px 18px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.06); color: #fff; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+    .admin-header .count { font-size: 0.82rem; color: rgba(255,255,255,0.4); display: block; margin-top: 4px; }
+    .admin-header .actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+    .admin-header button { padding: 8px 18px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.06); color: #fff; font-size: 0.8rem; font-weight: 600; cursor: pointer; }
     .admin-header button:hover { background: rgba(255,255,255,0.12); }
     .admin-header .back { text-decoration: none; color: rgba(255,255,255,0.5); font-size: 0.82rem; }
     .admin-header .back:hover { color: #fff; }
     .admin-body { padding: 24px 32px; }
-    .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 28px; }
+    .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 20px; }
     .stat-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 18px; }
     .stat-card .label { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: rgba(255,255,255,0.35); margin-bottom: 6px; }
     .stat-card .value { font-size: 1.6rem; font-weight: 800; color: #fff; }
+    .tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+    .tabs button { padding: 8px 14px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: transparent; color: rgba(255,255,255,0.55); font-size: 0.78rem; font-weight: 600; cursor: pointer; }
+    .tabs button.active { background: rgba(255,255,255,0.1); color: #fff; border-color: rgba(255,255,255,0.2); }
     .table-wrap { overflow-x: auto; }
     table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
-    thead th { text-align: left; padding: 10px 14px; font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: rgba(255,255,255,0.35); border-bottom: 1px solid rgba(255,255,255,0.08); }
+    thead th { text-align: left; padding: 10px 14px; font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: rgba(255,255,255,0.35); border-bottom: 1px solid rgba(255,255,255,0.08); white-space: nowrap; }
     tbody td { padding: 12px 14px; border-bottom: 1px solid rgba(255,255,255,0.04); color: rgba(255,255,255,0.7); vertical-align: top; }
     tbody tr:hover { background: rgba(255,255,255,0.02); }
     .name { color: #fff; font-weight: 600; }
-    .program { display: inline-block; padding: 2px 10px; border-radius: 6px; background: rgba(255,255,255,0.06); font-size: 0.72rem; color: rgba(255,255,255,0.6); }
+    .pill { display: inline-block; padding: 2px 10px; border-radius: 6px; background: rgba(255,255,255,0.06); font-size: 0.72rem; color: rgba(255,255,255,0.6); }
     .time { font-size: 0.72rem; color: rgba(255,255,255,0.3); }
-    .delete-btn { background: none; border: none; color: rgba(255,255,255,0.25); cursor: pointer; font-size: 0.75rem; padding: 4px 8px; border-radius: 4px; transition: color 0.2s, background 0.2s; }
+    .delete-btn { background: none; border: none; color: rgba(255,255,255,0.25); cursor: pointer; font-size: 0.75rem; padding: 4px 8px; border-radius: 4px; }
     .delete-btn:hover { color: #dc3545; background: rgba(220,53,69,0.1); }
     .empty { text-align: center; padding: 60px 20px; color: rgba(255,255,255,0.3); }
     .empty h2 { font-size: 1.1rem; margin-bottom: 8px; color: rgba(255,255,255,0.5); }
-    @media (max-width: 768px) { .stats { grid-template-columns: 1fr 1fr; } .admin-body { padding: 16px; } .admin-header { padding: 16px; } }
+    .error { color: #ff8a8a; padding: 16px 0; }
+    @media (max-width: 768px) { .stats { grid-template-columns: 1fr 1fr; } .admin-body, .admin-header { padding: 16px; } }
   </style>
 </head>
 <body>
   <div class="admin-header">
     <div>
       <h1>Form Submissions</h1>
-      <span class="count" id="count">Loading...</span>
+      <span class="count" id="count">Loading…</span>
     </div>
     <div class="actions">
       <a class="back" href="/">&larr; Back to site</a>
-      <button onclick="loadSubmissions()">Refresh</button>
-      <button onclick="exportCSV()">Export CSV</button>
+      <button type="button" onclick="loadSubmissions()">Refresh</button>
+      <button type="button" onclick="exportCSV()">Export CSV</button>
     </div>
   </div>
   <div class="admin-body">
     <div class="stats">
-      <div class="stat-card"><div class="label">Total Submissions</div><div class="value" id="statTotal">0</div></div>
-      <div class="stat-card"><div class="label">Today</div><div class="value" id="statToday">0</div></div>
-      <div class="stat-card"><div class="label">This Week</div><div class="value" id="statWeek">0</div></div>
-      <div class="stat-card"><div class="label">Unique Programs</div><div class="value" id="statPrograms">0</div></div>
+      <div class="stat-card"><div class="label">Consultations</div><div class="value" id="statConsultations">0</div></div>
+      <div class="stat-card"><div class="label">Challenge</div><div class="value" id="statChallenge">0</div></div>
+      <div class="stat-card"><div class="label">Corporate</div><div class="value" id="statCorporate">0</div></div>
+      <div class="stat-card"><div class="label">Calculations</div><div class="value" id="statCalculations">0</div></div>
+    </div>
+    <div class="tabs" id="tabs">
+      <button type="button" class="active" data-table="all">All</button>
+      <button type="button" data-table="consultations">Consultations</button>
+      <button type="button" data-table="challenge_leads">Challenge</button>
+      <button type="button" data-table="corporate_events">Corporate</button>
+      <button type="button" data-table="calculations">Calculations</button>
     </div>
     <div class="table-wrap">
       <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Phone</th>
-            <th>Email</th>
-            <th>Program</th>
-            <th>Coach</th>
-            <th>Goal</th>
-            <th>Notes</th>
-            <th>Date</th>
-            <th></th>
-          </tr>
-        </thead>
+        <thead id="thead"></thead>
         <tbody id="tbody"></tbody>
       </table>
       <div class="empty" id="empty" style="display:none">
         <h2>No submissions yet</h2>
-        <p>Form submissions will appear here in real time.</p>
+        <p>Form submissions land in SQLite tables and show up here.</p>
       </div>
+      <p class="error" id="error" style="display:none"></p>
     </div>
   </div>
 
   <script>
+    const TABLE_COLUMNS = {
+      consultations: [
+        ["name", "Name"], ["phone", "Phone"], ["email", "Email"], ["program", "Program"],
+        ["coach", "Coach"], ["goal", "Goal"], ["message", "Notes"], ["source", "Source"], ["created_at", "Date"]
+      ],
+      challenge_leads: [
+        ["name", "Name"], ["phone", "Phone"], ["email", "Email"], ["location", "Location"],
+        ["program", "Program"], ["goal", "Goal"], ["message", "Notes"], ["created_at", "Date"]
+      ],
+      corporate_events: [
+        ["company", "Company"], ["contact_name", "Contact"], ["phone", "Phone"], ["email", "Email"],
+        ["event_type", "Event"], ["attendees", "Attendees"], ["preferred_date", "Date wanted"],
+        ["budget", "Budget"], ["location", "Location"], ["message", "Notes"], ["created_at", "Date"]
+      ],
+      calculations: [
+        ["title", "Calculator"], ["result", "Result"], ["unit", "Unit"], ["rating", "Rating"],
+        ["details", "Details"], ["created_at", "Date"]
+      ]
+    };
+
     let allData = [];
+    let activeTable = "all";
+    let counts = { consultations: 0, challenge_leads: 0, corporate_events: 0, calculations: 0 };
+
+    document.getElementById("tabs").addEventListener("click", function(e) {
+      const btn = e.target.closest("button[data-table]");
+      if (!btn) return;
+      activeTable = btn.dataset.table;
+      Array.from(document.getElementById("tabs").children).forEach(function(b) {
+        b.classList.toggle("active", b === btn);
+      });
+      render();
+    });
 
     async function loadSubmissions() {
+      const error = document.getElementById("error");
+      error.style.display = "none";
       try {
         const res = await fetch("/api/submissions");
         const json = await res.json();
-        if (json.ok) {
-          allData = json.data;
-          renderTable(allData);
-          updateStats(allData);
-        }
+        if (!json.ok) throw new Error(json.error || "Failed to load");
+        allData = json.data || [];
+        counts = { consultations: 0, challenge_leads: 0, corporate_events: 0, calculations: 0 };
+        allData.forEach(function(row) {
+          if (counts[row._table] != null) counts[row._table] += 1;
+        });
+        document.getElementById("statConsultations").textContent = counts.consultations;
+        document.getElementById("statChallenge").textContent = counts.challenge_leads;
+        document.getElementById("statCorporate").textContent = counts.corporate_events;
+        document.getElementById("statCalculations").textContent = counts.calculations;
+        document.getElementById("count").textContent = allData.length + " total · SQLite tables";
+        render();
       } catch (err) {
-        console.error("Failed to load:", err);
+        error.style.display = "block";
+        error.textContent = "Could not reach the SQLite backend. Run npm start, then open /admin on that server.";
+        console.error(err);
       }
     }
 
-    function renderTable(data) {
+    function filteredRows() {
+      if (activeTable === "all") return allData;
+      return allData.filter(function(row) { return row._table === activeTable; });
+    }
+
+    function formatWhen(value) {
+      if (!value) return "—";
+      const d = new Date(value);
+      if (Number.isNaN(d.getTime())) return String(value);
+      return d.toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }) +
+        "<br>" + d.toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" });
+    }
+
+    function render() {
+      const rows = filteredRows();
+      const thead = document.getElementById("thead");
       const tbody = document.getElementById("tbody");
       const empty = document.getElementById("empty");
-      if (!data.length) {
+
+      if (!rows.length) {
+        thead.innerHTML = "";
         tbody.innerHTML = "";
         empty.style.display = "block";
         return;
       }
       empty.style.display = "none";
-      tbody.innerHTML = data.map(s => {
-        const d = new Date(s.timestamp);
-        const dateStr = d.toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
-        const timeStr = d.toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" });
-        const isCorp = s.form_type === "corporate_event";
-        return `<tr>
-          <td class="name">${esc(s.name)}</td>
-          <td>${esc(s.phone)}</td>
-          <td>${esc(s.email || "—")}</td>
-          <td><span class="program">${isCorp ? esc(s.event_type || "—") : esc(s.program)}</span></td>
-          <td>${s.coach ? esc(s.coach) : (isCorp ? esc(s.company || "—") : "—")}</td>
-          <td>${isCorp ? esc(s.attendees || "—") : esc(s.goal)}</td>
-          <td>${esc(s.message || "—")}</td>
-          <td><span class="time">${dateStr}<br>${timeStr}</span></td>
-          <td><button class="delete-btn" onclick="deleteSubmission('${s.id}')">Delete</button></td>
-        </tr>`;
+
+      if (activeTable === "all") {
+        thead.innerHTML = "<tr><th>Table</th><th>Name / Company</th><th>Phone</th><th>Email</th><th>Detail</th><th>Date</th><th></th></tr>";
+        tbody.innerHTML = rows.map(function(s) {
+          const label = s.name || s.contact_name || s.company || s.title || "—";
+          const detail = s.program || s.event_type || s.result || s.goal || "—";
+          return "<tr>" +
+            "<td><span class=\"pill\">" + esc(s._table) + "</span></td>" +
+            "<td class=\"name\">" + esc(label) + "</td>" +
+            "<td>" + esc(s.phone || "—") + "</td>" +
+            "<td>" + esc(s.email || "—") + "</td>" +
+            "<td>" + esc(detail) + "</td>" +
+            "<td><span class=\"time\">" + formatWhen(s.created_at) + "</span></td>" +
+            "<td><button class=\"delete-btn\" onclick=\"deleteSubmission('" + esc(s._table) + "','" + esc(s.id) + "')\">Delete</button></td>" +
+            "</tr>";
+        }).join("");
+        return;
+      }
+
+      const cols = TABLE_COLUMNS[activeTable] || [];
+      thead.innerHTML = "<tr>" + cols.map(function(c) { return "<th>" + c[1] + "</th>"; }).join("") + "<th></th></tr>";
+      tbody.innerHTML = rows.map(function(s) {
+        return "<tr>" + cols.map(function(c) {
+          const key = c[0];
+          if (key === "created_at") return "<td><span class=\"time\">" + formatWhen(s[key]) + "</span></td>";
+          if (key === "program" || key === "event_type" || key === "source") {
+            return "<td><span class=\"pill\">" + esc(s[key] || "—") + "</span></td>";
+          }
+          const val = s[key];
+          const cls = key === "name" || key === "company" || key === "contact_name" || key === "title" ? " class=\"name\"" : "";
+          return "<td" + cls + ">" + esc(val == null || val === "" ? "—" : val) + "</td>";
+        }).join("") +
+          "<td><button class=\"delete-btn\" onclick=\"deleteSubmission('" + esc(s._table) + "','" + esc(s.id) + "')\">Delete</button></td></tr>";
       }).join("");
     }
 
-    function updateStats(data) {
-      document.getElementById("statTotal").textContent = data.length;
-      document.getElementById("count").textContent = data.length + " total submissions";
-
-      const now = new Date();
-      const today = data.filter(s => {
-        const d = new Date(s.timestamp);
-        return d.toDateString() === now.toDateString();
-      });
-      document.getElementById("statToday").textContent = today.length;
-
-      const weekAgo = new Date(now - 7 * 24 * 60 * 60 * 1000);
-      const week = data.filter(s => new Date(s.timestamp) >= weekAgo);
-      document.getElementById("statWeek").textContent = week.length;
-
-      const programs = new Set(data.map(s => s.program));
-      document.getElementById("statPrograms").textContent = programs.size;
-    }
-
-    async function deleteSubmission(id) {
+    async function deleteSubmission(table, id) {
       if (!confirm("Delete this submission?")) return;
-      await fetch("/api/submissions/" + id, { method: "DELETE" });
+      await fetch("/api/submissions/" + encodeURIComponent(table) + "/" + encodeURIComponent(id), { method: "DELETE" });
       loadSubmissions();
     }
 
     function exportCSV() {
-      if (!allData.length) return alert("No data to export");
-      const headers = ["Name", "Phone", "Email", "Program", "Goal", "Notes", "Date", "Time"];
-      const rows = allData.map(s => {
-        const d = new Date(s.timestamp);
-        return [s.name, s.phone, s.email, s.program, s.goal, s.message, d.toLocaleDateString("en-IN"), d.toLocaleTimeString("en-IN")];
+      const rows = filteredRows();
+      if (!rows.length) return alert("No data to export");
+      const keys = Array.from(rows.reduce(function(set, row) {
+        Object.keys(row).forEach(function(k) { if (k !== "_table") set.add(k); });
+        return set;
+      }, new Set(["_table"])));
+      let csv = keys.join(",") + "\n";
+      rows.forEach(function(row) {
+        csv += keys.map(function(k) {
+          return '"' + String(row[k] == null ? "" : row[k]).replace(/"/g, '""') + '"';
+        }).join(",") + "\n";
       });
-      let csv = headers.join(",") + "\n";
-      rows.forEach(r => { csv += r.map(v => '"' + String(v).replace(/"/g, '""') + '"').join(",") + "\n"; });
-      const blob = new Blob([csv], { type: "text/csv" });
       const a = document.createElement("a");
-      a.href = URL.createObjectURL(blob);
-      a.download = "submissions_" + new Date().toISOString().slice(0, 10) + ".csv";
+      a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv" }));
+      a.download = "fg_" + activeTable + "_" + new Date().toISOString().slice(0, 10) + ".csv";
       a.click();
     }
 
     function esc(str) {
       const div = document.createElement("div");
-      div.textContent = str;
+      div.textContent = str == null ? "" : String(str);
       return div.innerHTML;
     }
 
