@@ -1,9 +1,11 @@
 /**
  * Fitness Gurukul — simple SQLite form backend
- * One table per form type. Run: npm start  →  http://127.0.0.1:3000
+ * Local: npm start  →  http://127.0.0.1:3000
+ * Live:  Render web service (see README)
  */
 const express = require("express");
 const cors = require("cors");
+const nodemailer = require("nodemailer");
 const initSqlJs = require("sql.js");
 const fs = require("fs");
 const path = require("path");
@@ -11,7 +13,9 @@ const crypto = require("crypto");
 
 const app = express();
 const PORT = Number(process.env.PORT || 3000);
-const DB_PATH = path.join(__dirname, "fitness_gurukul.sqlite3");
+const HOST = process.env.HOST || "0.0.0.0";
+const DB_PATH =
+  process.env.DB_PATH || path.join(__dirname, "fitness_gurukul.sqlite3");
 
 app.use(cors());
 app.use(express.json({ limit: "1mb" }));
@@ -19,6 +23,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(__dirname));
 
 let db;
+let mailer = null;
+
+const LEAD_TABLES = new Set(["consultations", "challenge_leads", "corporate_events"]);
 
 const TABLES = {
   consultations: {
@@ -264,7 +271,67 @@ function insertRow(table, payload, ip) {
     [id, ...values, createdAt, ip]
   );
   saveDatabase();
-  return { id, table, created_at: createdAt };
+
+  const saved = { id, table, created_at: createdAt };
+  const record = {};
+  meta.columns.forEach((col, i) => {
+    record[col] = values[i];
+  });
+  notifyLeadEmail(table, record, saved).catch((err) => {
+    console.error("Lead email failed:", err.message || err);
+  });
+  return saved;
+}
+
+function initMailer() {
+  const host = str(process.env.SMTP_HOST);
+  const user = str(process.env.SMTP_USER);
+  const pass = str(process.env.SMTP_PASS);
+  if (!host || !user || !pass) {
+    console.log("Lead email: off (set SMTP_HOST, SMTP_USER, SMTP_PASS, LEAD_NOTIFY_EMAIL)");
+    return;
+  }
+  mailer = nodemailer.createTransport({
+    host,
+    port: Number(process.env.SMTP_PORT || 465),
+    secure: String(process.env.SMTP_SECURE || "true") !== "false",
+    auth: { user, pass },
+  });
+  console.log("Lead email: on →", str(process.env.LEAD_NOTIFY_EMAIL || process.env.MAIL_TO || "(missing LEAD_NOTIFY_EMAIL)"));
+}
+
+async function notifyLeadEmail(table, record, meta) {
+  if (!LEAD_TABLES.has(table) || !mailer) return;
+  const to = str(process.env.LEAD_NOTIFY_EMAIL || process.env.MAIL_TO);
+  if (!to) return;
+
+  const labels = {
+    consultations: "New consultation lead",
+    challenge_leads: "New challenge lead",
+    corporate_events: "New corporate event inquiry",
+  };
+  const subject = `[Fitness Gurukul] ${labels[table] || "New lead"}`;
+  const lines = Object.entries(record)
+    .filter(([, v]) => v)
+    .map(([k, v]) => `${k}: ${v}`);
+  lines.push(`table: ${table}`);
+  lines.push(`id: ${meta.id}`);
+  lines.push(`created_at: ${meta.created_at}`);
+
+  const from =
+    str(process.env.MAIL_FROM) ||
+    str(process.env.SMTP_USER) ||
+    "noreply@fitnessgurukul.co.in";
+
+  await mailer.sendMail({
+    from,
+    to,
+    subject,
+    text: lines.join("\n"),
+    html: `<h2>${subject}</h2><pre style="font-family:ui-monospace,monospace;font-size:14px">${lines
+      .map((l) => l.replace(/</g, "&lt;"))
+      .join("\n")}</pre>`,
+  });
 }
 
 app.get("/api/health", (_req, res) => {
@@ -355,10 +422,12 @@ app.get("/", (_req, res) => {
 
 initDatabase()
   .then(() => {
-    app.listen(PORT, () => {
-      console.log(`Fitness Gurukul SQLite forms running at http://127.0.0.1:${PORT}`);
-      console.log(`Admin: http://127.0.0.1:${PORT}/admin`);
+    initMailer();
+    app.listen(PORT, HOST, () => {
+      console.log(`Fitness Gurukul SQLite forms running at http://${HOST}:${PORT}`);
+      console.log(`Admin: /admin`);
       console.log(`Tables: ${Object.keys(TABLES).join(", ")}`);
+      console.log(`DB: ${DB_PATH}`);
     });
   })
   .catch((err) => {

@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: fitness-gurukul
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      # Where lead emails are sent
+      - key: LEAD_NOTIFY_EMAIL
+        sync: false
+      # SMTP (Gmail example: smtp.gmail.com / 465)
+      - key: SMTP_HOST
+        sync: false
+      - key: SMTP_PORT
+        value: "465"
+      - key: SMTP_USER
+        sync: false
+      - key: SMTP_PASS
+        sync: false
+      - key: MAIL_FROM
+        sync: false
