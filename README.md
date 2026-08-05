@@ -1,72 +1,71 @@
 # Fitness Gurukul Full-Stack Website
 
-Multi-page Fitness Gurukul website with a responsive frontend, Python backend, and SQLite database.
+Multi-page Fitness Gurukul website with a responsive frontend, Node (or Python) backend, and SQLite database.
 
 ## What is included
 
-- Frontend: detailed pages in `public/`
-- Backend: dependency-free Python HTTP API in `server.py`
-- Database: SQLite file created automatically as `fitness_gurukul.sqlite3`
-- Dashboard: view user-entered leads, progress check-ins, and newsletter entries
-- Download: packaged project ZIP at `public/fitness-gurukul-fullstack.zip`
+- Frontend: HTML pages, `styles.css`, and `app.js` at the repo root
+- Backend (pick one for local/API hosting):
+  - **Node** — `server.js` (used by `npm start` and Render)
+  - **Python** — `server.py` (dependency-free HTTP API alternative)
+- Database: SQLite file created automatically (`fitness_gurukul.sqlite3` / sql.js for Node)
+- Admin: `admin.html` (Node submissions) and `owner-data.html` (Python admin-data)
+- Static deploys (Netlify/Vercel): frontend only via `scripts/prepare-static-dist.sh`
 
 ## Pages
 
-- `index.html` - logo-led home, guide, featured services, story, events, testimonials
-- `programs.html` - detailed services, filters, comparison table, packages
-- `events.html` - corporate marathon, cycling, active day, and planning flow
-- `community.html` - community runs, cycling crews, wellness challenges, and transformation paths
-- `coaches.html` - coaches, specialties, standards, testimonials, updates
-- `tools.html` - BMI, goal recommendation, check-ins, storage mode status
-- `contact.html` - consultation form, contact cards, areas, FAQ, newsletter
-- `owner-data.html` - direct owner-only data viewer, not linked in the client navigation
+- `index.html` — home
+- `about.html` — about
+- `services.html` — services, plans, pricing
+- `events.html` — community and corporate events
+- `coaches.html` — coaches (profiles open as overlays)
+- `tools.html` — BMI and fitness tools
+- `testimonials.html` — success stories
+- `contact.html` — consultation form and FAQ
+- `book-consultation.html` — booking form
+- `transformation-challenge.html` — challenge signup
+- `owner-data.html` / `admin.html` — owner-only data viewers (not in main nav)
 
 ## Brand system
 
-The UI uses the uploaded Fitness Gurukul logo colors only:
+The UI uses the Fitness Gurukul logo colors:
 
 - Black/dark background
 - Logo cyan and blue
 - Fitness red
 - White/ice text surfaces
 
-The fonts are Montserrat for headings/buttons and Inter for body/UI text.
+Fonts: Montserrat for headings/buttons, Inter for body/UI text.
 
 ## Run locally
+
+### Node (default)
+
+```bash
+npm install
+npm start
+```
+
+Open `http://127.0.0.1:3000` (or the port logged by the server).
+
+### Python alternative
 
 ```bash
 python server.py
 ```
 
-Open:
+Open `http://127.0.0.1:8000`.
 
-```text
-http://127.0.0.1:8000
-```
-
-To collect form data from another laptop on the same Wi-Fi, share your main laptop's network link:
-
-```text
-http://YOUR-LAPTOP-IP:8000/contact.html
-```
-
-Do not share `127.0.0.1` with another device. On another laptop, `127.0.0.1` points back to that other laptop.
+To collect form data from another laptop on the same Wi-Fi, share your main laptop's network link (not `127.0.0.1`).
 
 ## Where user data appears
 
-Run the backend, submit a form, then open:
+Run a backend, submit a form, then open:
 
-```text
-http://127.0.0.1:8000/owner-data.html
-```
+- Node: `admin.html` (`/api/submissions`)
+- Python: `owner-data.html` (`/api/admin-data`)
 
-The raw JSON is available at:
-
-```text
-http://127.0.0.1:8000/api/admin-data
-```
-
-Static hosting cannot run Python or SQLite, so static forms save demo records in the browser only.
+Static hosting cannot run the backend, so forms save demo records in the browser only.
 
 ## AI chatbot (free by default)
 
@@ -115,13 +114,24 @@ Priority with `CHAT_PROVIDER=auto`: **Ollama → local FAQ** (OpenAI only when o
 
 ## API endpoints
 
+Shared / common:
+
 - `GET /api/health`
 - `GET /api/content`
 - `GET /api/chat/status`
 - `POST /api/chat`
+
+Node (`server.js`):
+
+- `POST /api/submit`
+- `GET /api/submissions`
+- `DELETE /api/submissions`
+
+Python (`server.py`):
+
 - `POST /api/leads`
-- `GET /api/leads`
 - `POST /api/newsletter`
 - `POST /api/checkins`
+- `POST /api/calculations`
 - `GET /api/stats`
 - `GET /api/admin-data`

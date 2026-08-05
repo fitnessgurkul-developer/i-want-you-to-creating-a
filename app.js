@@ -66,14 +66,11 @@ const has = (selector) => Boolean(qs(selector));
   });
 })();
 
-let activeProgramFilter = "all";
-let allServices = [];
 let activeCoachFilter = "all";
 let allCoaches = [];
 let activeAdminTab = "leads";
 let adminData = { leads: [], checkins: [], ai_scans: [], newsletter: [], calculations: [] };
 let usesLocalBackend = false;
-let coachProfiles = [];
 
 const accentMap = {
   blue: "var(--white)",
@@ -136,160 +133,6 @@ const realData = {
   { name: "Ramakrishna", quote: "At my age I thought getting back in shape was impossible. My coach proved me wrong. The training was tough but always safe, and the nutrition plan was practical and easy to follow. I feel 10 years younger now.", result: "Weight Loss", rating: 5, galleryImage: STORY_MAP_IMAGES[2], before: 88, after: 74, unit: "kg", metric: "Weight", journey: [{ month: "Start", value: "88 kg" }, { month: "Month 2", value: "84 kg" }, { month: "Month 4", value: "79 kg" }, { month: "Month 6", value: "74 kg" }], coach: "Fitness Gurukul" },
   { name: "Deepak", quote: "I came to Fitness Gurukul with low energy and bad habits. The structured program and constant accountability from my coach kept me on track. Six months later I am stronger, leaner, and more confident than I have ever been.", result: "Weight Loss", rating: 5, galleryImage: STORY_MAP_IMAGES[3], before: 90, after: 76, unit: "kg", metric: "Weight", journey: [{ month: "Start", value: "90 kg" }, { month: "Month 2", value: "85 kg" }, { month: "Month 4", value: "80 kg" }, { month: "Month 6", value: "76 kg" }], coach: "Fitness Gurukul" },
   ],
-  workouts: [
-    {n:"10-Minute Ab Finisher Add-On",c:"Quick",l:"All Levels",d:"10 min"},
-    {n:"15-Min Morning Dumbbell Routine",c:"Quick",l:"Beginner",d:"15 min"},
-    {n:"15-Minute Kettlebell Complex Finisher",c:"Quick",l:"Intermediate",d:"15 min"},
-    {n:"20-Minute AMRAP Total Body Blitz",c:"Quick",l:"Intermediate",d:"20 min"},
-    {n:"20-Minute Lower Body Burn Session",c:"Quick",l:"All Levels",d:"20 min"},
-    {n:"20-Minute Upper Body Pump Session",c:"Quick",l:"All Levels",d:"20 min"},
-    {n:"30-Minute Full Body Express",c:"Quick",l:"All Levels",d:"30 min"},
-    {n:"30-Minute Superset Full Body Dumbbell Blast",c:"Quick",l:"Intermediate",d:"30 min"},
-    {n:"45-Minute Hypertrophy Express",c:"Quick",l:"Intermediate",d:"45 min"},
-    {n:"Early Morning Barbell Workout Before Work",c:"Quick",l:"Intermediate",d:"30 min"},
-    {n:"Tabata Dumbbell Workout: 4 Minutes of Pain",c:"Quick",l:"All Levels",d:"4 min"},
-    {n:"20-Min HIIT Treadmill Workout",c:"HIIT",l:"Intermediate",d:"20 min"},
-    {n:"20-Min Tabata Fat Burner",c:"HIIT",l:"All Levels",d:"20 min"},
-    {n:"30-Day HIIT Fat Burn Challenge",c:"HIIT",l:"All Levels",d:"30 days"},
-    {n:"30-Min Home Dumbbell Workout",c:"Home",l:"Beginner",d:"30 min"},
-    {n:"25-Min Foam Roller & Mobility Routine",c:"Recovery",l:"All Levels",d:"25 min"},
-    {n:"5/3/1 Wendler Strength Program for Intermediates",c:"Strength",l:"Intermediate",d:"12 weeks"},
-    {n:"5x5 StrongLifts: 8-Week Guide",c:"Strength",l:"Beginner",d:"8 weeks"},
-    {n:"Barbell Only Minimalist Strength Program",c:"Strength",l:"All Levels",d:"6 weeks"},
-    {n:"Beginner Strength: 3-Day Full Body Barbell",c:"Strength",l:"Beginner",d:"8 weeks"},
-    {n:"Intermediate Powerbuilding: 12-Week Program",c:"Strength",l:"Intermediate",d:"12 weeks"},
-    {n:"Strongman-Inspired Functional Strength Program",c:"Strength",l:"Advanced",d:"8 weeks"},
-    {n:"Ultimate Strength-Focused Plan",c:"Strength",l:"Intermediate",d:"12 weeks"},
-    {n:"90-Day Mass Builder for Hardgainers",c:"Hypertrophy",l:"Intermediate",d:"90 days"},
-    {n:"German Volume Training: 10x10 Mass Building",c:"Muscle Building",l:"Intermediate",d:"6 weeks"},
-    {n:"Lean Bulk: 12-Week Muscle Building Program",c:"Muscle Building",l:"Intermediate",d:"12 weeks"},
-    {n:"Cutting Program: Maintain Muscle, Lose Fat",c:"Fat Loss",l:"Intermediate",d:"8 weeks"},
-    {n:"12-Week Full Body Transformation",c:"Full Body",l:"All Levels",d:"12 weeks"},
-    {n:"3-Day Dumbbell-Only Full Body Plan",c:"Full Body",l:"Beginner",d:"8 weeks"},
-    {n:"4-Week Resistance Band Full Body Plan",c:"Full Body",l:"Beginner",d:"4 weeks"},
-    {n:"7-Day Full Body Fitness Plan",c:"Full Body",l:"All Levels",d:"7 days"},
-    {n:"Bodyweight to Barbell Bridge Program",c:"Full Body",l:"Beginner",d:"6 weeks"},
-    {n:"Garage Gym Program: Barbell, Rack, and Dumbbells",c:"Full Body",l:"Intermediate",d:"12 weeks"},
-    {n:"Over 40 Strength Training: Safe & Effective",c:"Full Body",l:"Beginner",d:"8 weeks"},
-    {n:"25-Min Lunch Break Bodyweight Session",c:"Bodyweight",l:"All Levels",d:"25 min"},
-    {n:"6-Week Bodyweight Bootcamp",c:"Bodyweight",l:"Beginner",d:"6 weeks"},
-    {n:"Calisthenics Skills Progression Program",c:"Bodyweight",l:"Intermediate",d:"12 weeks"},
-    {n:"Hotel Room Travel Workout: No Equipment Needed",c:"Bodyweight",l:"All Levels",d:"20 min"},
-    {n:"Zero to 10 Pull-Ups in 30 Days",c:"Bodyweight",l:"Beginner",d:"30 days"},
-    {n:"Running & Lifting Hybrid Program for Runners",c:"Hybrid",l:"Intermediate",d:"8 weeks"},
-    {n:"Zone 2 Base Building: 8-Week Aerobic Program for Lifters",c:"Hybrid",l:"Intermediate",d:"8 weeks"},
-    {n:"Functional Fitness: 4-Week Real-World Strength",c:"Functional",l:"Beginner",d:"4 weeks"},
-    {n:"Rucking Starter Program: 4-Week Weighted Walk Progression",c:"Functional",l:"Beginner",d:"4 weeks"},
-    {n:"20-Min Core & Abs Workout",c:"Core",l:"All Levels",d:"20 min"},
-    {n:"Core Strength & Stability: 6-Week Program",c:"Core",l:"Intermediate",d:"6 weeks"},
-    {n:"Glute-Focused Lower Body Builder",c:"Lower Body",l:"All Levels",d:"6 weeks"},
-    {n:"Arm Specialization: 6-Week Bicep & Tricep Program",c:"Specialization",l:"Intermediate",d:"6 weeks"},
-    {n:"Back Width & Thickness: 8-Week Program",c:"Specialization",l:"Intermediate",d:"8 weeks"},
-    {n:"Calf Specialization: Stubborn Muscle Program",c:"Specialization",l:"Intermediate",d:"8 weeks"},
-    {n:"Chest Specialization: 8-Week Pec Builder",c:"Specialization",l:"Intermediate",d:"8 weeks"},
-    {n:"Forearm & Grip Strength Builder",c:"Specialization",l:"All Levels",d:"6 weeks"},
-    {n:"Grip Strength Builder: 6-Week Forearm & Grip Program",c:"Specialization",l:"Beginner",d:"6 weeks"},
-    {n:"Hamstring & Posterior Chain Specialization",c:"Specialization",l:"Intermediate",d:"6 weeks"},
-    {n:"Quad-Dominant Leg Hypertrophy Program",c:"Specialization",l:"Intermediate",d:"8 weeks"},
-    {n:"Shoulder Builder: 8-Week Boulder Shoulders",c:"Specialization",l:"Intermediate",d:"8 weeks"},
-    {n:"Trap Builder: Thick Neck & Yoke Program",c:"Specialization",l:"Intermediate",d:"6 weeks"},
-    {n:"Upper Chest & Front Delt Builder",c:"Specialization",l:"Intermediate",d:"6 weeks"},
-    {n:"Rear Delt & Upper Back Posture Program",c:"Corrective",l:"All Levels",d:"6 weeks"},
-    {n:"3-Day Push/Pull/Legs for Busy Intermediates",c:"Split",l:"Intermediate",d:"8 weeks"},
-    {n:"5-Day Strength & Symmetry Split",c:"Split",l:"Intermediate",d:"12 weeks"},
-    {n:"5-Day Targeted Split Routine",c:"Split",l:"Intermediate",d:"12 weeks"},
-    {n:"Beginner Upper/Lower Split",c:"Split",l:"Beginner",d:"8 weeks"},
-    {n:"Push/Pull/Legs 6-Day Hypertrophy Program",c:"Split",l:"Advanced",d:"12 weeks"},
-    {n:"Barbell Only: Minimalist Strength",c:"Equipment-Specific",l:"All Levels",d:"8 weeks"},
-    {n:"Cable Machine Only: Full Body Program",c:"Equipment-Specific",l:"All Levels",d:"8 weeks"},
-    {n:"Dumbbell Only: Complete Home Gym Program",c:"Equipment-Specific",l:"All Levels",d:"12 weeks"},
-    {n:"Kettlebell Only: Strength & Conditioning",c:"Equipment-Specific",l:"Intermediate",d:"8 weeks"},
-    {n:"Landmine Total Body Strength",c:"Equipment-Specific",l:"Intermediate",d:"6 weeks"},
-    {n:"Medicine Ball: Explosive Power Training",c:"Equipment-Specific",l:"Intermediate",d:"6 weeks"},
-    {n:"Pull-Up Bar Only: Upper Body Program",c:"Equipment-Specific",l:"Intermediate",d:"8 weeks"},
-    {n:"Resistance Band: Full Body Strength",c:"Equipment-Specific",l:"All Levels",d:"8 weeks"},
-    {n:"Sandbag Strength & Conditioning",c:"Equipment-Specific",l:"Intermediate",d:"6 weeks"},
-    {n:"TRX Suspension: Full Body Workout Plan",c:"Equipment-Specific",l:"Intermediate",d:"8 weeks"},
-    {n:"4-Week Kettlebell Total Body",c:"Kettlebell",l:"Beginner",d:"4 weeks"},
-    {n:"Beginner Kettlebell Fundamentals",c:"Kettlebell",l:"Beginner",d:"4 weeks"},
-    {n:"5/3/1 Boring But Big",c:"Training Methods",l:"Intermediate",d:"12 weeks"},
-    {n:"Blood Flow Restriction (BFR) Training",c:"Training Methods",l:"Advanced",d:"6 weeks"},
-    {n:"Cluster Set Strength & Power",c:"Training Methods",l:"Advanced",d:"6 weeks"},
-    {n:"Conjugate Method: Max Effort / Dynamic Effort",c:"Training Methods",l:"Advanced",d:"12 weeks"},
-    {n:"Daily Undulating Periodization (DUP)",c:"Training Methods",l:"Intermediate",d:"8 weeks"},
-    {n:"Drop Set Muscle Building Program",c:"Training Methods",l:"Intermediate",d:"6 weeks"},
-    {n:"Eccentric Overload Strength Program",c:"Training Methods",l:"Intermediate",d:"6 weeks"},
-    {n:"Myo-Rep Training: Time-Efficient Hypertrophy",c:"Training Methods",l:"Intermediate",d:"6 weeks"},
-    {n:"Rest-Pause Hypertrophy Training",c:"Training Methods",l:"Intermediate",d:"6 weeks"},
-    {n:"Accumulation-Intensification Cycle",c:"Periodization",l:"Advanced",d:"12 weeks"},
-    {n:"Block Periodization: Accumulation to Peak",c:"Periodization",l:"Advanced",d:"16 weeks"},
-    {n:"Concurrent Training: Strength & Cardio",c:"Periodization",l:"Intermediate",d:"8 weeks"},
-    {n:"Linear Periodization: 12-Week Strength Cycle",c:"Periodization",l:"Intermediate",d:"12 weeks"},
-    {n:"Peaking Program: Competition Prep",c:"Periodization",l:"Advanced",d:"8 weeks"},
-    {n:"Reverse Linear Periodization for Hypertrophy",c:"Periodization",l:"Intermediate",d:"10 weeks"},
-    {n:"RPE-Based Autoregulated Training",c:"Periodization",l:"Advanced",d:"8 weeks"},
-    {n:"Step Loading: Progressive Overload",c:"Periodization",l:"Intermediate",d:"8 weeks"},
-    {n:"Texas Method: Intermediate Strength",c:"Periodization",l:"Intermediate",d:"12 weeks"},
-    {n:"Wave Loading Strength Program",c:"Periodization",l:"Intermediate",d:"8 weeks"},
-    {n:"Barbell Complex: Fat Loss Conditioning",c:"Movement Mastery",l:"All Levels",d:"6 weeks"},
-    {n:"Explosive Power Development",c:"Movement Mastery",l:"Intermediate",d:"8 weeks"},
-    {n:"Hip Hinge Mastery: Deadlift Variations",c:"Movement Mastery",l:"All Levels",d:"6 weeks"},
-    {n:"Isometric Strength Training",c:"Movement Mastery",l:"All Levels",d:"6 weeks"},
-    {n:"Loaded Carry: Strength & Conditioning",c:"Movement Mastery",l:"All Levels",d:"6 weeks"},
-    {n:"Overhead Press Specialization",c:"Movement Mastery",l:"Intermediate",d:"8 weeks"},
-    {n:"Pause Rep Strength Building",c:"Movement Mastery",l:"All Levels",d:"6 weeks"},
-    {n:"Squat Every Day: High Frequency Program",c:"Movement Mastery",l:"Advanced",d:"8 weeks"},
-    {n:"Tempo Training: Muscle Building",c:"Movement Mastery",l:"All Levels",d:"6 weeks"},
-    {n:"Unilateral Training: Fix Your Imbalances",c:"Movement Mastery",l:"All Levels",d:"6 weeks"},
-    {n:"100kg Bench Press Program",c:"Goal-Oriented",l:"Intermediate",d:"12 weeks"},
-    {n:"200kg Deadlift: 12-Week Program",c:"Goal-Oriented",l:"Intermediate",d:"12 weeks"},
-    {n:"Bodybuilding: 16-Week Contest Prep",c:"Goal-Oriented",l:"Advanced",d:"16 weeks"},
-    {n:"First Muscle-Up Achievement Program",c:"Goal-Oriented",l:"Intermediate",d:"8 weeks"},
-    {n:"First Strict Pull-Up: Progression Program",c:"Goal-Oriented",l:"Beginner",d:"6 weeks"},
-    {n:"Military Fitness Test Prep",c:"Goal-Oriented",l:"Intermediate",d:"8 weeks"},
-    {n:"Obstacle Course Race Prep",c:"Goal-Oriented",l:"Intermediate",d:"12 weeks"},
-    {n:"Powerlifting Meet Prep: 12 Weeks",c:"Goal-Oriented",l:"Advanced",d:"12 weeks"},
-    {n:"Summer Shred: 8-Week Cutting Program",c:"Goal-Oriented",l:"Intermediate",d:"8 weeks"},
-    {n:"Wedding Day Physique: 12-Week Program",c:"Goal-Oriented",l:"All Levels",d:"12 weeks"},
-    {n:"30-Day Strength Challenge",c:"Challenge",l:"All Levels",d:"30 days"},
-    {n:"Active Aging: Over 60 Mobility & Strength",c:"Life Stage",l:"Beginner",d:"8 weeks"},
-    {n:"Busy Parent: 30-Minute Training",c:"Life Stage",l:"All Levels",d:"8 weeks"},
-    {n:"College Student: Dorm Room Workout",c:"Life Stage",l:"Beginner",d:"6 weeks"},
-    {n:"Comeback: Returning After Time Off",c:"Life Stage",l:"Beginner",d:"6 weeks"},
-    {n:"Couples Partner Workout Program",c:"Life Stage",l:"All Levels",d:"6 weeks"},
-    {n:"Desk Worker: Posture Fix & Strength",c:"Life Stage",l:"All Levels",d:"6 weeks"},
-    {n:"Over 50: Strength & Vitality",c:"Life Stage",l:"Beginner",d:"8 weeks"},
-    {n:"Postpartum: Return to Fitness",c:"Life Stage",l:"Beginner",d:"8 weeks"},
-    {n:"Prenatal Strength: Safe & Effective",c:"Life Stage",l:"Beginner",d:"8 weeks"},
-    {n:"Teen Athlete: Strength Foundations",c:"Life Stage",l:"Beginner",d:"8 weeks"},
-    {n:"Garage Gym Essentials: Home Training",c:"Lifestyle",l:"All Levels",d:"12 weeks"},
-    {n:"Gymnastic Rings: Bodyweight Training",c:"Lifestyle",l:"Intermediate",d:"8 weeks"},
-    {n:"Hotel Room Travel Workout",c:"Lifestyle",l:"All Levels",d:"20 min"},
-    {n:"Lunch Break Express: 30-Minute Workout",c:"Lifestyle",l:"All Levels",d:"30 min"},
-    {n:"Minimalist: 2-Day Per Week Strength",c:"Lifestyle",l:"All Levels",d:"12 weeks"},
-    {n:"Morning Routine: 20-Minute Wake-Up Workout",c:"Lifestyle",l:"All Levels",d:"20 min"},
-    {n:"Outdoor Park Workout: No Gym Needed",c:"Lifestyle",l:"All Levels",d:"30 min"},
-    {n:"Prehab: Injury Prevention Program",c:"Lifestyle",l:"All Levels",d:"6 weeks"},
-    {n:"Shift Worker: Flexible Training Program",c:"Lifestyle",l:"All Levels",d:"8 weeks"},
-    {n:"Strategic Deload Week: Recovery Program",c:"Lifestyle",l:"All Levels",d:"1 week"},
-    {n:"Basketball: Vertical Jump & Court Performance",c:"Sport-Specific",l:"Intermediate",d:"8 weeks"},
-    {n:"Cycling: Leg Power & Core Stability",c:"Sport-Specific",l:"Intermediate",d:"8 weeks"},
-    {n:"Golf: Rotational Power & Mobility",c:"Sport-Specific",l:"Intermediate",d:"6 weeks"},
-    {n:"Martial Arts: Striking Power & Conditioning",c:"Sport-Specific",l:"Intermediate",d:"8 weeks"},
-    {n:"Rock Climbing: Grip & Pull Strength",c:"Sport-Specific",l:"Intermediate",d:"8 weeks"},
-    {n:"Rugby: Collision Strength & Power",c:"Sport-Specific",l:"Advanced",d:"12 weeks"},
-    {n:"Ski Season: Preseason Leg & Core Prep",c:"Sport-Specific",l:"Intermediate",d:"8 weeks"},
-    {n:"Soccer: Speed, Agility & Endurance",c:"Sport-Specific",l:"Intermediate",d:"8 weeks"},
-    {n:"Swimming: Dryland Strength & Power",c:"Sport-Specific",l:"Intermediate",d:"8 weeks"},
-    {n:"Tennis: First-Step Speed & Shoulder Health",c:"Sport-Specific",l:"Intermediate",d:"6 weeks"},
-    {n:"Athletic Conditioning: Speed, Agility & Power",c:"Athletic",l:"Intermediate",d:"8 weeks"},
-  ],
-  updates: [
-    { title: "Online Personal Trainer in Hyderabad � Flexible Coaching for Modern Lifestyles", date: "2026-02-17", summary: "Flexible coaching with check-ins, workouts, and nutrition support for modern schedules." },
-    { title: "Certified Personal Trainer in Hyderabad � Qualified Guidance You Can Trust", date: "2026-02-14", summary: "Qualified programming helps clients train safely, recover better, and build repeatable habits." },
-    { title: "Best Dietician for Weight Loss in Hyderabad � Practical Nutrition for Real Change", date: "2026-02-14", summary: "Food choices, portions, and routine design for sustainable weight management." },
-  ],
-  serviceAreas: ["Manikonda", "Lakshmi Nagar Colony", "Gachibowli", "Kokapet", "Narsingi", "Financial District", "HITEC City", "Madhapur", "Puppalaguda", "Shaikpet", "Jubilee Hills"],
   contact: {
     phone: "+917207113310",
     whatsapp: "+917207113310",
@@ -299,29 +142,11 @@ const realData = {
   },
 };
 
-/* A focused, original workout library with a practical Indian nutrition note per plan. */
-const curatedWorkouts = [
-  {n:"Foundation Strength",c:"Strength",l:"Beginner",d:"8 weeks",summary:"Three full-body sessions that teach the big lifts and build dependable strength.",diet:"Three balanced meals: protein at every meal, rice or roti around training, vegetables twice daily, and steady water intake."},
-  {n:"Build Muscle: Upper / Lower",c:"Hypertrophy",l:"Intermediate",d:"8 weeks",summary:"Four weekly sessions with progressive volume for balanced muscle growth.",diet:"Use a modest calorie surplus with protein in 3�4 meals. Add fruit, curd, paneer, eggs, dal, chicken, rice or roti based on preference."},
-  {n:"Fat Loss & Conditioning",c:"Fat Loss",l:"All Levels",d:"6 weeks",summary:"Strength training plus focused conditioning to preserve muscle while improving fitness.",diet:"Build plates around lean protein, vegetables, dal, fruit, and measured rice or roti portions. Avoid crash dieting; progress comes from consistency."},
-  {n:"Home Dumbbell Full Body",c:"Home",l:"Beginner",d:"6 weeks",summary:"Simple home sessions using a pair of dumbbells and clear weekly progression.",diet:"Keep it simple: protein at breakfast, lunch, and dinner; a fruit or curd snack; and enough carbs to support training without skipping meals."},
-  {n:"Quick HIIT Express",c:"HIIT",l:"Intermediate",d:"4 weeks",summary:"Short interval sessions for days when you want intensity without a long workout.",diet:"Have a light carb-and-protein snack before hard sessions if needed, then recover with a complete meal and extra fluids afterward."},
-  {n:"Core & Mobility Reset",c:"Recovery",l:"All Levels",d:"4 weeks",summary:"Low-fatigue mobility and trunk work to help you move, brace, and recover better.",diet:"Prioritize regular meals, protein, colorful produce, hydration, and sleep. This is a recovery block, not a restrictive diet phase."},
-  {n:"Bodyweight Anywhere",c:"Bodyweight",l:"All Levels",d:"6 weeks",summary:"A no-equipment plan for strength, work capacity, and consistency anywhere.",diet:"A balanced everyday approach works best: dal, eggs, dairy, chicken or paneer for protein; seasonal vegetables, fruit, and whole grains for fuel."},
-  {n:"Runner's Strength Base",c:"Hybrid",l:"Intermediate",d:"8 weeks",summary:"Run-supportive strength sessions to build resilient legs, trunk, and conditioning.",diet:"Increase carbs on longer run days, keep protein consistent, and use simple recovery foods such as curd rice, fruit, milk, eggs, dal, or chicken."},
-  {n:"Glutes & Lower Body",c:"Lower Body",l:"All Levels",d:"6 weeks",summary:"Squat, hinge, lunge, and carry patterns to strengthen legs and glutes.",diet:"Support lower-body volume with enough total food: protein every meal, carb portions near training, and iron-rich foods such as greens, legumes, and meat if you eat it."},
-  {n:"Push / Pull / Legs",c:"Split",l:"Intermediate",d:"8 weeks",summary:"A clear three-day split with enough volume and recovery for steady progress.",diet:"For performance, distribute protein across 3�4 meals and include a carb-rich meal before or after training. Adjust portions to your goal."},
-  {n:"Functional Fitness Starter",c:"Functional",l:"Beginner",d:"6 weeks",summary:"Practical strength, carries, conditioning, and movement confidence for daily life.",diet:"Choose repeatable meals over perfection: a protein source, vegetables, and a carb source at main meals; hydrate before and after sessions."},
-  {n:"Desk Worker Posture & Strength",c:"Corrective",l:"All Levels",d:"6 weeks",summary:"Posture-friendly strength and mobility for stiff hips, shoulders, and long workdays.",diet:"Keep energy stable with regular meals and protein-rich snacks. Pair the plan with daily walking, water, and sufficient sleep for better recovery."}
-];
 
 function safe(value) {
   return String(value ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#039;");
 }
 
-function list(items = []) {
-  return `<ul>${items.map((item) => `<li>${safe(item)}</li>`).join("")}</ul>`;
-}
 
 async function api(path, options = {}) {
   const controller = new AbortController();
@@ -352,18 +177,12 @@ async function detectBackend() {
   return usesLocalBackend;
 }
 
-function setStatus(element, message, isError = false) {
-  if (!element) return;
-  element.textContent = message;
-  element.style.color = isError ? "var(--white)" : "var(--white)";
-}
 
 function renderServices(services) {
   if (!has("#servicesGrid")) return;
   const container = qs("#servicesGrid");
   const limit = Number(container.dataset.limit || 0);
   const items = limit ? services.slice(0, limit) : services;
-  allServices = Array.isArray(services) ? services : [];
   var imgMap = {
     core: "https://productimages.withfloats.com/serviceimages/tile/6864c9e78413e7fa962e1378group1",
     prime: "https://productimages.withfloats.com/tile/69836aa4fb1f2c7bc65e495e.jpeg",
@@ -393,35 +212,20 @@ function renderServices(services) {
     var cat = s.category;
     var pr = priceMap[cat] || priceMap.core;
     var ac = "var(--white)";
-    var sel = selectedPlans.has(cat);
-    // Cards can be recreated after changing between Grid and Compare. Mark
-    // them visible immediately because they are added after the reveal
-    // observer has already run.
-    return '<article class="svc-card reveal visible' + (sel ? ' selected' : '') + '" data-plan="' + cat + '" style="--accent:' + ac + ';--delay:' + (idx * 0.1) + 's">' +
+    // Cards can be recreated after boot. Mark them visible immediately
+    // because they are added after the reveal observer has already run.
+    return '<article class="svc-card reveal visible" data-plan="' + cat + '" style="--accent:' + ac + ';--delay:' + (idx * 0.1) + 's">' +
       '<div class="svc-card-body"><div class="svc-card-badge" style="background:' + ac + ';color:#000">Recommended</div><h3>' + safe(s.name) + '</h3>' +
       (s.summary ? '<p class="svc-summary">' + safe(s.summary) + '</p>' : '') +
       '<p class="svc-short"><strong>' + pr.actual + pr.period + '</strong> &middot; ' + safe(s.sessions || "") + '</p>' +
       '<ul class="svc-features">' + (pointsMap[cat] || pointsMap.core).map(function(p) { return '<li>' + checkSvg + ' ' + safe(p) + '</li>'; }).join("") + '</ul>' +
       '<div class="svc-card-foot"><span class="svc-sessions">' + safe(s.sessions || "") + '</span>' +
-      '<button class="svc-compare-btn' + (sel ? ' selected' : '') + '" data-plan="' + cat + '" type="button">' + (sel ? '✓ Comparing' : '+ Compare') + '</button>' +
       '<span class="primary-button svc-card-cta" data-plan="' + cat + '" style="cursor:pointer;justify-content:center;border-radius:8px;background:' + ac + ';border-color:' + ac + ';color:#000">View Plans &amp; Pricing</span></div></div>' +
       '<div class="svc-card-img-wrap"><img class="svc-card-img" src="' + imgMap[cat] + '" alt="" loading="lazy" /><div class="svc-card-overlay"></div></div>' +
       '</article>';
   }).join("");
-  _servicesData = services;
-  updateCompareCount();
 }
 
-function getServiceCatalog() {
-  var catalog = (Array.isArray(allServices) && allServices.length) ? allServices :
-    ((Array.isArray(_servicesData) && _servicesData.length) ? _servicesData : realData.services);
-  // Keep the compare view usable even if the API returns an incomplete service row.
-  return catalog.filter(function(service) {
-    return service && typeof service === "object";
-  });
-}
-var _servicesData = [];
-var selectedPlans = new Set();
 
 var FALLBACK_COACHES = [
   { name: "Aditya Gururani", role: "Yoga Instructor & Breathing Specialist", slug: "aditya-gururani", category: "yoga", bio: "A certified yoga instructor specializing in breathwork, stress management, and functional mobility.", focus: ["Breathwork", "Stress management", "Functional mobility"], highlight: "Breathwork Expert", color: "cyan", image: "https://web.s-cdn.boostkit.dev/webaction-files/67dd161916df35677e31c42c_myteam/img_0302-69538f34664ae75da3c69fce.jpg" },
@@ -439,7 +243,6 @@ function renderCoaches(coaches) {
   if (!coaches || !coaches.length) { console.log("[renderCoaches] using FALLBACK_COACHES"); coaches = FALLBACK_COACHES; }
   console.log("[renderCoaches] coaches count:", coaches.length);
   allCoaches = coaches;
-  coachProfiles = coaches;
   renderFilteredCoaches();
 }
 
@@ -732,243 +535,6 @@ function updateTestimonialStats(testimonials) {
 }
 
 
-function slugify(str) {
-  return str.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').replace(/-+/g, '-');
-}
-
-var CAT_EMOJI = {
-  "Quick": "\u26a1", "HIIT": "\ud83d\udd25", "Home": "\ud83c\udfe0", "Recovery": "\ud83e\uddd8",
-  "Strength": "\ud83c\udfcb\ufe0f", "Hypertrophy": "\ud83d\udcaa", "Muscle Building": "\ud83d\udcaa",
-  "Fat Loss": "\ud83d\udd25", "Full Body": "\ud83c\udfcb\ufe0f", "Bodyweight": "\ud83e\udd38",
-  "Hybrid": "\ud83d\udd04", "Functional": "\ud83c\udfc3", "Core": "\ud83c\udfaf",
-  "Lower Body": "\ud83e\uddb5", "Specialization": "\ud83c\udfaf", "Corrective": "\ud83e\uddd8",
-  "Split": "\ud83d\udcca", "Equipment-Specific": "\u2699\ufe0f", "Kettlebell": "\ud83d\udd14",
-  "Training Methods": "\ud83d\udccb", "Periodization": "\ud83d\udcc8", "Movement Mastery": "\ud83c\udfaf",
-  "Goal-Oriented": "\ud83c\udfaf", "Challenge": "\ud83c\udfc6", "Life Stage": "\ud83c\udf31",
-  "Lifestyle": "\ud83c\udfe0", "Sport-Specific": "\u26bd", "Athletic": "\ud83c\udfc3"
-};
-
-function renderWorkoutGrid(workouts) {
-  var grid = qs("#wkGrid");
-  if (!grid) return;
-  var filterBar = qs("#wkFilterBar");
-  var totalCount = qs("#wkTotalCount");
-  var catCount = qs("#wkCatCount");
-
-  function getWorkoutGoal(w) {
-    if (!w || !w.c) return "General fitness";
-    if (w.c === "Strength") return "Build force";
-    if (w.c === "Fat Loss" || w.c === "HIIT") return "Condition harder";
-    if (w.c === "Hypertrophy" || w.c === "Muscle Building" || w.c === "Specialization") return "Add muscle";
-    if (w.c === "Recovery" || w.c === "Corrective") return "Move better";
-    if (w.c === "Bodyweight" || w.c === "Home") return "Train anywhere";
-    return "Train with structure";
-  }
-
-  function getWorkoutFormat(w) {
-    if (!w || !w.c) return "Structured sessions";
-    if (w.c === "Strength") return "Heavy compounds and longer rest";
-    if (w.c === "HIIT") return "Intervals with high-output efforts";
-    if (w.c === "Quick") return "Dense supersets with minimal downtime";
-    if (w.c === "Recovery" || w.c === "Corrective") return "Mobility, activation, low fatigue";
-    if (w.c === "Hypertrophy" || w.c === "Muscle Building") return "Volume-led progression and pump work";
-    return "Focused sessions with a clear progression path";
-  }
-
-  function getWorkoutEquipment(w) {
-    var name = ((w && w.n) || "").toLowerCase();
-    if (name.indexOf("barbell") !== -1) return "Barbell setup";
-    if (name.indexOf("dumbbell") !== -1) return "Dumbbells";
-    if (name.indexOf("kettlebell") !== -1) return "Kettlebells";
-    if (name.indexOf("band") !== -1) return "Bands";
-    if (name.indexOf("pull-up") !== -1) return "Pull-up bar";
-    if (w.c === "Bodyweight") return "Bodyweight only";
-    if (w.c === "Home") return "Home setup";
-    return "Gym or adaptable";
-  }
-
-  function getWorkoutImage(w) {
-    var images = {
-      "Strength": "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1200&q=80&auto=format&fit=crop",
-      "Hypertrophy": "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=1200&q=80&auto=format&fit=crop",
-      "Muscle Building": "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=1200&q=80&auto=format&fit=crop",
-      "Fat Loss": "https://images.unsplash.com/photo-1549476464-37392f717541?w=1200&q=80&auto=format&fit=crop",
-      "HIIT": "https://images.unsplash.com/photo-1599058917765-a780eda07a3e?w=1200&q=80&auto=format&fit=crop",
-      "Athletic": "https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=1200&q=80&auto=format&fit=crop",
-      "Functional": "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=1200&q=80&auto=format&fit=crop",
-      "Bodyweight": "https://images.unsplash.com/photo-1518611012118-696072aa579a?w=1200&q=80&auto=format&fit=crop",
-      "Home": "https://images.unsplash.com/photo-1601422407692-ec4eeec1d9b3?w=1200&q=80&auto=format&fit=crop",
-      "Recovery": "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=1200&q=80&auto=format&fit=crop",
-      "Core": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=1200&q=80&auto=format&fit=crop",
-      "Full Body": "https://images.unsplash.com/photo-1518611012118-696072aa579a?w=1200&q=80&auto=format&fit=crop",
-      "Quick": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=1200&q=80&auto=format&fit=crop"
-    };
-    return images[w.c] || "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=1200&q=80&auto=format&fit=crop";
-  }
-
-  var cats = {};
-  workouts.forEach(function(w) {
-    var key = (w.c || "General").toLowerCase();
-    if (!cats[key]) { cats[key] = { name: w.c || "General", count: 0 }; }
-    cats[key].count++;
-  });
-
-  var keys = Object.keys(cats).sort();
-  if (catCount) catCount.textContent = keys.length;
-  if (totalCount) totalCount.textContent = workouts.length;
-
-  if (filterBar) {
-    var chipsHtml = '<button class="wk-filter-chip active" data-f="all">All <span class="cnt">' + workouts.length + '</span></button>';
-    keys.forEach(function(k) {
-      var c = cats[k];
-      var slug = slugify(k);
-      chipsHtml += '<button class="wk-filter-chip" data-f="' + slug + '">' + safe(c.name) + ' <span class="cnt">' + c.count + '</span></button>';
-    });
-    filterBar.innerHTML = chipsHtml;
-    filterBar.addEventListener("click", function(e) {
-      var chip = e.target.closest(".wk-filter-chip");
-      if (!chip) return;
-      qsa(".wk-filter-chip", filterBar).forEach(function(c) { c.classList.remove("active"); });
-      chip.classList.add("active");
-      applyFilter(chip.getAttribute("data-f"));
-    });
-  }
-
-  function applyFilter(filter) {
-    var all = workouts;
-    if (filter && filter !== "all") {
-      all = workouts.filter(function(w) {
-        var cat = slugify(w.c || "");
-        var level = (w.l || "").toLowerCase();
-        return cat === filter || level.indexOf(filter) !== -1;
-      });
-    }
-
-    var result = qs("#wkResult");
-    if (result) {
-      result.textContent = filter && filter !== "all"
-        ? "Showing " + all.length + " programs for " + filter.replace(/-/g, " ")
-        : "Showing all " + workouts.length + " programs";
-    }
-    grid.innerHTML = all.map(function(w) {
-      var s = slugify(w.n);
-      var e = CAT_EMOJI[w.c] || "\ud83c\udfcb\ufe0f";
-      return '<button class="wk-card wk-card-button" type="button" data-workout-slug="' + safe(s) + '" aria-label="Open ' + safe(w.n) + ' program details">' +
-        '<div class="wk-card-content">' +
-        '<div class="wk-card-topline"><span class="wk-card-emoji">' + e + '</span><span class="wk-card-goal">' + safe(getWorkoutGoal(w)) + '</span></div>' +
-        '<h3 class="wk-card-name">' + safe(w.n) + '</h3>' +
-        '<div class="wk-card-desc">' + safe(w.summary || CAT_DESC[w.c] || "A structured program for your fitness goals.") + '</div>' +
-        '<div class="wk-card-highlights">' +
-        '<span>' + safe(getWorkoutFormat(w)) + '</span>' +
-        '<span>' + safe(getWorkoutEquipment(w)) + '</span>' +
-        '</div>' +
-        '</div>' +
-        '<div class="wk-card-footer"><div class="wk-card-meta">' +
-        '<span class="wk-badge bg-cat">' + safe(w.c) + '</span>' +
-        '<span class="wk-badge bg-dur">' + safe(w.d) + '</span>' +
-        '<span class="wk-badge bg-level">' + safe(w.l || "All Levels") + '</span>' +
-        '</div><span class="wk-card-cta">View Program</span></div></button>';
-    }).join("");
-    grid.querySelectorAll("[data-workout-slug]").forEach(function(card) {
-      card.addEventListener("click", function() { openWorkoutOverlay(card.dataset.workoutSlug); });
-    });
-  }
-
-  var params = new URLSearchParams(window.location.search);
-  var initialFilter = slugify(params.get("filter") || "all");
-  if (initialFilter !== "all") {
-    if (filterBar) {
-      qsa(".wk-filter-chip", filterBar).forEach(function(c) { c.classList.toggle("active", c.getAttribute("data-f") === initialFilter); });
-    }
-    applyFilter(initialFilter);
-  } else {
-    applyFilter("all");
-  }
-}
-
-function openWorkoutOverlay(slug) {
-  var overlay = qs("#workoutOverlay");
-  if (!overlay) {
-    overlay = document.createElement("section");
-    overlay.id = "workoutOverlay";
-    overlay.className = "workout-overlay";
-    overlay.setAttribute("role", "dialog");
-    overlay.setAttribute("aria-modal", "true");
-    overlay.setAttribute("aria-label", "Workout program details");
-    overlay.innerHTML = '<div class="workout-overlay-bar"><span>Workout program</span><button type="button" class="workout-overlay-close" aria-label="Close workout details">Close <span aria-hidden="true">�</span></button></div><iframe class="workout-overlay-frame" title="Workout program details"></iframe>';
-    document.body.appendChild(overlay);
-    overlay.querySelector(".workout-overlay-close").addEventListener("click", closeWorkoutOverlay);
-    overlay.addEventListener("click", function(event) { if (event.target === overlay) closeWorkoutOverlay(); });
-    document.addEventListener("keydown", function(event) { if (event.key === "Escape" && overlay.classList.contains("is-open")) closeWorkoutOverlay(); });
-  }
-  overlay.querySelector("iframe").src = "workout.html?slug=" + encodeURIComponent(slug) + "&overlay=1";
-  overlay.classList.add("is-open");
-  document.body.classList.add("workout-overlay-open");
-  overlay.querySelector(".workout-overlay-close").focus();
-}
-
-function closeWorkoutOverlay() {
-  var overlay = qs("#workoutOverlay");
-  if (!overlay) return;
-  overlay.classList.remove("is-open");
-  overlay.querySelector("iframe").src = "about:blank";
-  document.body.classList.remove("workout-overlay-open");
-}
-
-var CAT_DESC = {
-  "Quick": "Time-efficient training to fit any schedule.",
-  "HIIT": "Max calorie burn with interval training.",
-  "Strength": "Build raw power and muscle.",
-  "Hypertrophy": "Moderate-heavy loads for muscle growth.",
-  "Muscle Building": "Evidence-based protocols for size.",
-  "Fat Loss": "Preserve muscle while shedding fat.",
-  "Full Body": "Complete training every session.",
-  "Bodyweight": "Zero equipment, real results.",
-  "Core": "Build a rock-solid foundation.",
-  "Lower Body": "Stronger legs, glutes, and hips.",
-  "Split": "Targeted volume per muscle group.",
-  "Equipment-Specific": "Master a specific training tool.",
-  "Kettlebell": "Strength and cardio in one tool.",
-  "Specialization": "Bring up a lagging body part.",
-  "Corrective": "Fix imbalances and move better.",
-  "Periodization": "Systematic training for peak results.",
-  "Training Methods": "Advanced techniques past plateaus.",
-  "Movement Mastery": "Perfect your technique.",
-  "Functional": "Strength you can actually use.",
-  "Hybrid": "Strength and conditioning combined.",
-  "Goal-Oriented": "Purpose-built for a specific goal.",
-  "Challenge": "Push your limits and build momentum.",
-  "Life Stage": "Training that fits your phase of life.",
-  "Lifestyle": "Flexible training for real life.",
-  "Sport-Specific": "Training that transfers to your sport.",
-  "Recovery": "Active recovery and mobility.",
-  "Home": "Effective workouts without the gym.",
-  "Athletic": "Speed, power, and agility development."
-};
-
-function renderUpdates(updates) {
-  if (!has("#updatesList")) return;
-  qs("#updatesList").innerHTML = updates.map((u) =>
-    `<article class="update-card"><time datetime="${safe(u.date)}">${formatDate(u.date)}</time><h3>${safe(u.title)}</h3><p>${safe(u.summary)}</p></article>`
-  ).join("");
-}
-
-function renderServiceAreas(areas) {
-  if (!has("#serviceAreaGrid")) return;
-  qs("#serviceAreaGrid").innerHTML = areas.map((a) => `<span>${safe(a)}</span>`).join("");
-}
-
-function renderContact(contact) {
-  qsa("[data-contact-line]").forEach((node) => {
-    node.textContent = `${contact.city || "Hyderabad, India"} | ${contact.phone} | ${contact.email}`;
-  });
-}
-
-function formatDate(value) {
-  const date = new Date(value);
-  return Number.isNaN(date.getTime()) ? "-" : date.toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
-}
-
 function formatTime(value) {
   if (!value) return "-";
   const date = typeof value === "number" ? new Date(value * 1000) : new Date(value);
@@ -1024,128 +590,6 @@ function renderAdminTable() {
     };
   });
   draw(active.dataset.adminTab);
-}
-
-function saveLeadLocally(payload) {
-  const leads = JSON.parse(localStorage.getItem("fg_leads") || "[]");
-  leads.push({ ...payload, savedAt: new Date().toISOString() });
-  localStorage.setItem("fg_leads", JSON.stringify(leads));
-}
-
-async function submitForm(formId, apiPath, statusId, transform) {
-  const form = qs(formId);
-  if (!form) return;
-  form.addEventListener("submit", async (event) => {
-    event.preventDefault();
-    const status = qs(statusId);
-    const payload = Object.fromEntries(new FormData(form).entries());
-    try {
-      if (!usesLocalBackend) await detectBackend();
-      if (usesLocalBackend) {
-        await api(apiPath, { method: "POST", body: JSON.stringify(transform ? transform(payload) : payload) });
-      } else {
-        saveLeadLocally(payload);
-      }
-      setStatus(status, "Saved. We'll reach back to you shortly.");
-      form.reset();
-    } catch (error) {
-      saveLeadLocally(payload);
-      setStatus(status, "Saved. We'll reach back to you shortly.");
-      form.reset();
-    }
-  });
-}
-
-/* -- Auth ----------------------------------- */
-function getUsers() {
-  try { return JSON.parse(localStorage.getItem("fg_users")) || []; }
-  catch { return []; }
-}
-function saveUsers(users) {
-  localStorage.setItem("fg_users", JSON.stringify(users));
-}
-function getSession() {
-  try { return JSON.parse(localStorage.getItem("fg_session")); }
-  catch { return null; }
-}
-function saveSession(user) {
-  localStorage.setItem("fg_session", JSON.stringify(user));
-}
-function clearSession() {
-  localStorage.removeItem("fg_session");
-}
-function hash(str) {
-  let h = 0;
-  for (let i = 0; i < str.length; i++) { h = ((h << 5) - h) + str.charCodeAt(i); h |= 0; }
-  return "h" + h;
-}
-function currentUser() {
-  return getSession();
-}
-
-/* -- Quiz data ------------------------------ */
-const quizQuestions = [
-  {
-    question: "What is your primary fitness goal?",
-    key: "goal",
-    options: [
-      { value: "weight-loss", label: "Lose weight / Burn fat" },
-      { value: "strength", label: "Build muscle / Get stronger" },
-      { value: "flexibility", label: "Improve flexibility / Yoga" },
-      { value: "sports", label: "Sports performance / Athletics" },
-      { value: "rehab", label: "Injury recovery / Rehabilitation" },
-      { value: "kids", label: "Kids fitness / My child's fitness" },
-      { value: "general", label: "General health / Stay active" },
-    ],
-  },
-  {
-    question: "Where do you prefer to train?",
-    key: "location",
-    options: [
-      { value: "studio", label: "At our training studio" },
-      { value: "home", label: "At home (doorstep service)" },
-      { value: "online", label: "Online / virtual sessions" },
-    ],
-  },
-  {
-    question: "What is your experience level?",
-    key: "level",
-    options: [
-      { value: "beginner", label: "Beginner � new to fitness" },
-      { value: "intermediate", label: "Intermediate � some experience" },
-      { value: "advanced", label: "Advanced � regularly active" },
-    ],
-  },
-];
-
-/* -- Coach matching ------------------------- */
-const goalCategoryMap = {
-  "weight-loss": ["fitness"],
-  "strength": ["fitness", "hybrid"],
-  "flexibility": ["yoga"],
-  "sports": ["sports", "fitness"],
-  "rehab": ["rehab", "yoga"],
-  "kids": ["kids", "special"],
-  "general": ["fitness", "yoga"],
-};
-
-function matchCoach(answers, coaches) {
-  const categories = goalCategoryMap[answers.goal] || ["fitness"];
-  const candidates = coaches.filter((c) => categories.includes(c.category));
-  if (!candidates.length) candidates.push(...coaches);
-  const scored = candidates.map((c) => {
-    let score = 0;
-    if (categories.includes(c.category)) score += 3;
-    if (c.focus && c.focus.some((f) => f.toLowerCase().includes("weight")) && answers.goal === "weight-loss") score += 2;
-    if (c.focus && c.focus.some((f) => f.toLowerCase().includes("yoga")) && answers.goal === "flexibility") score += 2;
-    if (c.focus && c.focus.some((f) => f.toLowerCase().includes("injur")) && answers.goal === "rehab") score += 2;
-    if (c.focus && c.focus.some((f) => f.toLowerCase().includes("kids") || f.toLowerCase().includes("children")) && answers.goal === "kids") score += 2;
-    if (c.focus && c.focus.some((f) => f.toLowerCase().includes("sport")) && answers.goal === "sports") score += 2;
-    if (c.focus && c.focus.some((f) => f.toLowerCase().includes("beginner")) && answers.level === "beginner") score += 1;
-    return { coach: c, score };
-  });
-  scored.sort((a, b) => b.score - a.score);
-  return scored[0].coach;
 }
 
 function injectAmbientBg() {
@@ -1453,42 +897,6 @@ function injectHeroContent(content) {
   if (subhead) subhead.textContent = d.heroSubhead || "At Fitness Gurukul, we believe in a holistic approach to health that incorporates fitness, nutrition, and lifestyle changes. We make health and fitness a part of everyday life.";
 }
 
-function injectAuthModal() {
-}
-
-function wireAuth() {
-}
-
-function injectWhatsApp() {
-  if (qs("#waWidget")) return;
-  const wrapper = document.createElement("div");
-  wrapper.id = "waWidget";
-  wrapper.innerHTML =
-    '<button id="waBtn" aria-label="Chat on WhatsApp">' +
-      '<svg viewBox="0 0 32 32" fill="white" width="26" height="26"><path d="M16 2C8.268 2 2 8.268 2 16c0 3.03 1.06 5.826 2.828 8.028L3.54 28.46l4.712-1.287A13.938 13.938 0 0 0 16 30c7.732 0 14-6.268 14-14S23.732 2 16 2zm0 2c6.627 0 12 5.373 12 12s-5.373 12-12 12c-2.317 0-4.48-.66-6.32-1.8l-.46-.28-3.52.96.96-3.44-.3-.48A11.933 11.933 0 0 1 4 16C4 9.373 9.373 4 16 4zm-4.5 5.5c-.2 0-.5.07-.76.3-.26.22-1.03 1-1.03 2.44s1.06 2.83 1.2 3.03c.16.2 2.08 3.17 5.03 4.44.7.3 1.25.48 1.68.62.71.23 1.36.2 1.87.12.57-.08 1.76-.72 2-1.42.26-.7.26-1.3.18-1.42-.07-.12-.26-.2-.55-.34-.29-.15-1.73-.85-2-.95-.26-.1-.47-.15-.67.15-.2.3-.78.95-.96 1.14-.18.2-.36.22-.65.07-.3-.15-1.24-.46-2.36-1.46-.87-.77-1.46-1.72-1.63-2.02-.17-.3-.02-.45.12-.6.13-.13.3-.34.44-.5.14-.18.2-.3.3-.5.1-.2.05-.38-.02-.53-.08-.15-.67-1.62-.92-2.22-.24-.58-.5-.48-.67-.5-.18-.02-.38-.02-.58-.02z"/></svg>' +
-    '</button>' +
-    '<div id="waPopup">' +
-      '<div id="waHeader">WhatsApp</div>' +
-      '<div id="waBody">' +
-        '<p id="waIntro">Chat with us on WhatsApp for a quick response!</p>' +
-        '<p id="waPhone">+917207113310</p>' +
-        '<label id="waLabel">Your message' +
-          '<textarea id="waMessage" rows="3" placeholder="Hi! I would like to know more about your services..."></textarea>' +
-        '</label>' +
-        '<a id="waSend" class="primary-button" href="https://wa.me/917207113310" target="_blank" rel="noopener">Send on WhatsApp</a>' +
-      '</div>' +
-    '</div>';
-  document.body.appendChild(wrapper);
-  qs("#waBtn").addEventListener("click", () => {
-    qs("#waPopup").classList.toggle("open");
-  });
-  qs("#waMessage").addEventListener("input", function () {
-    const text = this.value.trim();
-    qs("#waSend").href = text
-      ? "https://wa.me/917207113310?text=" + encodeURIComponent(text)
-      : "https://wa.me/917207113310";
-  });
-}
 
 function wireForms() {
   var leadForm = qs("#leadForm");
@@ -1887,9 +1295,9 @@ function initPlanModals() {
       if (plan === "endurance") { openModal("endurancePlanModal"); return; }
       if (plan === "elite") { openModal("elitePlanModal"); return; }
     }
-    /* any button with data-plan (skip compare buttons) */
+    /* any button with data-plan */
     var planBtn = target.closest("[data-plan]");
-    if (planBtn && !planBtn.classList.contains("svc-compare-btn")) {
+    if (planBtn) {
       if (planBtn.tagName === "A") e.preventDefault();
       var p2 = planBtn.dataset.plan;
       if (p2 === "core") { openModal("corePlanModal"); return; }
@@ -2167,7 +1575,7 @@ function injectFooter() {
   if (existing) existing.remove();
   var f = document.createElement("footer");
   f.className = "site-footer footer-refresh";
-  f.innerHTML = `<div class="footer-topline"><a class="footer-logo" href="index.html"><img src="assets/cdn/logo.jpg" alt="Fitness Gurukul" /><span class="footer-logo-text"><strong>Fitness</strong><span>Gurukul</span></span></a><p>Personal training, made personal.</p><a class="footer-cta" href="contact.html">Talk to a coach <span aria-hidden="true">&rarr;</span></a></div><div class="footer-refresh-grid"><div class="footer-intro"><p>Built for stronger, healthier lives in Hyderabad&mdash;at the studio, at home, and wherever you train.</p><a href="tel:+917207113310">+91 72071 13310</a></div><div class="footer-col"><h4>Discover</h4><nav class="footer-nav"><a href="about.html">About us</a><a href="coaches.html">Our coaches</a><a href="workouts.html">Workout programs</a></nav></div><div class="footer-col"><h4>Start here</h4><nav class="footer-nav"><a href="tools.html">Fitness tools</a><a href="events.html">Events</a><a href="testimonials.html">Success stories</a><a href="contact.html">Book a consultation</a></nav></div><div class="footer-col"><h4>Contact Us</h4><div class="footer-contact-col"><a href="tel:+917207113310"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>+91 72071 13310</a><a href="mailto:contact@fitnessgurukul.co.in"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>contact@fitnessgurukul.co.in</a><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Manikonda, Hyderabad</span><a class="footer-contact-cta" href="contact.html">Get Directions &rarr;</a></div></div><div class="footer-col"><h4>Visit</h4><p class="footer-address">Manikonda, Hyderabad<br />Telangana, India</p><div class="footer-social"><a href="https://www.instagram.com/fitnessgurukulofficial/" target="_blank" rel="noopener" aria-label="Instagram">IG</a><a href="https://www.facebook.com/fitnessgurukul7/" target="_blank" rel="noopener" aria-label="Facebook">fb</a><a href="https://www.youtube.com/channel/UCLt2Qs1MeV_uf_xMJ7AaPlA" target="_blank" rel="noopener" aria-label="YouTube">YT</a></div></div></div><div class="footer-bottom"><p class="footer-copy">&copy; 2026 Fitness Gurukul. All rights reserved.</p><a href="contact.html">Contact Us</a></div>`;
+  f.innerHTML = `<div class="footer-topline"><a class="footer-logo" href="index.html"><img src="assets/cdn/logo.jpg" alt="Fitness Gurukul" /><span class="footer-logo-text"><strong>Fitness</strong><span>Gurukul</span></span></a><p>Personal training, made personal.</p><a class="footer-cta" href="contact.html">Talk to a coach <span aria-hidden="true">&rarr;</span></a></div><div class="footer-refresh-grid"><div class="footer-intro"><p>Built for stronger, healthier lives in Hyderabad&mdash;at the studio, at home, and wherever you train.</p><a href="tel:+917207113310">+91 72071 13310</a></div><div class="footer-col"><h4>Discover</h4><nav class="footer-nav"><a href="about.html">About us</a><a href="coaches.html">Our coaches</a><a href="services.html">Services &amp; programs</a></nav></div><div class="footer-col"><h4>Start here</h4><nav class="footer-nav"><a href="tools.html">Fitness tools</a><a href="events.html">Events</a><a href="testimonials.html">Success stories</a><a href="contact.html">Book a consultation</a></nav></div><div class="footer-col"><h4>Contact Us</h4><div class="footer-contact-col"><a href="tel:+917207113310"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>+91 72071 13310</a><a href="mailto:contact@fitnessgurukul.co.in"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>contact@fitnessgurukul.co.in</a><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Manikonda, Hyderabad</span><a class="footer-contact-cta" href="contact.html">Get Directions &rarr;</a></div></div><div class="footer-col"><h4>Visit</h4><p class="footer-address">Manikonda, Hyderabad<br />Telangana, India</p><div class="footer-social"><a href="https://www.instagram.com/fitnessgurukulofficial/" target="_blank" rel="noopener" aria-label="Instagram">IG</a><a href="https://www.facebook.com/fitnessgurukul7/" target="_blank" rel="noopener" aria-label="Facebook">fb</a><a href="https://www.youtube.com/channel/UCLt2Qs1MeV_uf_xMJ7AaPlA" target="_blank" rel="noopener" aria-label="YouTube">YT</a></div></div></div><div class="footer-bottom"><p class="footer-copy">&copy; 2026 Fitness Gurukul. All rights reserved.</p><a href="contact.html">Contact Us</a></div>`;
   document.body.appendChild(f);
 }
 
@@ -2491,78 +1899,6 @@ function injectSiteChatbot() {
   });
 }
 
-function showCompareView() {
-  var container = qs("#servicesGrid");
-  var svcData = getServiceCatalog();
-  if (!container) return;
-  container.classList.add("compare-view");
-  if (!svcData.length) {
-    container.innerHTML = '<p class="svc-compare-empty">Plans are loading. Please try Compare again in a moment.</p>';
-    return;
-  }
-  var services = svcData;
-  if (selectedPlans.size > 0) services = services.filter(function(s) { return selectedPlans.has(s.category); });
-  // A refreshed catalog can invalidate an earlier selection. Fall back to the
-  // complete catalog instead of leaving the comparison area blank.
-  if (!services.length) {
-    selectedPlans.clear();
-    services = svcData;
-  }
-  var fields = [
-    { label: "Price Starts At", key: "price", type: "price" },
-    { label: "Sessions", key: "sessions", type: "text" },
-    { label: "Dedicated Coach", key: "coach", type: "check" },
-    { label: "Custom Meal Plan", key: "meal", type: "check" },
-    { label: "Video Check-ins", key: "video", type: "check" },
-    { label: "In-person PT", key: "inperson", type: "check" },
-    { label: "App Tracking", key: "app", type: "check" }
-  ];
-  var planChecks = {
-    core: { coach: true, meal: true, video: true, inperson: true, app: true },
-    prime: { coach: true, meal: true, video: true, inperson: true, app: true },
-    signature: { coach: true, meal: true, video: true, inperson: true, app: true },
-    endurance: { coach: true, meal: false, video: true, inperson: false, app: true },
-    forge: { coach: true, meal: false, video: true, inperson: false, app: true },
-    elite: { coach: true, meal: true, video: true, inperson: false, app: true }
-  };
-  var checkMark = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16" style="color:var(--white)"><polyline points="20 6 9 17 4 12"/></svg>';
-  var crossMark = '<span style="color:var(--muted)">&mdash;</span>';
-  var html = '<div class="svc-compare-wrap"><table class="svc-compare-table"><thead><tr><th>Feature</th>';
-  services.forEach(function(s) { html += '<th>' + safe(s.name) + '</th>'; });
-  html += '</tr></thead><tbody>';
-  fields.forEach(function(f) {
-    html += '<tr><td>' + safe(f.label) + '</td>';
-    services.forEach(function(s) {
-      if (f.type === "price") {
-        html += '<td><strong style="color:var(--white);font-family:var(--font-display)">' + safe(s.price) + '</strong></td>';
-      } else if (f.type === "text") {
-        html += '<td>' + safe(s.sessions || "&mdash;") + '</td>';
-      } else {
-        var checks = planChecks[s.category] || {};
-        html += '<td>' + (checks[f.key] ? checkMark : crossMark) + '</td>';
-      }
-    });
-    html += '</tr>';
-  });
-  html += '<tr><td></td>';
-  services.forEach(function(s) {
-    html += '<td class="cta-cell"><span class="primary-button" data-plan="' + s.category + '" style="cursor:pointer;justify-content:center;font-size:0.78rem;padding:8px 16px;color:#000;background:var(--white)">Choose</span></td>';
-  });
-  html += '</tr></tbody></table></div>';
-  container.innerHTML = html;
-}
-
-/* -- Missing stubs ------------------- */
-function updateCompareCount() {}
-function initStickyHeader() {}
-function renderAboutCoaches() {}
-function initServiceToggles() {}
-function initRipple() {}
-function initMagneticHover() {}
-function injectCursor() {}
-function initEventTilt() {}
-function initEventsParallax() {}
-function initDistTrack() {}
 
 async function boot() {
   /* wire modals immediately so buttons work even before async ops finish */
@@ -2575,12 +1911,7 @@ async function boot() {
   try { initPlanCards(); } catch (e) { console.warn("boot:initPlanCards", e); }
   try { renderCoaches(d.coaches || realData.coaches); } catch (e) { console.warn("boot:renderCoaches", e); }
   try { renderTestimonials(d.testimonials || realData.testimonials); } catch (e) { console.warn("boot:renderTestimonials", e); }
-  try { renderUpdates(d.updates || realData.updates); } catch (e) { console.warn("boot:renderUpdates", e); }
-  try { renderServiceAreas(d.serviceAreas || realData.serviceAreas); } catch (e) { console.warn("boot:renderServiceAreas", e); }
-  try { renderWorkoutGrid(d.workouts || realData.workouts); } catch (e) { console.warn("boot:renderWorkoutGrid", e); }
-  try { renderContact(d.contact || realData.contact); } catch (e) { console.warn("boot:renderContact", e); }
   try { injectAmbientBg(); } catch (e) { console.warn("boot:injectAmbientBg", e); }
-  try { renderAboutCoaches(d.coaches || realData.coaches); } catch (e) { console.warn("boot:renderAboutCoaches", e); }
   try { renderMindsCarousel(d.coaches || realData.coaches); } catch (e) { console.warn("boot:renderMindsCarousel", e); }
   try { injectHeroContent(d); } catch (e) { console.warn("boot:injectHeroContent", e); }
   try { initHeroCarousel(); } catch (e) { console.warn("boot:initHeroCarousel", e); }
@@ -2590,8 +1921,6 @@ async function boot() {
   try { animateCounters(); } catch (e) { console.warn("boot:animateCounters", e); }
   try { initRevealAnimations(); } catch (e) { console.warn("boot:initRevealAnimations", e); }
   try { initHomePage(); } catch (e) { console.warn("boot:initHomePage", e); }
-  try { initStickyHeader(); } catch (e) { console.warn("boot:initStickyHeader", e); }
-  try { initServiceToggles(); } catch (e) { console.warn("boot:initServiceToggles", e); }
   try { injectCoachModal(); } catch (e) { console.warn("boot:injectCoachModal", e); }
   try { wireCoachPopups(); } catch (e) { console.warn("boot:wireCoachPopups", e); }
   try { injectBookModal(); wireBookModalForm(); } catch (e) { console.warn("boot:wireBookModalForm", e); }
@@ -2602,12 +1931,6 @@ async function boot() {
   try { injectFooter(); } catch (e) { console.warn("boot:injectFooter", e); }
   try { injectWhatsAppFloat(); } catch (e) { console.warn("boot:injectWhatsAppFloat", e); }
   try { injectSiteChatbot(); } catch (e) { console.warn("boot:injectSiteChatbot", e); }
-  try { injectCursor(); } catch (e) { console.warn("boot:injectCursor", e); }
-  try { initRipple(); } catch (e) { console.warn("boot:initRipple", e); }
-  try { initEventTilt(); } catch (e) { console.warn("boot:initEventTilt", e); }
-  try { initEventsParallax(); } catch (e) { console.warn("boot:initEventsParallax", e); }
-  try { initDistTrack(); } catch (e) { console.warn("boot:initDistTrack", e); }
-  try { initMagneticHover(); } catch (e) { console.warn("boot:initMagneticHover", e); }
   try { initCycleCarousel(); } catch (e) { console.warn("boot:initCycleCarousel", e); }
 }
 
@@ -2894,20 +2217,6 @@ function initCycleCarousel() {
     }
     if (calTitle) calTitle.textContent = "All Coaches Schedule � June 2026";
 
-    function openCoachOverlay(coachId) {
-      var data = coachData[coachId];
-      if (!data) return;
-      calImg.src = data.img;
-      calImg.alt = data.name;
-      calName.textContent = data.name;
-      calRole.textContent = data.role;
-      calBadges.innerHTML = "<span>" + data.badge + "</span>" + data.tags.map(function(t) { return "<span>" + t + "</span>"; }).join("");
-      if (calGridWrap) calGridWrap.innerHTML = buildScheduleCalendarHTML(coachId, true);
-      if (calTitle) calTitle.textContent = data.name + " - June 2026 Class Schedule";
-      overlay.classList.add("open");
-      document.body.style.overflow = "hidden";
-    }
-
     function closeCoachOverlay() {
       overlay.classList.remove("open");
       document.body.style.overflow = "";
@@ -3096,25 +2405,6 @@ function initCycleCarousel() {
     cards += '</div></div>';
 
     return '<div class="svc-cat-overlay" id="svcCatOverlay"><div class="svc-cat-modal"><button class="svc-cat-close" id="svcCatClose">&times;</button><div class="svc-cat-header"><h2>Our Services &amp; Programs</h2><p>From personal training to group wellness � find what fits your goal</p></div><div class="svc-cat-grid">' + cards + '</div></div></div>';
-  }
-
-  /* Inject trigger button */
-  function injectSvcTrigger() {
-    if (document.getElementById("svcCatTrigger")) return;
-    var btn = document.createElement("button");
-    btn.id = "svcCatTrigger";
-    btn.className = "svc-cat-trigger";
-    btn.setAttribute("aria-label", "Services catalog");
-    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>';
-    document.body.appendChild(btn);
-    btn.addEventListener("click", function() {
-      if (!document.getElementById("svcCatOverlay")) {
-        document.body.insertAdjacentHTML("beforeend", buildSvcOverlayHTML());
-        wireSvcOverlay();
-      }
-      document.getElementById("svcCatOverlay").classList.add("open");
-      document.body.style.overflow = "hidden";
-    });
   }
 
   function wireSvcOverlay() {
