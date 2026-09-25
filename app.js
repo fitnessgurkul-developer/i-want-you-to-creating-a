@@ -1294,12 +1294,12 @@ function injectAmbientBg() {
 
 /** Latest public event — featured on Events and shown site-wide via the top banner. */
 var LATEST_EVENT = {
-  name: "September Autumn Ride",
-  shortDate: "Sun 20 Sept",
-  dateLabel: "20 September 2026",
+  name: "October Dussehra Ride",
+  shortDate: "Sun 18 Oct",
+  dateLabel: "18 October 2026",
   time: "5:00 AM onwards",
   location: "SmartBike Point, Narsingi",
-  registerUrl: "https://ifinish.in/cycling/FGCC-September",
+  registerUrl: "https://ifinish.in/cycling/FGCC-October",
   pageUrl: "events.html#latest-event"
 };
 
