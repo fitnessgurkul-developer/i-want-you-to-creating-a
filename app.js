@@ -1294,12 +1294,12 @@ function injectAmbientBg() {
 
 /** Latest public event — featured on Events and shown site-wide via the top banner. */
 var LATEST_EVENT = {
-  name: "October Dussehra Ride",
-  shortDate: "Sun 18 Oct",
-  dateLabel: "18 October 2026",
+  name: "Halloween Run",
+  shortDate: "Sun 1 Nov",
+  dateLabel: "1 November 2026",
   time: "5:00 AM onwards",
-  location: "SmartBike Point, Narsingi",
-  registerUrl: "https://ifinish.in/cycling/FGCC-October",
+  location: "Sanjeevaiah Park,Hyderabad",
+  registerUrl: "https://ifinish.in/running/FGHR",
   pageUrl: "events.html#latest-event"
 };
 
